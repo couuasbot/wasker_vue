@@ -1,9 +1,11 @@
 <script setup>
 import MainLayout from './layouts/MainLayout.vue'
+import TheAiAssistant from './components/TheAiAssistant.vue'
 </script>
 
 <template>
   <MainLayout />
+  <TheAiAssistant />
 </template>
 
 <style>

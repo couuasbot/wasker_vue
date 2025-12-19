@@ -15,5 +15,10 @@ export const useAppStore = defineStore('app', () => {
         isMenuOpen.value = false
     }
 
-    return { isMenuOpen, toggleMenu, closeMenu }
+    const isLoading = ref(true)
+    function setLoading(val) {
+        isLoading.value = val
+    }
+
+    return { isMenuOpen, toggleMenu, closeMenu, isLoading, setLoading }
 })

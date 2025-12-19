@@ -1,25 +1,25 @@
 ---
-name: "Walter Archer"
-roles: ["Ui/ux Designer", "Web Developer", "Graphic Designer", "Dreamer 😊"]
+name: "COUUAS"
+roles: [ "Full Stack Developer", "SPEC-Coding Practitioner", "Nuclear Safety Software Engineer","Open Source Project Enthusiast","Dreamer 😊"]
 avatar: "/assets/img-dark/ui/avatar.jpg"
 banner: "/assets/img-dark/ui/banner1.jpg"
 
 services:
-  - title: "UI/UX Design"
-    description: "I design intuitive user interfaces that captivate from the first click. Optimizing the user experience to achieve maximum impact."
+  - title: "Full Stack Development"
+    description: "Expertise in the Vue.js and Python ecosystems. I build robust full-stack applications, from intricate interactive frontends to high-performance APIs, ensuring stability for mission-critical logic."
     link: "/contact"
-  - title: "Web Dev"
-    description: "I build moderm, high-performance websites using the latest technologies. Ensuring stability and responsiveness across all devices."
+  - title: "SPEC-Coding Solutions"
+    description: "Implementing structured SPEC-Coding methodologies to manage complex logic. I deliver clean, maintainable, and highly scalable architectures tailored for industrial-grade software."
     link: "/contact"
-  - title: "Graphic Design"
-    description: "I create eye-catching visual solutions that reflect your brand's uniqueness. From illustrations to brand books, all in one style."
+  - title: "Nuclear Digital Twin"
+    description: "Specializing in the Tritium Fuel Cycle. I develop high-fidelity digital twins that provide precise simulation, real-time monitoring, and safety assessments for complex nuclear processes."
     link: "/contact"
-  - title: "Marketing"
-    description: "I develop strategies that reach your audience and boost brand recognition across both digital and traditional channels."
+  - title: "Scientific Visualization"
+    description: "Transforming complex industrial data into intuitive 3D experiences. I bridge the gap between nuclear engineering and modern web tech to create high-impact, data-driven visual solutions."
     link: "/contact"
 
 languages:
-  - name: "French"
+  - name: "Chinese"
     level: "Native"
     percent: 100
   - name: "English"
@@ -27,41 +27,41 @@ languages:
     percent: 75
 
 skills:
-  - name: "Figma"
-    percent: 90
-  - name: "Html"
-    percent: 80
-  - name: "Photoshop"
-    percent: 75
-  - name: "Css / scss"
+  # --- Core Development Stack ---
+  - name: "Vue.js / Vite"
     percent: 95
-  - name: "Adobe XD"
+  - name: "Python / FastAPI"
+    percent: 90
+  - name: "Node.js"
+    percent: 75
+
+  # --- Domain Expertise ---
+  - name: "Digital Twin / Three.js"
+    percent: 85
+  - name: "Nuclear Safety Engineering"
+    percent: 90
+  - name: "SPEC-Coding Standards"
+    percent: 95
+
+  # --- Engineering & Design ---
+  - name: "SCSS / Data Viz"
+    percent: 95
+  - name: "System Simulation"
     percent: 80
-  - name: "Js / React"
-    percent: 60
 
 education:
-  - title: "Art school"
-    year: "2006 - 2008"
+  - title: "USC，Software Engineering"
+    year: "2016 - 2020"
     description: "Repellendus minima repellat fuga tempora impedit alias dolores odit id, placeat ut officia dicta."
-  - title: "Lviv academy of arts"
-    year: "2008 - 2013"
+    certificate: ""
+  - title: "USC，Nuclear Energy Engineering"
+    year: "2022 - 2025"
     description: "Dolore molestias rerum voluptate quas laborum perferendis iste omnis ipsam velit eius architecto quibusdam. Recusandae unde minima officiis dolore."
-    certificate: "assets/files/certificate-1.jpg"
-  - title: "Envato courses"
-    year: "2014 - 2015"
-    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit ex illum omnis consequatur quas vitae esse ipsum molestias vel libero."
-    certificate: "assets/files/certificate-2.jpg"
+    certificate: ""
 
 work:
-  - title: "Pixy creative agency"
-    year: "2016 - 2017"
-    description: "Repellendus minima repellat fuga tempora impedit alias dolores odit id, placeat ut officia dicta. Recusandae unde minima officiis dolore. Quas vitae esse ipsum molestias vel libero"
-  - title: "Ashley art studio"
-    year: "2017 - 2019"
-    description: "Dolore molestias rerum voluptate quas laborum perferendis iste omnis ipsam velit eius architecto quibusdam. Recusandae unde minima officiis dolore."
-  - title: "Themeforest"
-    year: "2019 - Today"
+  - title: "Institute of Energy, Hefei Comprehensive National Science Center"
+    year: "2025 - Today"
     description: "Praesentium minus dolores reprehenderit doloremque suscipit dolore animi deleniti expedita, soluta beatae! Voluptatibus, cupiditate earum facilis. Quae, dolores!"
 
 social:
@@ -75,9 +75,9 @@ social:
     link: "https://pinterest.com"
 
 footer:
-  copyright: "©2024. All rights reserved."
-  designer: "Nazar Miller"
-  designer_url: "https://www.bootstrapmb.com"
+  copyright: "©2025. All rights reserved."
+  designer: "COUUAS"
+  designer_url: "https://6660.pp.ua"
 ---
 
-Thank you very much for your attention ❤️ ! Follow me on social media and don't forget to visit [my blog](/blog) I post a lot of interesting things about design and not only.
+Thank you very much for your attention ❤️ ! Follow me on social media and don't forget to visit my blog, I post a lot of interesting things and not only.

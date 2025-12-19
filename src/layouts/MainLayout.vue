@@ -64,6 +64,7 @@ onMounted(() => {
       
       setTimeout(() => {
         isLoading.value = false
+        appStore.setLoading(false)
       }, 800) 
     }
    }, 100) 
