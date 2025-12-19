@@ -2295,7 +2295,7 @@ portfolio
   left: 0;
   background: -webkit-gradient(linear, left bottom, left top, color-stop(21%, rgba(18, 18, 18, 0.8)), to(rgba(18, 18, 18, 0.1)));
   background: linear-gradient(0deg, rgba(18, 18, 18, 0.8) 21%, rgba(18, 18, 18, 0.1) 100%);
-  backgrop-filter: blur(1rem);
+  backdrop-filter: blur(1rem);
   -webkit-transition: 0.4s cubic-bezier(0, 0, 0.3642, 1);
   transition: 0.4s cubic-bezier(0, 0, 0.3642, 1);
 }

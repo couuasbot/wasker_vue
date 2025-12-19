@@ -4,15 +4,16 @@
 
 ## 🚀 Features
 
+-   **Knowledge Galaxy (LAB)**: Immersive 3D knowledge graph visualization of your articles and their connections, built with **Three.js**.
 -   **Markdown-Driven CMS**: Manage your Blog, Portfolio, Friend Links, and Profile entirely via `.md` files. No database required.
 -   **Dynamic Routing**: Automatically generates routes for blog posts and portfolio items.
 -   **Smooth Animations**: Integrated **GSAP** transition effects, scroll animations, and typewriter effects.
 -   **Smart Layout**:
     -   **Dynamic Right Bar**: Profile information loaded from `src/content/profile/profile.md`.
-    -   **Responsive Sidebar**: Mobile-friendly navigation.
+    -   **Responsive Sidebar**: Mobile-friendly navigation with a unified 1200px breakpoint.
     -   **Transition Overlaps**: Smooth cross-fading page transitions.
 -   **Categorization**: Automatic category detection based on folder structure.
--   **RSS Feed**: Built-in script to generate `rss.xml` for blog posts.
+-   **RSS Feed**: Optimized RSS generation for **GitHub Pages** (couuas.github.io) with XML compliance.
 -   **Developer Experience**: Fast HMR with Vite, scoped CSS, and modular component design.
 
 ## 🛠️ Tech Stack
@@ -22,6 +23,7 @@
 -   **State Management**: [Pinia](https://pinia.vuejs.org/)
 -   **Styling**: Custom CSS variables, FontAwesome, Bootstrap Grid System.
 -   **Animation**: [GSAP](https://greensock.com/gsap/)
+-   **3D Visualization**: [Three.js](https://threejs.org/) & [3d-force-graph](https://github.com/vasturiano/3d-force-graph)
 -   **Markdown**: `markdown-it`, `front-matter`, `highlight.js`.
 
 ## 📦 Getting Started
@@ -46,7 +48,8 @@ npm run dev
 ### Production Build
 
 ```bash
-# Build for production (includes RSS generation)
+# Build for production
+# Includes Knowledge Graph and RSS generation
 npm run build
 ```
 
@@ -87,6 +90,12 @@ Add link cards in `src/content/friend/`.
     url: "https://vuejs.org"
     ---
     ```
+
+### 5. **Knowledge Galaxy (Automatic)**
+The galaxy graph is automatically generated based on your markdown content and internal links.
+-   **Internal Links**: Use `[[PostTitle]]` or `[Label](/blog/PostSlug)` syntax in your markdown to create connections (edges) in the 3D graph.
+-   **Generation**: The `scripts/generate-graph.js` logic handles link flattening and node weight calculation during the build process.
+-   **Interactive UI**: Includes "Tap-to-Fly" camera, intelligent detail panels, and related entry navigation.
 
 ## 🎨 Customization
 

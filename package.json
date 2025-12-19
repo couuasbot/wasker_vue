@@ -4,13 +4,15 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "npm run generate:rss && vite build",
+    "dev": "npm run generate:graph && vite",
+    "build": "npm run generate:graph && npm run generate:rss && vite build",
     "generate:rss": "node scripts/generate-rss.js",
+    "generate:graph": "node scripts/generate-graph.js",
     "preview": "vite preview"
   },
   "dependencies": {
     "@fancyapps/ui": "^6.1.7",
+    "3d-force-graph": "^1.79.0",
     "front-matter": "^4.0.2",
     "gsap": "^3.14.2",
     "highlight.js": "^11.11.1",
@@ -19,11 +21,14 @@
     "pinia": "^3.0.4",
     "sass": "^1.97.0",
     "swiper": "^12.0.3",
+    "three": "^0.182.0",
     "vue": "^3.5.24",
     "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
+    "glob": "^13.0.0",
+    "gray-matter": "^4.0.3",
     "vite": "^7.2.4"
   }
 }

@@ -50,6 +50,12 @@ const router = createRouter({
             name: 'contact',
             component: Contact,
             meta: { bodyClass: 'mil-half-page' }
+        },
+        {
+            path: '/galaxy',
+            name: 'galaxy',
+            component: () => import('../views/GalaxyPage.vue'),
+            meta: { bodyClass: 'mil-fw-page' }
         }
     ],
     scrollBehavior(to, from, savedPosition) {
