@@ -2525,14 +2525,47 @@ portfolio
   background-color: #DBA91C;
 }
 
+.mil-bottom-panel .mil-jcc {
+  height: 100%;
+}
+
 .mil-filter {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+  padding: 0 4rem 1.5rem 4rem;
+  /* Horizontal spacing and push scrollbar to bottom */
+  box-sizing: border-box;
+  height: 100%;
+  align-items: center;
+}
+
+/* Custom scrollbar for filter tabs */
+.mil-filter::-webkit-scrollbar {
+  height: 2px;
+  /* Ultra-thin stylish scrollbar */
+}
+
+.mil-filter::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mil-filter::-webkit-scrollbar-thumb {
+  background: rgba(219, 169, 28, 0.4);
+  border-radius: 0;
+}
+
+.mil-filter::-webkit-scrollbar-thumb:hover {
+  background: rgba(219, 169, 28, 0.8);
 }
 
 .mil-filter a {
   margin-right: 3rem;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .mil-filter a:last-child {

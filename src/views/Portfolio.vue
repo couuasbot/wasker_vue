@@ -80,7 +80,7 @@ watch(displayedWorks, async () => {
             
             <div class="mil-bottom-panel">
                 <div class="mil-jcc mil-w-100">
-                    <div class="mil-filter mb-30">
+                    <div class="mil-filter">
                          <a v-for="cat in categories" :key="cat" 
                            @click.prevent="switchCategory(cat)"
                            href="#" 
