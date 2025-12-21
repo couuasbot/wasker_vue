@@ -62,7 +62,7 @@ watch(displayedWorks, async () => {
                 <div class="row">
                     <div v-for="work in displayedWorks" :key="work.slug" class="col-lg-6">
                         <div 
-                            class="mil-blog-card mil-sm mil-mb-15 mil-up"
+                            class="mil-blog-card mil-mb-15 mil-up"
                             :class="{ 'mil-active': toggledSlug === work.slug }"
                             @click="toggleCard(work.slug)"
                         >

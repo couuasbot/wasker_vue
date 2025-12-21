@@ -93,9 +93,6 @@ function onGlobalClick(e) {
     }
 }
 
-onMounted(() => {
-    document.addEventListener('click', onGlobalClick);
-    const region = detectRegion(); // Re-add region detection which was inside onMounted
 
 
 // Touch support for mobile
@@ -173,6 +170,10 @@ function loadScript(url) {
     document.body.appendChild(script);
   });
 }
+
+onMounted(() => {
+    document.addEventListener('click', onGlobalClick);
+    const region = detectRegion(); 
 
 async function initCoze(region) {
   const botId = getBotId(region);

@@ -33,7 +33,7 @@ watch(friends, () => {
                     <!-- Dynamic Friends List -->
                     <div class="col-lg-6" v-for="friend in friends" :key="friend.slug">
                         <div 
-                            class="mil-blog-card mil-sm mil-mb-15 mil-up"
+                            class="mil-blog-card mil-mb-15 mil-up"
                             :class="{ 'mil-active': toggledSlug === friend.slug }"
                             @click="toggleCard(friend.slug)"
                         >
