@@ -66,11 +66,11 @@ const onSubmit = () => {
                 <div class="mil-jcb mil-w-100">
                     <a href="#" class="mil-icon-text" target="_blank">
                         <i class="fab fa-whatsapp"></i>
-                        <div class="mil-link">+38 (088) 133 XX 49</div>
+                        <div class="mil-link">+1 (919) 919 9996</div>
                     </a>
                     <a href="mailto:archer@mail.com" class="mil-icon-text" target="_blank">
                         <i class="fal fa-at"></i>
-                        <div class="mil-link">archer@mail.com</div>
+                        <div class="mil-link">couuas@gmail.com</div>
                     </a>
                 </div>
             </div>

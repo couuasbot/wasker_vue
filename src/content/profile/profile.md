@@ -1,7 +1,7 @@
 ---
 name: "COUUAS"
 roles: [ "Full Stack Developer", "SPEC-Coding Practitioner", "Nuclear Safety Software Engineer","Open Source Project Enthusiast","Dreamer 😊"]
-avatar: "/assets/img-dark/ui/avatar.jpg"
+avatar: "/assets/img-dark/ui/avatar.png"
 banner: "/assets/img-dark/ui/banner1.jpg"
 
 services:
