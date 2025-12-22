@@ -5,6 +5,7 @@ category: "Web Development"
 client: "Open Source"
 description: "一个极简、高性能且富有设计感的 Vue 3 作品集与博客主题。"
 image: "/assets/img-dark/default/1.jpg"
+pdf: "/assets/pdf/portfolio_demo.pdf"
 ---
 
 # 项目概览
@@ -14,7 +15,7 @@ Wasker Vue 是一个专为追求极致体验的开发者设计的个人网站主
 ## 项目链接
 
 - **项目地址 (GitHub)**: [https://github.com/couuas/wasker_vue](https://github.com/couuas/wasker_vue)
-- **在线演示**: [https://wasker.vercal.app](https://wasker.vercal.app)
+- **在线演示**: [https://couuas.pp.ua](https://couuas.pp.ua)
 
 ## 设计思想
 

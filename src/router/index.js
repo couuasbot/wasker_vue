@@ -56,6 +56,12 @@ const router = createRouter({
             name: 'galaxy',
             component: () => import('../views/GalaxyPage.vue'),
             meta: { bodyClass: 'mil-fw-page' }
+        },
+        {
+            path: '/presentation/:id',
+            name: 'presentation',
+            component: () => import('../views/PresentationPage.vue'),
+            meta: { bodyClass: 'mil-fw-page' }
         }
     ],
     scrollBehavior(to, from, savedPosition) {

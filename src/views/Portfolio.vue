@@ -77,6 +77,7 @@ watch(displayedWorks, async () => {
                                     <div class="mil-left">
                                         <h3 class="mil-line-height mil-mb-20">{{ work.title }}</h3>
                                         <router-link :to="'/portfolio/' + work.slug" class="mil-link mil-hover-link mil-accent">read more</router-link>
+                                        <router-link v-if="work.pdf" :to="'/presentation/' + work.slug" class="mil-link mil-hover-link mil-accent" style="margin-left: 30px;">Read PPT</router-link>
                                     </div>
                                     <div class="mil-right">
                                         <p>{{ work.description }}</p>

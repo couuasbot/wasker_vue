@@ -3,6 +3,7 @@ import { computed, onMounted, onUpdated, nextTick, ref } from 'vue'
 import { useRoute, useRouter, RouterLink } from 'vue-router'
 import { useMarkdown } from '@/composables/useMarkdown'
 import md from '@/utils/markdown'
+import SimplePdfViewer from '@/components/SimplePdfViewer.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -130,6 +131,13 @@ onUpdated(() => {
                             <div class="col-6 mil-jce mil-up" v-if="work.date">
                                 <div class="mil-link"><span class="mil-accent">date:</span> {{ work.date }}</div>
                             </div>
+                        </div>
+                        
+                        <!-- PDF Viewer Section -->
+                        <div class="mil-pdf-section mil-mb-60 mil-up" v-if="work.pdf">
+                            <div class="mil-divider mil-mb-60"></div>
+                            <h3 class="mil-mb-30">Presentation Slides</h3>
+                            <SimplePdfViewer :src="work.pdf" />
                         </div>
                     </div>
                 </div>

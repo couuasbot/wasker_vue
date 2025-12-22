@@ -1,148 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
-    <title>couuas.github.io</title>
-    <link>https://couuas.github.io</link>
+    <title>6660.pp.ua</title>
+    <link>https://6660.pp.ua</link>
     <description>Personal portfolio and blog of a creative designer/developer.</description>
     <language>en-us</language>
-    <lastBuildDate>Fri, 19 Dec 2025 08:21:27 GMT</lastBuildDate>
-    <atom:link href="https://couuas.github.io/rss.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 22 Dec 2025 08:38:56 GMT</lastBuildDate>
+    <atom:link href="https://6660.pp.ua/rss.xml" rel="self" type="application/rss+xml" />
     
     <item>
-        <title><![CDATA[Introduction to Knowledge Galaxy]]></title>
-        <link>https://couuas.github.io/blog/galaxy-introduction</link>
-        <guid>https://couuas.github.io/blog/galaxy-introduction</guid>
-        <pubDate>Thu, 19 Dec 2024 00:00:00 GMT</pubDate>
-        <description><![CDATA[Exploring the concept of a 3D knowledge graph for local markdown content.]]></description>
-        <category>Demo</category>
+        <title><![CDATA[About Wasker Vue]]></title>
+        <link>https://6660.pp.ua/blog/about-wasker</link>
+        <guid>https://6660.pp.ua/blog/about-wasker</guid>
+        <pubDate>Wed, 20 Mar 2024 00:00:00 GMT</pubDate>
+        <description><![CDATA[A modern portfolio and blog theme based on Vue 3, featuring 3D interactions and responsive design.]]></description>
+        <category>En</category>
     </item>
     <item>
-        <title><![CDATA[The Tech Stack Behind the Galaxy]]></title>
-        <link>https://couuas.github.io/blog/galaxy-tech-stack</link>
-        <guid>https://couuas.github.io/blog/galaxy-tech-stack</guid>
-        <pubDate>Thu, 19 Dec 2024 00:00:00 GMT</pubDate>
-        <description><![CDATA[How we use Three.js and Vue 3 to build a performant 3D graph.]]></description>
-        <category>Demo</category>
-    </item>
-    <item>
-        <title><![CDATA[Defining the Visual Style]]></title>
-        <link>https://couuas.github.io/blog/galaxy-visual-style</link>
-        <guid>https://couuas.github.io/blog/galaxy-visual-style</guid>
-        <pubDate>Thu, 19 Dec 2024 00:00:00 GMT</pubDate>
-        <description><![CDATA[Aesthetic choices for the Knowledge Galaxy.]]></description>
-        <category>Demo</category>
-    </item>
-    <item>
-        <title><![CDATA[Three.js Basics for Data Viz]]></title>
-        <link>https://couuas.github.io/blog/threejs-basics</link>
-        <guid>https://couuas.github.io/blog/threejs-basics</guid>
-        <pubDate>Thu, 19 Dec 2024 00:00:00 GMT</pubDate>
-        <description><![CDATA[Simple starters for 3D web graphics.]]></description>
-        <category>Demo</category>
-    </item>
-    <item>
-        <title><![CDATA[Internal Link Demo]]></title>
-        <link>https://couuas.github.io/blog/link-test</link>
-        <guid>https://couuas.github.io/blog/link-test</guid>
-        <pubDate>Wed, 15 Mar 2023 00:00:00 GMT</pubDate>
-        <description><![CDATA[Demonstrating how to link between markdown files.]]></description>
-        <category>Test</category>
-    </item>
-    <item>
-        <title><![CDATA[The Kitchen Sink]]></title>
-        <link>https://couuas.github.io/blog/mixed-content</link>
-        <guid>https://couuas.github.io/blog/mixed-content</guid>
-        <pubDate>Fri, 10 Mar 2023 00:00:00 GMT</pubDate>
-        <description><![CDATA[A little bit of everything in one post.]]></description>
-        <category>Misc</category>
-    </item>
-    <item>
-        <title><![CDATA[Working with Tables]]></title>
-        <link>https://couuas.github.io/blog/table-examples</link>
-        <guid>https://couuas.github.io/blog/table-examples</guid>
-        <pubDate>Thu, 09 Mar 2023 00:00:00 GMT</pubDate>
-        <description><![CDATA[Displaying tabular data.]]></description>
-        <category>Data</category>
-    </item>
-    <item>
-        <title><![CDATA[Typography Essentials]]></title>
-        <link>https://couuas.github.io/blog/typography-guide</link>
-        <guid>https://couuas.github.io/blog/typography-guide</guid>
-        <pubDate>Wed, 08 Mar 2023 00:00:00 GMT</pubDate>
-        <description><![CDATA[Choosing the right fonts.]]></description>
-        <category>Design</category>
-    </item>
-    <item>
-        <title><![CDATA[Minimalist Design Principles]]></title>
-        <link>https://couuas.github.io/blog/design-principles</link>
-        <guid>https://couuas.github.io/blog/design-principles</guid>
-        <pubDate>Tue, 07 Mar 2023 00:00:00 GMT</pubDate>
-        <description><![CDATA[Less is more.]]></description>
-        <category>Design</category>
-    </item>
-    <item>
-        <title><![CDATA[Semantic HTML5]]></title>
-        <link>https://couuas.github.io/blog/html5-features</link>
-        <guid>https://couuas.github.io/blog/html5-features</guid>
-        <pubDate>Mon, 06 Mar 2023 00:00:00 GMT</pubDate>
-        <description><![CDATA[writing accessible and semantic markup.]]></description>
-        <category>Code</category>
-    </item>
-    <item>
-        <title><![CDATA[Advanced CSS Layouts]]></title>
-        <link>https://couuas.github.io/blog/css-tricks</link>
-        <guid>https://couuas.github.io/blog/css-tricks</guid>
-        <pubDate>Sun, 05 Mar 2023 00:00:00 GMT</pubDate>
-        <description><![CDATA[Mastering Flexbox and Grid.]]></description>
-        <category>Design</category>
-    </item>
-    <item>
-        <title><![CDATA[Python for Data Science]]></title>
-        <link>https://couuas.github.io/blog/python-data-science</link>
-        <guid>https://couuas.github.io/blog/python-data-science</guid>
-        <pubDate>Sat, 04 Mar 2023 00:00:00 GMT</pubDate>
-        <description><![CDATA[Using Pandas and NumPy for data analysis.]]></description>
-        <category>Data</category>
-    </item>
-    <item>
-        <title><![CDATA[Modern JavaScript Features]]></title>
-        <link>https://couuas.github.io/blog/javascript-tutorial</link>
-        <guid>https://couuas.github.io/blog/javascript-tutorial</guid>
-        <pubDate>Fri, 03 Mar 2023 00:00:00 GMT</pubDate>
-        <description><![CDATA[Exploring ES6+ features with code examples.]]></description>
-        <category>Code</category>
-    </item>
-    <item>
-        <title><![CDATA[Deep Dive into Code Blocks]]></title>
-        <link>https://couuas.github.io/blog/code-blocks-demo</link>
-        <guid>https://couuas.github.io/blog/code-blocks-demo</guid>
-        <pubDate>Thu, 02 Mar 2023 00:00:00 GMT</pubDate>
-        <description><![CDATA[Testing various programming languages in markdown code blocks.]]></description>
-        <category>Test</category>
-    </item>
-    <item>
-        <title><![CDATA[Markdown Syntax Master Guide]]></title>
-        <link>https://couuas.github.io/blog/markdown-syntax-guide</link>
-        <guid>https://couuas.github.io/blog/markdown-syntax-guide</guid>
-        <pubDate>Wed, 01 Mar 2023 00:00:00 GMT</pubDate>
-        <description><![CDATA[A comprehensive test of standard Markdown syntax elements.]]></description>
-        <category>Code</category>
-    </item>
-    <item>
-        <title><![CDATA[The Ultimate Guide to UI/UX Design]]></title>
-        <link>https://couuas.github.io/blog/ui-ux-guide</link>
-        <guid>https://couuas.github.io/blog/ui-ux-guide</guid>
-        <pubDate>Mon, 02 Jan 2023 00:00:00 GMT</pubDate>
-        <description><![CDATA[Detailed guide on UI/UX best practices.]]></description>
-        <category>UI/UX</category>
-    </item>
-    <item>
-        <title><![CDATA[How to Become a Graphic Designer in 10 Simple Steps]]></title>
-        <link>https://couuas.github.io/blog/graphic-designer</link>
-        <guid>https://couuas.github.io/blog/graphic-designer</guid>
-        <pubDate>Sun, 01 Jan 2023 00:00:00 GMT</pubDate>
-        <description><![CDATA[Repellendus minima repellat fuga tempora impedit alias dolores odit id, placeat ut officia dicta.]]></description>
-        <category>Design</category>
+        <title><![CDATA[关于 Wasker Vue]]></title>
+        <link>https://6660.pp.ua/blog/about-wasker</link>
+        <guid>https://6660.pp.ua/blog/about-wasker</guid>
+        <pubDate>Wed, 20 Mar 2024 00:00:00 GMT</pubDate>
+        <description><![CDATA[一个基于 Vue 3 的现代个人作品集与博客主题，融合了 3D 交互与响应式设计。]]></description>
+        <category>Zh</category>
     </item>
 </channel>
 </rss>

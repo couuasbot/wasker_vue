@@ -5,6 +5,8 @@ category: "Web Development"
 client: "Open Source"
 description: "A minimal, high-performance, and design-centric Vue 3 portfolio & blog theme."
 image: "/assets/img-dark/default/1.jpg"
+pdf: "/assets/img-dark/pdf/portfolio_demo.pdf"
+
 ---
 
 # Project Overview

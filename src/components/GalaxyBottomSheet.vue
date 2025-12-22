@@ -75,6 +75,7 @@ defineExpose({ sheetRef });
       
       <div class="primary-actions">
         <router-link :to="articleLink" class="read-btn">Read Article</router-link>
+        <router-link v-if="node.pdf" :to="'/presentation/' + node.slug" class="read-btn ppt-btn" style="margin-top: 10px; background: transparent; border: 1px solid #DBA91C; color: #DBA91C;">Read PPT</router-link>
       </div>
 
       <!-- Related Nodes List -->
