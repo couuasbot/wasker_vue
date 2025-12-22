@@ -108,7 +108,7 @@ onUpdated(() => {
 
 <template>
     <div class="mil-content-frame">
-        <div class="mil-scroll mil-half-1 mil-bp-fix">
+        <div class="mil-scroll mil-half-1 mil-bp-fix-2">
             <div class="mil-main-content" v-if="post">
                 <div class="mil-banner">
                     <div class="mil-bg-frame">
@@ -136,9 +136,9 @@ onUpdated(() => {
                         </div>
                     </div>
                 </div>
-                <div class="mil-space-90 mil-p-0-75">
+                <div class="mil-space-90 mil-p-90-75">
                     <!-- Markdown Content with click listener -->
-                    <div class="mil-markdown-content" v-html="renderedBody" @click="handleLinkClick"></div>
+                        <div class="mil-markdown-content mil-mb-60 mil-up" v-html="renderedBody" @click="handleLinkClick"></div>
                 </div>
             </div>
             <!-- ... -->
@@ -161,17 +161,6 @@ onUpdated(() => {
                         <!-- Center Group: Back + Lang Switch -->
                         <div class="mil-bottom-centered">
                             <router-link to="/blog" class="mil-link">Back to Blog</router-link>
-                            
-                            <span class="mil-divider">/</span>
-
-                            <span 
-                                class="mil-link mil-icon-link" 
-                                :class="{ 'mil-disabled': !hasEn && !hasZh || (currentLang === 'zh' && !hasEn) || (currentLang === 'en' && !hasZh) }"
-                                @click="toggleLang"
-                                title="Switch Language"
-                                style="cursor: pointer;">
-                                <i class="fas fa-language" style="font-size: 24px;"></i>
-                            </span>
                         </div>
 
                         <!-- Next Post (Older) -->
@@ -180,6 +169,15 @@ onUpdated(() => {
                                 <span>Next</span> <i class="fas fa-chevron-right"></i>
                             </router-link>
                             <span v-else class="mil-link mil-disabled" style="opacity: 0.5;">Next <i class="fas fa-chevron-right"></i></span>
+                        </div>
+                        <div class="mil-lang-switch-container">
+                            <span 
+                                class="mil-lang-btn-border" 
+                                :class="{ 'mil-disabled': !hasEn && !hasZh || (currentLang === 'zh' && !hasEn) || (currentLang === 'en' && !hasZh) }"
+                                @click="toggleLang"
+                                title="Switch Language">
+                                <i class="fas fa-language"></i>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -202,6 +200,34 @@ onUpdated(() => {
     max-width: 100%;
     border-radius: 10px;
     margin: 20px 0;
+}
+
+.mil-lang-btn-border {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2); /* The requested border */
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.mil-lang-btn-border:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
+}
+.mil-lang-btn-border i {
+    font-size: 18px !important;
+    line-height: 1; /* Reset line height for perfect centering */
+    display: block; /* Ensure no inline baseline weirdness */
+}
+
+.mil-lang-switch-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
 /* Language Switcher Styles */

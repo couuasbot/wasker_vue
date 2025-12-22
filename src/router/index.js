@@ -43,7 +43,7 @@ const router = createRouter({
             path: '/blog/:id',
             name: 'blog-detail',
             component: () => import('../views/BlogDetail.vue'),
-            meta: { bodyClass: 'mil-fw-page' }
+            meta: { bodyClass: 'mil-half-page' }
         },
         {
             path: '/contact',

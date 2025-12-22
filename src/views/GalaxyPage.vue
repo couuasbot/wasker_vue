@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, shallowRef, nextTick, computed } from 'vue';
+import { ref, onMounted, onUnmounted, shallowRef, nextTick, computed, watch } from 'vue';
 import Galaxy3D from '../components/Galaxy3D.vue';
 import GalaxyBottomSheet from '../components/GalaxyBottomSheet.vue';
 
@@ -83,6 +83,22 @@ function handleReset() {
         currentSheetHeight.value = 0;
     }
 }
+
+watch(currentLang, (newLang) => {
+  if (selectedNode.value) {
+    const { slug, type } = selectedNode.value;
+    // Find equivalent node in the new language
+    const newNode = graphData.value.nodes.find(n => n.lang === newLang && n.slug === slug && n.type === type);
+    
+    if (newNode) {
+       // Update selected node with the new language version
+       handleNodeClick(newNode);
+    } else {
+       // If no corresponding node found (e.g. translation missing), close the sheet
+       selectedNode.value = null;
+    }
+  }
+});
 </script>
 
 <template>
@@ -91,7 +107,7 @@ function handleReset() {
         <!-- Back Link (optional or removed if we use main nav, but keeping placeholder) -->
     </div>
 
-    <!-- Language Switcher -->
+    <!-- Language Switcher & Reset -->
     <div class="galaxy-lang-switch">
         <span 
             class="lang-btn" 
@@ -102,6 +118,13 @@ function handleReset() {
             class="lang-btn" 
             :class="{ 'active': currentLang === 'en' }" 
             @click="currentLang = 'en'">EN</span>
+        <span class="divider">/</span>
+        <span 
+            class="lang-btn" 
+            @click="handleReset"
+            title="Reset View">
+            <i class="fal fa-dot-circle"></i>
+        </span>
     </div>
 
     <div 
@@ -116,10 +139,6 @@ function handleReset() {
         />
     </div>
     
-    <button class="reset-view-btn" @click="handleReset" title="Reset View" :class="{ 'detail-open': !!selectedNode }">
-        <i class="fal fa-dot-circle"></i>
-    </button>
-
     <GalaxyBottomSheet 
       ref="bottomSheetRef"
       :node="selectedNode" 
@@ -132,60 +151,9 @@ function handleReset() {
 </template>
 
 <style scoped>
-.reset-view-btn {
-    position: absolute;
-    bottom: 30px;
-    right: 30px;
-    z-index: 2200; /* Higher than BottomSheet (2000) just in case, but we will shift it */
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: rgba(20, 20, 25, 0.6);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #fff;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
+/* Removed reset-view-btn styles as it is now integrated */
 
-.reset-view-btn:hover {
-    background: rgba(219, 169, 28, 0.2);
-    border-color: rgba(219, 169, 28, 0.5);
-    color: #DBA91C;
-    transform: scale(1.1);
-}
 
-@media (max-width: 1200px) {
-    /* Relocate button to top-left when BottomSheet is open on mobile/tablet */
-    .reset-view-btn.detail-open {
-        bottom: auto;
-        right: auto;
-        top: 110px; /* Below the mobile header/logo area */
-        left: 20px;
-        transform: scale(0.9);
-        background: rgba(219, 169, 28, 0.15);
-        border-color: rgba(219, 169, 28, 0.4);
-    }
-}
-
-@media (min-width: 1201px) {
-    .reset-view-btn {
-        bottom: 40px;
-        right: 40px;
-    }
-    
-    /* Relocate button to top-left when Side Panel is open on desktop */
-    .reset-view-btn.detail-open {
-        bottom: auto;
-        right: auto;
-        top: 40px;
-        left: 40px;
-    }
-}
 
 .galaxy-page {
   position: relative;

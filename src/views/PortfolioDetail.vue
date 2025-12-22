@@ -137,11 +137,10 @@ onUpdated(() => {
              <div v-else class="mil-p-90-75">
                 <h1>Project not found</h1>
             </div>
-
-             <div class="mil-bottom-panel">
-                 <div class="mil-space-90 mil-jcb mil-w-100">
-                     <div class="mil-jcb mil-w-100">
-                         <!-- Previous Work -->
+            			 <div class="mil-bottom-panel">
+                <div class="mil-jcc mil-space-15 mil-w-100">
+                    <div class="mil-jcb mil-w-100 mil-p-30-0">
+                         <!-- Previous Post (Newer) -->
                         <div class="mil-prev-nav">
                              <router-link v-if="adjacentPosts.prev" :to="'/portfolio/' + adjacentPosts.prev.slug" class="mil-link mil-icon-link-left" title="Previous Project">
                                 <i class="fas fa-chevron-left"></i> <span>Previous</span>
@@ -151,30 +150,29 @@ onUpdated(() => {
 
                         <!-- Center Group: Back + Lang Switch -->
                         <div class="mil-bottom-centered">
-                            <router-link to="/portfolio" class="mil-link">Back to Portfolio</router-link>
-                            
-                            <span class="mil-divider">/</span>
-
-                            <span 
-                                class="mil-link mil-icon-link" 
-                                :class="{ 'mil-disabled': !hasEn && !hasZh || (currentLang === 'zh' && !hasEn) || (currentLang === 'en' && !hasZh) }"
-                                @click="toggleLang"
-                                title="Switch Language"
-                                style="cursor: pointer;">
-                                <i class="fas fa-language" style="font-size: 24px;"></i>
-                            </span>
+							<router-link to="/portfolio" class="mil-link">Back to Portfolio</router-link>
                         </div>
 
-                        <!-- Next Work -->
+                        <!-- Next Post (Older) -->
                         <div class="mil-next-nav">
                             <router-link v-if="adjacentPosts.next" :to="'/portfolio/' + adjacentPosts.next.slug" class="mil-link mil-icon-link" title="Next Project">
                                 <span>Next</span> <i class="fas fa-chevron-right"></i>
                             </router-link>
-                             <span v-else class="mil-link mil-disabled" style="opacity: 0.5;">Next <i class="fas fa-chevron-right"></i></span>
+                            <span v-else class="mil-link mil-disabled" style="opacity: 0.5;">Next <i class="fas fa-chevron-right"></i></span>
                         </div>
-                     </div>
-                 </div>
-             </div>
+                        <div class="mil-lang-switch-container">
+                            <span 
+                                class="mil-lang-btn-border" 
+                                :class="{ 'mil-disabled': !hasEn && !hasZh || (currentLang === 'zh' && !hasEn) || (currentLang === 'en' && !hasZh) }"
+                                @click="toggleLang"
+                                title="Switch Language">
+                                <i class="fas fa-language"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </div>
     </div>
 </template>
@@ -205,6 +203,34 @@ onUpdated(() => {
     margin-bottom: 5px;
 }
 
+.mil-lang-btn-border {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2); /* The requested border */
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.mil-lang-btn-border:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
+}
+.mil-lang-btn-border i {
+    font-size: 18px !important;
+    line-height: 1; /* Reset line height for perfect centering */
+    display: block; /* Ensure no inline baseline weirdness */
+}
+
+.mil-lang-switch-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
 /* Language Switcher Styles */
 .mil-lang-switch {
     display: inline-flex;
@@ -220,7 +246,7 @@ onUpdated(() => {
 }
 .mil-lang-btn.active {
     opacity: 1;
-    color: var(--accent);
+    color: var(--accent); /* Assuming accent color variable exists, else use gold/red */
 }
 .mil-lang-btn.disabled {
     cursor: not-allowed;
@@ -229,15 +255,6 @@ onUpdated(() => {
 }
 .mil-lang-btn:hover:not(.disabled) {
     opacity: 1;
-}
-
-/* Bottom Bar Layout Styling */
-.mil-bottom-centered {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
 }
 
 .mil-divider {
