@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 const SITE_URL = 'https://couuas.pp.ua';
 const SITE_TITLE = 'couuas.pp.ua';
 const SITE_DESCRIPTION = 'Personal portfolio and blog of a creative designer/developer.';
-const CONTENT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '../src/content/blog');
+const CONTENT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '../src/content/blog/en');
 const PUBLIC_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '../public');
 const OUTPUT_FILE = path.join(PUBLIC_DIR, 'rss.xml');
 

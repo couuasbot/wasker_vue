@@ -1,28 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
-    <title>6660.pp.ua</title>
-    <link>https://6660.pp.ua</link>
+    <title>couuas.pp.ua</title>
+    <link>https://couuas.pp.ua</link>
     <description>Personal portfolio and blog of a creative designer/developer.</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 22 Dec 2025 08:38:56 GMT</lastBuildDate>
-    <atom:link href="https://6660.pp.ua/rss.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 24 Dec 2025 07:07:08 GMT</lastBuildDate>
+    <atom:link href="https://couuas.pp.ua/rss.xml" rel="self" type="application/rss+xml" />
     
     <item>
         <title><![CDATA[About Wasker Vue]]></title>
-        <link>https://6660.pp.ua/blog/about-wasker</link>
-        <guid>https://6660.pp.ua/blog/about-wasker</guid>
+        <link>https://couuas.pp.ua/blog/about-wasker</link>
+        <guid>https://couuas.pp.ua/blog/about-wasker</guid>
         <pubDate>Wed, 20 Mar 2024 00:00:00 GMT</pubDate>
         <description><![CDATA[A modern portfolio and blog theme based on Vue 3, featuring 3D interactions and responsive design.]]></description>
-        <category>En</category>
-    </item>
-    <item>
-        <title><![CDATA[关于 Wasker Vue]]></title>
-        <link>https://6660.pp.ua/blog/about-wasker</link>
-        <guid>https://6660.pp.ua/blog/about-wasker</guid>
-        <pubDate>Wed, 20 Mar 2024 00:00:00 GMT</pubDate>
-        <description><![CDATA[一个基于 Vue 3 的现代个人作品集与博客主题，融合了 3D 交互与响应式设计。]]></description>
-        <category>Zh</category>
+        <category>Project</category>
     </item>
 </channel>
 </rss>
