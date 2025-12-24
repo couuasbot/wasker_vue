@@ -12,6 +12,19 @@ watch(() => appStore.isLoading, (loading) => {
   }
 });
 
+// Watch for trigger from Sidebar
+watch(() => appStore.triggerAssistant, () => {
+    if (cozeClientInstance) {
+        try {
+            cozeClientInstance.showChatBot();
+            // Force open state
+            isChatOpen.value = true;
+        } catch (err) {
+            console.error('Failed to show chat bot via trigger', err);
+        }
+    }
+});
+
 const LOAD_TIMEOUT = 5000;
 let isLoaded = false;
 let cozeClientInstance = null; // Store client instance
@@ -280,7 +293,8 @@ onUnmounted(() => {
     class="draggable-widget-container"
     :class="{ 
       'mobile-open': isMobile && isChatOpen,
-      'desktop-open': !isMobile && isChatOpen 
+      'desktop-open': !isMobile && isChatOpen,
+      'widget-hidden': !isChatOpen
     }"
     v-show="isVisible"
     :style="!isChatOpen || !isMobile ? { bottom: position.bottom + 'px', right: position.right + 'px' } : {}"
@@ -319,6 +333,12 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   align-items: flex-end; /* Align right */
+}
+
+.widget-hidden {
+    visibility: hidden;
+    pointer-events: none;
+    opacity: 0;
 }
 
 /* 

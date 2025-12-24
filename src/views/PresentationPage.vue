@@ -64,16 +64,18 @@ function goBack() {
         </button>
 
         <!-- Desktop Navigation Arrows -->
-        <div class="nav-controls desktop-only">
-            <button class="nav-btn prev" @click="prevSlide" title="Previous Slide">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            
-            <span class="page-counter">{{ currentPage }} / {{ pageCount }}</span>
 
-            <button class="nav-btn next" @click="nextSlide" title="Next Slide">
-                <i class="fas fa-chevron-right"></i>
-            </button>
+        
+        <!-- Scroll Indicator -->
+        <div class="scroll-indicator" v-if="pageCount > 1">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <div class="arrow-scroll">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
 
         <div v-if="!work" class="error-msg">
@@ -314,5 +316,70 @@ function goBack() {
 
 @keyframes spin {
     to { transform: rotate(360deg); }
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    z-index: 2147483647;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.mouse {
+    width: 26px;
+    height: 40px;
+    border: 2px solid #fff;
+    border-radius: 20px;
+    position: relative;
+}
+
+.wheel {
+    width: 4px;
+    height: 4px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: scrollWheel 2s infinite;
+}
+
+.arrow-scroll span {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-bottom: 2px solid #fff;
+    border-right: 2px solid #fff;
+    transform: rotate(45deg);
+    margin: -4px 0;
+    animation: scrollArrow 2s infinite;
+}
+
+.arrow-scroll span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.arrow-scroll span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes scrollWheel {
+    0% { opacity: 1; top: 6px; }
+    100% { opacity: 0; top: 20px; }
+}
+
+@keyframes scrollArrow {
+    0% { opacity: 0; transform: rotate(45deg) translate(-5px, -5px); }
+    50% { opacity: 1; }
+    100% { opacity: 0; transform: rotate(45deg) translate(5px, 5px); }
 }
 </style>

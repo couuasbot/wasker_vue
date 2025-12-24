@@ -35,6 +35,19 @@ const renderedBody = computed(() => {
     return work.value ? md.render(work.value.body) : ''
 })
 
+const isFullScreen = ref(false)
+
+const toggleFullScreen = () => {
+    isFullScreen.value = !isFullScreen.value
+    if (isFullScreen.value) {
+        document.body.classList.remove('mil-half-page')
+        document.body.classList.add('mil-fw-page')
+    } else {
+        document.body.classList.remove('mil-fw-page')
+        document.body.classList.add('mil-half-page')
+    }
+}
+
 const handleLinkClick = (event) => {
     const link = event.target.closest('a');
     if (link && link.getAttribute('href')) {
@@ -148,6 +161,13 @@ onUpdated(() => {
             			 <div class="mil-bottom-panel">
                 <div class="mil-jcc mil-space-15 mil-w-100">
                     <div class="mil-jcb mil-w-100 mil-p-30-0">
+                         <!-- Full Screen Toggle (Left) -->
+                        <div class="mil-fs-toggle mil-icon-btn d-none d-xl-flex" 
+                             @click="toggleFullScreen" 
+                             title="Toggle Full Screen">
+                            <i class="fas" :class="isFullScreen ? 'fa-compress' : 'fa-expand'"></i>
+                        </div>
+
                          <!-- Previous Post (Newer) -->
                         <div class="mil-prev-nav">
                              <router-link v-if="adjacentPosts.prev" :to="'/portfolio/' + adjacentPosts.prev.slug" class="mil-link mil-icon-link-left" title="Previous Project">
@@ -267,5 +287,23 @@ onUpdated(() => {
 
 .mil-divider {
     opacity: 0.2;
+}
+
+.mil-fs-toggle {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    margin-right: 20px;
+}
+.mil-fs-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
 }
 </style>

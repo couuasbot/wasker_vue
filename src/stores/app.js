@@ -20,5 +20,12 @@ export const useAppStore = defineStore('app', () => {
         isLoading.value = val
     }
 
-    return { isMenuOpen, toggleMenu, closeMenu, isLoading, setLoading }
+    // AI Assistant Trigger
+    const triggerAssistant = ref(0)
+    function openAssistant() {
+        triggerAssistant.value++
+        closeMenu()
+    }
+
+    return { isMenuOpen, toggleMenu, closeMenu, isLoading, setLoading, triggerAssistant, openAssistant }
 })

@@ -60,10 +60,17 @@ const appStore = useAppStore()
             <li :class="{ 'mil-current': isActive }" @click="appStore.closeMenu" class="mil-lab-item">
               <a :href="href" @click="navigate" :class="{ 'mil-active': isActive }">
                 <i class="fal fa-atom"></i><span>Galaxy</span>
-                <sup class="mil-lab-badge">LAB</sup>
               </a>
             </li>
           </router-link>
+          
+
+          
+          <li class="mil-lab-item" @click="appStore.openAssistant">
+              <a href="javascript:void(0);">
+                 <i class="fal fa-robot"></i><span>Assistant</span>
+              </a>
+          </li>
 
         </ul>
       </nav>
@@ -109,10 +116,12 @@ const appStore = useAppStore()
 /* Separator */
 .mil-sidebar-separator {
     border-top: dotted 2px #2C2C2C;
-    margin: 15px 0;
+    margin:px 0;
     list-style: none;
     width: 60%;
     margin-left: auto;
     margin-right: auto;
 }
 </style>
+
+/* Unused desktop/mobile specific styles removed */

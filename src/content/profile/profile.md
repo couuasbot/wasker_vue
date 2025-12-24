@@ -43,11 +43,6 @@ skills:
   - name: "SPEC-Coding Standards"
     percent: 95
 
-  # --- Engineering & Design ---
-  - name: "SCSS / Data Viz"
-    percent: 95
-  - name: "System Simulation"
-    percent: 80
 
 education:
   - title: "USC，Software Engineering"
@@ -64,20 +59,8 @@ work:
     year: "2025 - Today"
     description: "Praesentium minus dolores reprehenderit doloremque suscipit dolore animi deleniti expedita, soluta beatae! Voluptatibus, cupiditate earum facilis. Quae, dolores!"
 
-social:
-  - icon: "fab fa-instagram"
-    link: "https://instagram.com"
-  - icon: "fab fa-behance"
-    link: "https://behance.net"
-  - icon: "fab fa-dribbble"
-    link: "https://dribbble.com"
-  - icon: "fab fa-pinterest-p"
-    link: "https://pinterest.com"
-
 footer:
   copyright: "©2025. All rights reserved."
   designer: "COUUAS"
-  designer_url: "https://6660.pp.ua"
+  designer_url: "https://couuas.pp.ua"
 ---
-
-Thank you very much for your attention ❤️ ! Follow me on social media and don't forget to visit my blog, I post a lot of interesting things and not only.
