@@ -101,6 +101,7 @@ onMounted(async () => {
     .graphData(structuredClone(toRaw(props.graphData)))
     .backgroundColor('#000005') // Deep black
     .showNavInfo(false)
+    .cameraPosition({ z: 1200 }) // Start far away to prevent "shrinking" stutter
     .nodeLabel('name') // Show name on hover
     .nodeRelSize(4)
     .linkWidth(1)
@@ -149,9 +150,10 @@ onMounted(async () => {
   graph.onEngineStop(() => {
     if (!initialFitDone) {
       setTimeout(() => {
-          graph.zoomToFit(1000, 200); // More padding for better overview
+          // First fit should be very fast or instant to hide jumping
+          graph.zoomToFit(300, 200); 
           initialFitDone = true;
-      }, 100);
+      }, 50);
     }
   });  // Custom controls settings based on device
   const controls = graph.controls();
@@ -208,10 +210,10 @@ onMounted(async () => {
       if (!initialFitDone) {
           setTimeout(() => {
               if (!initialFitDone && graph) {
-                  graph.zoomToFit(1400, 200);
+                  graph.zoomToFit(600, 200); // Reasonably fast first fit
                   initialFitDone = true;
               }
-          }, 300);
+          }, 100);
       }
     }
   }, { deep: true });
