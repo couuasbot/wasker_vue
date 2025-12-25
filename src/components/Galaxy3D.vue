@@ -11,6 +11,10 @@ const props = defineProps({
   onNodeClick: {
     type: Function,
     default: () => {}
+  },
+  selectedNodeId: {
+    type: String,
+    default: null
   }
 });
 
@@ -20,14 +24,22 @@ let graph = null;
 const focusNode = (node) => {
   if (!graph || !node) return;
   
+  // Safety: If passing a raw node from outside (Vue state), it might not have current x,y,z
+  // or it might be a different object reference due to structuredClone.
+  // We must find the actual positioned node in the graph by ID.
+  const internalNode = graph.graphData().nodes.find(n => n.id === (node.id || node));
+  
+  if (!internalNode || internalNode.x === undefined || isNaN(internalNode.x)) {
+      console.warn('Galaxy3D: Cannot focus node, coordinates not ready.', node.id);
+      return;
+  }
+
   const distance = 80;
   
-  // Directly move camera to a position relative to the node
-  // This avoids the 'approaching and then distancing' effect caused by vector scaling
   graph.cameraPosition(
-    { x: node.x, y: node.y, z: node.z + distance },
-    node, // look-at node
-    2000  // Slightly faster transition for snappier feel
+    { x: internalNode.x, y: internalNode.y, z: internalNode.z + distance },
+    internalNode, // look-at node
+    2000 
   );
 };
 
@@ -45,7 +57,7 @@ defineExpose({ focusNode, resetView });
 onMounted(async () => {
   // Initialize graph
   graph = ForceGraph3D()(galaxyContainer.value)
-    .graphData(toRaw(props.graphData))
+    .graphData(structuredClone(toRaw(props.graphData)))
     .backgroundColor('#000005') // Deep black
     .showNavInfo(false)
     .nodeLabel('name') // Show name on hover
@@ -66,7 +78,7 @@ onMounted(async () => {
       const gradient = context.createRadialGradient(32, 32, 0, 32, 32, 32);
       
       // Color based on category (simple hash or preset)
-      const color = getNodeColor(node.category);
+      const color = node.id === props.selectedNodeId ? '#DBA91C' : getNodeColor(node.category);
       
       gradient.addColorStop(0, color);
       gradient.addColorStop(0.2, color);
@@ -86,7 +98,8 @@ onMounted(async () => {
       const sprite = new THREE.Sprite(material);
       
       // Scale based on "val" (citation count/weight)
-      const scale = 4 + (node.val || 0) * 2;
+      let scale = 4 + (node.val || 0) * 2;
+      if (node.id === props.selectedNodeId) scale *= 1.5; // Make selected node larger
       sprite.scale.set(scale, scale, scale);
       
       return sprite;
@@ -160,11 +173,19 @@ onMounted(async () => {
   // Watch for data changes (async load from parent)
   watch(() => props.graphData, (newData) => {
     if (graph && newData && newData.nodes && newData.nodes.length > 0) {
-      graph.graphData(toRaw(newData));
-      // Reset fit flag so it frames the newly loaded data
-      initialFitDone = false;
+      graph.graphData(structuredClone(toRaw(newData)));
+      // Note: We don't reset initialFitDone here anymore to prevent camera jumping 
+      // when switching languages or filtering data.
     }
   }, { deep: true });
+
+  // Watch for selection changes to update colors
+  watch(() => props.selectedNodeId, () => {
+    if (graph) {
+        // Refresh individual nodes to update colors/scales
+        graph.nodeThreeObject(graph.nodeThreeObject());
+    }
+  });
   
   onUnmounted(() => {
       resizeObserver.disconnect();

@@ -97,6 +97,15 @@ watch(currentLang, (newLang) => {
     if (newNode) {
        // Update selected node with the new language version
        handleNodeClick(newNode);
+       
+       // Re-focus camera on the new language version of the node
+       // We use a slight delay because the graph simulation needs a few ticks 
+       // to initialize positions for the newly structured nodes.
+       setTimeout(() => {
+           if (galaxy3dRef.value) {
+               galaxy3dRef.value.focusNode(newNode);
+           }
+       }, 500); // 500ms is usually enough for the first stabilization pass
     } else {
        // If no corresponding node found (e.g. translation missing), close the sheet
        selectedNode.value = null;
@@ -139,6 +148,7 @@ watch(currentLang, (newLang) => {
         <Galaxy3D 
           ref="galaxy3dRef"
           :graphData="filteredGraphData"
+          :selectedNodeId="selectedNode?.id"
           :onNodeClick="handleNodeClick" 
         />
     </div>
