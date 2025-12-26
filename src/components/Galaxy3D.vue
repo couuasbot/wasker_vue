@@ -148,7 +148,7 @@ onMounted(async () => {
   // Track initial load to auto-fit view once
   let initialFitDone = false;
   graph.onEngineStop(() => {
-    if (!initialFitDone) {
+    if (!initialFitDone && graph.graphData().nodes.length > 0) {
       setTimeout(() => {
           // First fit should be very fast or instant to hide jumping
           graph.zoomToFit(2000); 
