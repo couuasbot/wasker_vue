@@ -67,11 +67,10 @@ const submitFriendUrl = async () => {
 }
 
 // Re-init animations when list changes/loads
-watch(friends, () => {
-    nextTick(() => {
-        initAnimations()
-    })
-}, { immediate: true })
+watch(friends, async () => {
+    await nextTick()
+    initAnimations()
+}, { deep: true })
 </script>
 
 <template>
