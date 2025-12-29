@@ -91,13 +91,50 @@ watch([categories, currentLang], async () => {
    await nextTick()
    checkOverflow()
 })
+
+// Action Menu State
+const isActionMenuOpen = ref(false)
+const isFullScreen = ref(false)
+const isListView = ref(false)
+
+const toggleActionMenu = () => {
+    isActionMenuOpen.value = !isActionMenuOpen.value
+}
+
+const toggleFullScreen = () => {
+    isFullScreen.value = !isFullScreen.value
+    if (isFullScreen.value) {
+        document.body.classList.remove('mil-half-page')
+        document.body.classList.add('mil-fw-page')
+    } else {
+        document.body.classList.remove('mil-fw-page')
+        document.body.classList.add('mil-half-page')
+    }
+}
+
+const toggleLayout = () => {
+    isListView.value = !isListView.value
+}
+
+watch(isListView, async () => {
+    await nextTick()
+    initAnimations()
+})
+
+const formatDate = (date) => {
+    if (!date) return ''
+    const d = new Date(date)
+    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+}
 </script>
 
 <template>
     <div class="mil-content-frame">
         <div class="mil-scroll mil-half-1 mil-bp-fix">
             <div class="mil-row-fix">
-                <div class="row">
+                
+                <!-- Grid View -->
+                <div class="row" v-if="!isListView">
                     <!-- Posts Loop -->
                     <div v-for="(post, index) in displayedPosts" :key="post.slug" :class="(displayedPosts.length % 2 !== 0 && index === 0) ? 'col-lg-12' : 'col-lg-6'">
                         <div 
@@ -119,15 +156,31 @@ watch([categories, currentLang], async () => {
                             </div>
                         </div>
                     </div>
-                   
-                    <div v-if="filteredPosts.length === 0" class="col-12 mil-mb-15">
-                        <p>No posts found in this category.</p>
-                    </div>
-
                 </div>
+
+                <!-- List View (Table Style) -->
+                <div class="mil-list-container" v-else>
+                    <router-link 
+                        v-for="post in displayedPosts" 
+                        :key="post.slug" 
+                        :to="'/blog/' + post.slug"
+                        class="mil-list-row mil-up"
+                    >
+                        <div class="mil-list-col mil-list-date">{{ formatDate(post.date) }}</div>
+                        <div class="mil-list-col mil-list-cat"><span class="mil-cat-pill">{{ post.category }}</span></div>
+                        <div class="mil-list-col mil-list-title">
+                            <h6>{{ post.title }}</h6>
+                            <p class="mil-list-desc" v-if="post.description">{{ post.description }}</p>
+                        </div>
+                        <div class="mil-list-col mil-list-arrow"><i class="fas fa-arrow-right"></i></div>
+                    </router-link>
+                </div>
+
+                <div v-if="filteredPosts.length === 0" class="col-12 mil-mb-15">
+                    <p>No posts found in this category.</p>
+                </div>
+
             </div>
-            
-            <a v-if="showViewMore" @click="switchToFullWidth" class="mil-btn mil-mb-15 cursor-pointer">View more posts</a>
             
             <div class="mil-bottom-panel mil-up-instant">
                 <div class="mil-w-100 mil-list-footer">
@@ -150,11 +203,25 @@ watch([categories, currentLang], async () => {
                         </div>
                     </div>
                     
-                    <!-- Right: Fixed Language Switch -->
-                    <div class="mil-fixed-icon mil-right-icon">
-                        <a href="#" @click.prevent="toggleLang"  title="Switch Language">
-                            <i class="fas fa-language"></i>
-                        </a>
+                    <!-- Right: Action Menu (Replaces standalone Language Switch) -->
+                    <div class="mil-action-menu-wrapper" :class="{ 'mil-active': isActionMenuOpen }">
+                        <div class="mil-action-list">
+                            <!-- Layout Toggle -->
+                            <div class="mil-action-btn" @click="toggleLayout" :title="isListView ? 'Grid View' : 'List View'">
+                                <i :class="['fas', isListView ? 'fa-th-large' : 'fa-list']"></i>
+                            </div>
+                            <!-- Language Toggle -->
+                            <div class="mil-action-btn" @click="toggleLang" title="Switch Language">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <!-- Full Screen Toggle -->
+                            <div class="mil-action-btn" @click="toggleFullScreen" :title="isFullScreen ? 'Original View' : 'Full Screen View'">
+                                <i :class="['fas', isFullScreen ? 'fa-compress-alt' : 'fa-expand-alt']"></i>
+                            </div>
+                        </div>
+                        <div class="mil-action-trigger mil-icon-btn" @click="toggleActionMenu" :class="{ 'mil-active': isActionMenuOpen }">
+                            <i :class="['fas', isActionMenuOpen ? 'fa-times' : 'fa-ellipsis-v']"></i>
+                        </div>
                     </div>
 
                 </div>
@@ -166,6 +233,116 @@ watch([categories, currentLang], async () => {
 <style scoped>
 .cursor-pointer {
     cursor: pointer;
+}
+
+.mil-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.mil-list-row {
+    display: flex;
+    align-items: center;
+    padding: 20px 25px;
+    background: rgba(255, 255, 255, 0.03); /* Subtle card bg */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    gap: 20px;
+}
+
+.mil-list-row:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.mil-list-date {
+    font-size: 0.85rem;
+    opacity: 0.6;
+    white-space: nowrap;
+    min-width: 100px;
+}
+
+.mil-list-cat {
+    display: flex;
+    align-items: center;
+}
+
+.mil-cat-pill {
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.mil-list-title {
+    flex-grow: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.mil-list-title h6 {
+    margin: 0;
+    font-size: 1.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mil-list-desc {
+    margin: 5px 0 0 0;
+    font-size: 0.85rem;
+    opacity: 0.6;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: normal;
+}
+
+.mil-list-arrow {
+    display: flex;
+    align-items: center;
+    opacity: 0.5;
+    transition: transform 0.3s ease;
+}
+
+.mil-list-row:hover .mil-list-arrow {
+    transform: translateX(5px);
+    opacity: 1;
+    color: var(--mil-accent);
+}
+
+/* Mobile Responsiveness for Table */
+@media (max-width: 768px) {
+    .mil-list-row {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .mil-list-date {
+        order: 1;
+        width: auto;
+    }
+    .mil-list-cat {
+        order: 2;
+        margin-left: auto;
+    }
+    .mil-list-title {
+        order: 3;
+        width: 100%;
+        margin-top: 5px;
+    }
+    .mil-list-arrow {
+        display: none; /* Hide arrow on mobile to save space */
+    }
 }
 
 .mil-list-footer {

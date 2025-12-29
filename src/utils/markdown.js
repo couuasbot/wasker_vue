@@ -46,13 +46,31 @@ md.renderer.rules.fence = function (tokens, idx, options, env, self) {
             </div>`;
 };
 
-// Table styling rule (optional, can also be done via CSS)
-// Ensure tables are responsive
+// Table styling rule (optional)
 md.renderer.rules.table_open = function () {
     return '<div class="table-responsive"><table class="table table-striped">';
 };
 md.renderer.rules.table_close = function () {
     return '</table></div>';
+};
+
+// Anchor ID generation for headings
+md.renderer.rules.heading_open = function (tokens, idx, options, env, self) {
+    const token = tokens[idx];
+    const level = token.tag.slice(1);
+    const nextToken = tokens[idx + 1];
+
+    if (nextToken && nextToken.type === 'inline') {
+        const title = nextToken.content;
+        const slug = title.toLowerCase()
+            .trim()
+            .replace(/[^\u4e00-\u9fa5a-z0-9]+/g, '-') // Support Chinese characters + alphanumeric
+            .replace(/^-+|-+$/g, '');
+
+        return `<h${level} id="${slug}">`;
+    }
+
+    return `<h${level}>`;
 };
 
 

@@ -537,30 +537,48 @@ onUnmounted(() => {
   .mil-player-container {
     flex-direction: row;
     align-items: center;
-    gap: 35px;
+    gap: 20px;
+    flex-wrap: nowrap;
   }
 
   .mil-track-info {
-    min-width: 180px;
-    max-width: 200px;
+    min-width: 130px;
+    max-width: 160px;
     padding: 5px 0;
   }
 
   .mil-player-controls {
     flex: 1;
     gap: 12px;
+    min-width: 200px;
   }
 
   .mil-progress-container {
-    gap: 15px;
+    gap: 10px;
   }
 
   .mil-volume-control {
-    min-width: 140px;
+    min-width: auto; /* Allow shrinking to just icon */
     padding-top: 0;
     border-top: none;
-    padding-left: 20px;
+    padding-left: 15px;
     border-left: 1px solid rgba(44, 44, 44, 0.5);
+  }
+
+  /* Hide volume slider by default on "smaller" desktops to prevent overflow in half-page layout */
+  .mil-volume-bar {
+    display: none;
+  }
+}
+
+/* Wide Desktop (>= 1550px) - Restore Volume Slider */
+@media (min-width: 1550px) {
+  .mil-volume-control {
+    min-width: 120px;
+  }
+
+  .mil-volume-bar {
+    display: block;
   }
 }
 

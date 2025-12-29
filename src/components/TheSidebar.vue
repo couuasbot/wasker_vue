@@ -12,7 +12,7 @@ const appStore = useAppStore()
       <!-- text logo -->
       <span>wa</span>
     </router-link>
-    <div class="mil-menu-panel">
+    <div class="mil-menu-panel mil-relative-panel">
 
       <nav class="mil-main-menu" :class="{ 'mil-active': appStore.isMenuOpen }">
         
@@ -79,11 +79,12 @@ const appStore = useAppStore()
         </ul>
       </nav>
 
+
+      <div class="mil-sidebar-player">
+        <CompactMusicPlayer />
+      </div>
+
       <div class="mil-menu-btn" :class="{ 'mil-active': appStore.isMenuOpen }" @click="appStore.toggleMenu"><span></span></div>
-    </div>
-    
-    <div class="mil-sidebar-player">
-      <CompactMusicPlayer />
     </div>
 
   </div>
@@ -93,7 +94,7 @@ const appStore = useAppStore()
 .mil-sidebar-player {
   padding: 0;
   width: auto;
-  margin: 0 10px 0 auto; /* Push to right, before menu button */
+  margin: 0 2rem 0 0; /* Right margin to separate from menu button */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -102,7 +103,7 @@ const appStore = useAppStore()
 @media (min-width: 1200px) {
   .mil-sidebar-player {
     width: 100%;
-    margin: auto 0 2rem 0; /* Bottom on desktop */
+    margin-top: 2rem; /* Add space between menu and player */
   }
 }
 

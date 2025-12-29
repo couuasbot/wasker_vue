@@ -73,13 +73,13 @@ onMounted(() => {
   }
   
   .compact-disc-container {
-    width: 32px;
-    height: 32px;
+    width: 38px;
+    height: 38px;
   }
   
   .compact-disc {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
   }
   
   .compact-cover-icon {
@@ -89,8 +89,8 @@ onMounted(() => {
 
 .compact-disc-container {
   position: relative;
-  width: 44px;
-  height: 44px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -125,8 +125,8 @@ onMounted(() => {
 
 /* Disc Content */
 .compact-disc {
-  width: 32px;
-  height: 32px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
   display: flex;
@@ -144,7 +144,7 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   color: #555;
-  font-size: 14px;
+  font-size: 10px;
   transition: opacity 0.3s ease;
 }
 
@@ -158,7 +158,7 @@ onMounted(() => {
 /* Hover States for Play/Pause Icons */
 .play-icon, .pause-icon {
   z-index: 2;
-  font-size: 12px;
+  font-size: 10px;
   color: #FFF;
   opacity: 0;
   transition: opacity 0.2s ease;

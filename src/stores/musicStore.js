@@ -17,7 +17,7 @@ export const useMusicStore = defineStore('music', () => {
     const playlist = ref([
         {
             title: 'Call of Silence',
-            artist: 'Unknown',
+            artist: 'PIANO',
             album: 'Unknown',
             src: '/audio/call_of_silence.mp3'
         }

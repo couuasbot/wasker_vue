@@ -85,6 +85,52 @@ const renderedBody = computed(() => {
     return post.value ? md.render(post.value.body) : ''
 })
 
+// TOC Extraction
+const toc = computed(() => {
+    if (!post.value) return [];
+    
+    const headings = [];
+    const lines = post.value.body.split('\n');
+    
+    lines.forEach(line => {
+        const match = line.match(/^(#{1,6})\s+(.+)$/);
+        if (match) {
+            const level = match[1].length;
+            const title = match[2].trim();
+            const slug = title.toLowerCase()
+                .trim()
+                .replace(/[^\u4e00-\u9fa5a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            
+            headings.push({ level, title, slug });
+        }
+    });
+    
+    return headings;
+});
+
+const isToeOpen = ref(false); // Legacy ref name - kept for compatibility but renamed to isTocOpen below
+const isTocOpen = ref(false);
+const isActionMenuOpen = ref(false);
+
+const toggleToc = () => {
+    isTocOpen.value = !isTocOpen.value;
+    if (isTocOpen.value) isActionMenuOpen.value = false;
+};
+
+const toggleActionMenu = () => {
+    isActionMenuOpen.value = !isActionMenuOpen.value;
+    if (isActionMenuOpen.value) isTocOpen.value = false;
+};
+
+const scrollToSection = (slug) => {
+    const el = document.getElementById(slug);
+    if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        isTocOpen.value = false;
+    }
+};
+
 const isFullScreen = ref(false)
 
 const toggleFullScreen = () => {
@@ -96,6 +142,14 @@ const toggleFullScreen = () => {
         document.body.classList.remove('mil-fw-page')
         document.body.classList.add('mil-half-page')
     }
+}
+
+// Share Logic
+const copied = ref(false)
+const copyLink = () => {
+    navigator.clipboard.writeText(window.location.href)
+    copied.value = true
+    setTimeout(() => { copied.value = false }, 2000)
 }
 
 // Intercept clicks on rendered markdown
@@ -199,12 +253,31 @@ onUpdated(() => {
                         </div>
                     </div>
                 </div>
+                
                 <div class="mil-space-90 mil-p-90-75">
                     <!-- Markdown Content with click listener -->
-                        <div class="mil-markdown-content mil-mb-60 mil-up" v-html="renderedBody" @click="handleLinkClick"></div>
+                    <div class="mil-markdown-content mil-mb-60 mil-up" v-html="renderedBody" @click="handleLinkClick"></div>
+                </div>
+
+                <!-- TOC Menu (Controlled by unified menu) -->
+                <div class="mil-toc-backdrop" :class="{ 'mil-active': isTocOpen }" @click="toggleToc"></div>
+                <div class="mil-toc-wrapper" :class="{ 'mil-toc-active': isTocOpen }" v-if="toc.length > 0">
+                    <div class="mil-toc-menu mil-up-instant">
+                        <div class="mil-sheet-handle"></div>
+                        <div class="mil-toc-header">
+                            <span class="mil-link">Contents</span>
+                            <div class="mil-toc-close" @click="toggleToc"><i class="fas fa-times"></i></div>
+                        </div>
+                        <ul class="mil-toc-list mil-scroll">
+                            <li v-for="item in toc" :key="item.slug" 
+                                :class="['mil-toc-item', 'mil-level-' + item.level]"
+                                @click="scrollToSection(item.slug)">
+                                <span class="mil-soft">{{ item.title }}</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <!-- ... -->
             
             <div v-else class="mil-p-90-75">
                 <h1>Post not found</h1>
@@ -212,42 +285,53 @@ onUpdated(() => {
 
             <div class="mil-bottom-panel mil-up-instant">
                 <div class="mil-jcc mil-space-15 mil-w-100">
-                    <div class="mil-jcb mil-w-100 mil-p-30-0">
-                         <!-- Full Screen Toggle (Left) -->
-                        <div class="mil-fs-toggle mil-icon-btn d-none d-xl-flex" 
-                             @click="toggleFullScreen" 
-                             title="Toggle Full Screen">
-                            <i class="fas" :class="isFullScreen ? 'fa-compress' : 'fa-expand'"></i>
-                        </div>
+                        <div class="mil-jcb mil-w-100 mil-p-30-0">
+                             <!-- Share Button (Far Left) for Symmetry -->
+                             <div class="mil-action-trigger mil-icon-btn" @click="copyLink" title="Copy Link" style="margin-right: 20px;">
+                                <i :class="['fas', copied ? 'fa-check' : 'fa-share-alt']"></i>
+                             </div>
 
-                         <!-- Previous Post (Newer) -->
-                        <div class="mil-prev-nav">
-                             <router-link v-if="adjacentPosts.prev" :to="'/blog/' + adjacentPosts.prev.slug" class="mil-link mil-icon-link-left" title="Previous Post">
-                                <i class="fas fa-chevron-left"></i> <span>Previous</span>
-                             </router-link>
-                             <span v-else class="mil-link mil-disabled" style="opacity: 0.5;"><i class="fas fa-chevron-left"></i> Previous</span>
-                         </div>
+                             <!-- Navigation (Left) -->
+                            <div class="mil-prev-nav">
+                                 <router-link v-if="adjacentPosts.prev" :to="'/blog/' + adjacentPosts.prev.slug" class="mil-link mil-icon-link-left" title="Previous Post">
+                                    <i class="fas fa-chevron-left"></i> <span>Previous</span>
+                                 </router-link>
+                                 <span v-else class="mil-link mil-disabled" style="opacity: 0.5;"><i class="fas fa-chevron-left"></i> Previous</span>
+                             </div>
 
-                        <!-- Center Group: Back + Lang Switch -->
+                        <!-- Center Group: Back -->
                         <div class="mil-bottom-centered">
-                            <router-link to="/blog" class="mil-link">Back to Blog</router-link>
+                            <router-link to="/blog" class="mil-link mil-back-btn">Back to Blog</router-link>
                         </div>
 
-                        <!-- Next Post (Older) -->
+                        <!-- Next Post (Right) -->
                         <div class="mil-next-nav">
                             <router-link v-if="adjacentPosts.next" :to="'/blog/' + adjacentPosts.next.slug" class="mil-link mil-icon-link" title="Next Post">
                                 <span>Next</span> <i class="fas fa-chevron-right"></i>
                             </router-link>
                             <span v-else class="mil-link mil-disabled" style="opacity: 0.5;">Next <i class="fas fa-chevron-right"></i></span>
                         </div>
-                        <div class="mil-lang-switch-container">
-                            <span 
-                                class="mil-lang-btn-border" 
-                                :class="{ 'mil-disabled': !hasEn && !hasZh || (currentLang === 'zh' && !hasEn) || (currentLang === 'en' && !hasZh) }"
-                                @click="toggleLang"
-                                title="Switch Language">
-                                <i class="fas fa-language"></i>
-                            </span>
+
+                        <!-- Unified Action Menu (Far Right) -->
+                        <div class="mil-action-menu-wrapper" :class="{ 'mil-active': isActionMenuOpen }">
+                            <div class="mil-action-list">
+                                <!-- TOC Toggle -->
+                                <div class="mil-action-btn" @click="toggleToc" v-if="toc.length > 0" title="Table of Contents">
+                                    <i class="fas fa-list-ul"></i>
+                                </div>
+                                <!-- Language Toggle -->
+                                <div class="mil-action-btn" @click="toggleLang" title="Switch Language">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                                <!-- Full Screen Toggle -->
+                                <div class="mil-action-btn" @click="toggleFullScreen" :title="isFullScreen ? 'Original View' : 'Full Screen View'">
+                                    <i :class="['fas', isFullScreen ? 'fa-compress-alt' : 'fa-expand-alt']"></i>
+                                </div>
+                            </div>
+                            <div class="mil-action-trigger mil-icon-btn" @click="toggleActionMenu" :class="{ 'mil-active': isActionMenuOpen }">
+                                <i :class="['fas', isActionMenuOpen ? 'fa-times' : 'fa-ellipsis-v']"></i>
+                                <span class="mil-toc-dot" v-if="!isActionMenuOpen && toc.length > 0"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -335,6 +419,24 @@ onUpdated(() => {
     gap: 15px;
 }
 
+.mil-back-btn {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px 25px;
+    border-radius: 30px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px; /* Match height with other icons */
+}
+
+.mil-back-btn:hover {
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+}
+
 .mil-divider {
     opacity: 0.2;
 }
@@ -355,5 +457,313 @@ onUpdated(() => {
     background-color: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.5);
     transform: scale(1.05);
+}
+
+/* Unified Action Menu Styles */
+.mil-action-menu-wrapper {
+    position: relative;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.mil-action-trigger {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0, 0, 0.3642, 1);
+    position: relative;
+}
+
+.mil-action-trigger i {
+    font-size: 20px;
+    color: #fff;
+    transition: all 0.4s ease;
+}
+
+.mil-action-trigger.mil-active {
+    background: #DBA91C;
+    border-color: #DBA91C;
+}
+
+.mil-action-trigger.mil-active i {
+    color: #000;
+    transform: rotate(90deg);
+}
+
+.mil-action-list {
+    position: absolute;
+    bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0, 0, 0.3642, 1);
+}
+
+.mil-active .mil-action-list {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.mil-action-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(18, 18, 18, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mil-action-btn i {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.mil-action-btn:hover {
+    background: #fff;
+    border-color: #fff;
+}
+
+.mil-action-btn:hover i {
+    color: #000;
+}
+
+/* TOC Styles Update */
+.mil-toc-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    will-change: opacity;
+    transform: translate3d(0,0,0); /* Force hardware acceleration */
+}
+
+.mil-toc-backdrop.mil-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Desktop & Mobile: Always align to left part container */
+.mil-toc-wrapper {
+    position: fixed; /* Relative to mil-content-frame due to transform */
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1001;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+    will-change: transform;
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mil-toc-menu {
+    pointer-events: auto;
+    width: 100%;
+    max-width: 100rem; /* Match page content max-width (mil-space-90) */
+    max-height: 85vh;
+    height: auto;
+    background: rgba(18, 18, 18, 0.98);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px 30px 0 0;
+    padding: 20px 25px 40px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease, visibility 0.4s;
+    box-shadow: 0 -20px 60px rgba(0,0,0,0.8);
+    will-change: transform, opacity;
+    backface-visibility: hidden; /* Fix flickering */
+    transform-style: preserve-3d;
+}
+
+.mil-toc-active .mil-toc-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.mil-sheet-handle {
+    width: 40px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    margin: 0 auto 20px;
+}
+
+.mil-toc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mil-toc-close {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.mil-toc-close:hover {
+    background: #ff5e5e;
+    color: #fff;
+}
+
+.mil-toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.mil-toc-list::-webkit-scrollbar {
+    width: 3px;
+}
+
+.mil-toc-list::-webkit-scrollbar-thumb {
+    background: rgba(219, 169, 28, 0.4);
+    border-radius: 3px;
+}
+
+.mil-toc-item {
+    padding: 10px 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-left: 2px solid transparent;
+}
+
+.mil-toc-item span {
+    font-size: 1.3rem;
+    line-height: 1.5;
+    transition: all 0.3s ease;
+}
+
+.mil-toc-item:hover {
+    padding-left: 15px;
+    border-left-color: #DBA91C;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.mil-toc-item:hover span {
+    color: #fff !important;
+}
+
+.mil-level-1 { font-weight: 700; margin-top: 10px; font-size: 1.4rem; color: #fff !important; }
+.mil-toc-item:first-child { margin-top: 0 !important; }
+.mil-level-2 { padding-left: 15px; font-weight: 500; font-size: 1.3rem; }
+.mil-level-3 { padding-left: 30px; font-size: 1.2rem; opacity: 0.9; }
+.mil-level-4 { padding-left: 45px; font-size: 1.15rem; opacity: 0.8; }
+.mil-level-5 { padding-left: 60px; font-size: 1.1rem; opacity: 0.7; }
+.mil-level-6 { padding-left: 75px; font-size: 1.0rem; opacity: 0.6; }
+
+.mil-toc-dot {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 10px;
+    height: 10px;
+    background: #DBA91C;
+    border-radius: 50%;
+    animation: mil-pulsing 2s infinite;
+}
+
+@keyframes mil-pulsing {
+    0% { transform: scale(0.6); opacity: 1; }
+    100% { transform: scale(1.6); opacity: 0; }
+}
+
+@media (max-width: 768px) {
+    .mil-toc-menu {
+        padding: 15px 25px 40px;
+    }
+    .mil-toc-item {
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+    .mil-toc-item span {
+        font-size: 1.4rem;
+        color: #E0E0E0 !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .mil-action-menu-wrapper {
+        margin-left: 10px;
+    }
+    .mil-action-list {
+        bottom: 50px;
+        gap: 10px;
+    }
+    .mil-action-btn {
+        width: 40px;
+        height: 40px;
+    }
+}
+/* Mobile Optimization for Bottom Bar */
+@media (max-width: 768px) {
+    /* Hide the center "Back to..." button */
+    .mil-bottom-centered {
+        display: none;
+    }
+
+    /* Hide text labels in Prev/Next navigation, keep icons */
+    .mil-prev-nav span, 
+    .mil-next-nav span {
+        display: none;
+    }
+
+    /* Ensure icons are large enough and centered */
+    .mil-prev-nav .mil-link, 
+    .mil-next-nav .mil-link {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+    }
+    
+    /* Adjust specific margins if needed */
+    .mil-prev-nav .mil-link i,
+    .mil-next-nav .mil-link i {
+        margin: 0 !important;
+    }
 }
 </style>

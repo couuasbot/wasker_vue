@@ -269,7 +269,7 @@ main
 
 html {
   overflow: hidden;
-  scroll-behavior: smooth;
+  scroll-behavior: smooth !important;
   -ms-scroll-chaining: none;
   overscroll-behavior: none;
   font-size: 11px;
