@@ -2285,7 +2285,7 @@ menu button
 ------------------------------------------- */
 .mil-menu-btn {
   pointer-events: all;
-  height: 2.8rem;
+  height: 3.8rem;
   cursor: pointer;
   display: none;
   -webkit-box-pack: center;
@@ -2296,7 +2296,7 @@ menu button
   align-items: center;
   -webkit-transition: 0.4s cubic-bezier(0, 0, 0.3642, 1);
   transition: 0.4s cubic-bezier(0, 0, 0.3642, 1);
-  margin-right: 3rem;
+  margin-right: 2rem;
   -webkit-transform: scale(0.8);
   transform: scale(0.8);
 }

@@ -1,18 +1,21 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 import { useAppStore } from '../stores/app'
+import CompactMusicPlayer from './CompactMusicPlayer.vue'
 
 const appStore = useAppStore()
 </script>
 
 <template>
-  <div class="mil-menu-part">
+  <div class="mil-menu-part mil-sidebar-flex">
     <router-link to="/" class="mil-logo">
       <!-- text logo -->
       <span>wa</span>
     </router-link>
     <div class="mil-menu-panel">
+
       <nav class="mil-main-menu" :class="{ 'mil-active': appStore.isMenuOpen }">
+        
         <ul id="swupMenu">
           <router-link to="/" custom v-slot="{ href, navigate, isExactActive }">
             <li :class="{ 'mil-current': isExactActive }" @click="appStore.closeMenu">
@@ -75,12 +78,34 @@ const appStore = useAppStore()
 
         </ul>
       </nav>
+
       <div class="mil-menu-btn" :class="{ 'mil-active': appStore.isMenuOpen }" @click="appStore.toggleMenu"><span></span></div>
     </div>
+    
+    <div class="mil-sidebar-player">
+      <CompactMusicPlayer />
+    </div>
+
   </div>
 </template>
 
 <style scoped>
+.mil-sidebar-player {
+  padding: 0;
+  width: auto;
+  margin: 0 10px 0 auto; /* Push to right, before menu button */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (min-width: 1200px) {
+  .mil-sidebar-player {
+    width: 100%;
+    margin: auto 0 2rem 0; /* Bottom on desktop */
+  }
+}
+
 /* Scoped styles if needed, otherwise global CSS handles it */
 .mil-main-menu li a.mil-active {
     /* Ensure active state style matches .mil-current */
@@ -144,4 +169,3 @@ const appStore = useAppStore()
 }
 </style>
 
-/* Unused desktop/mobile specific styles removed */

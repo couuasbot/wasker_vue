@@ -2,6 +2,7 @@
 import { onMounted, onUnmounted, ref, watch, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useMarkdown } from '@/composables/useMarkdown'
+import MusicPlayer from './MusicPlayer.vue'
 
 const typingElement = ref(null)
 const { getProfile } = useMarkdown()
@@ -188,6 +189,11 @@ onUnmounted(() => {
           </ul>
           <div class="mil-divider mil-mb-60 mil-up"></div>
           <div class="mil-mb-30 mil-up" v-html="profile.body"></div>
+          
+          <!-- Music Player at the bottom of content -->
+          <div class="mil-up">
+            <MusicPlayer />
+          </div>
         </div>
       </div>
       <footer>
