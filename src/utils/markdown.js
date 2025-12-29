@@ -27,6 +27,10 @@ md.renderer.rules.fence = function (tokens, idx, options, env, self) {
     const info = token.info ? md.utils.escapeHtml(token.info).trim() : '';
     const langName = info ? info.split(/\s+/g)[0] : '';
 
+    if (langName === 'mermaid') {
+        return `<pre class="mermaid">${token.content}</pre>`;
+    }
+
     // Render the original code block
     const rawCode = defaultFence(tokens, idx, options, env, self);
 

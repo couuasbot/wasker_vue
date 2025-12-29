@@ -127,14 +127,14 @@ run_simulation(config)
 tracer.stop()
 tracer.save() 
 ```
-![](../../assets/sequence_tracer.png)
+![](/assets/img-dark/content/blog/sequence_tracer.png)
 总结：
 1. OMPython底层设计是使用 ZeroMQ 通信中间件与omc服务端（守护进程）传递命令，由omc返回结果后再解析字符串为python对象。
 2. 最耗时的操作是初始化ModelicaSystem对象中的buildModel()环节，该环节耗时原因是omc对modelica源码解析成C代码并调用gcc编译器进行编译生成.exe/elf可执行文件。
 3. simulate()函数实际上是复用了.exe/elf可执行文件，使用_excute_child()起子进程调用
 4. setParameters()函数忽略不计
 
-![](../../assets/concurrent_tracer.png)
+![](/assets/img-dark/content/blog/concurrent_tracer.png)
 总结：
 1. 每个子线程在初始化ModelicaSystem对象中起一个omc服务端，常理来说不会发生竞争状态，线程数量过多仍会报错
 2. 每个子线程没有复用mod对象，导致最耗时的buildModel()环节占用了每个子线程一半以上的计算资源

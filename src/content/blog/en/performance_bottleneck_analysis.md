@@ -126,14 +126,14 @@ run_simulation(config)
 tracer.stop()
 tracer.save() 
 ```
-![](../../assets/sequence_tracer.png)
+![](/assets/img-dark/content/blog/sequence_tracer.png)
 Summary:
 1. OMPython uses ZeroMQ to communicate with the `omc` server (daemon), parsing result strings back into Python objects.
 2. The most time-consuming part is `buildModel()` during `ModelicaSystem` initialization, where `omc` parses Modelica code into C and calls `gcc` to compile it.
 3. `simulate()` reuses the generated executable via `_excute_child()` subprocess calls.
 4. `setParameters()` is negligible.
 
-![](../../assets/concurrent_tracer.png)
+![](/assets/img-dark/content/blog/concurrent_tracer.png)
 Summary:
 1. Each thread starts its own `omc` server. While they should be isolated, high thread counts still cause crashes.
 2. Lack of `mod` object reuse means the expensive `buildModel()` step consumes >50% of CPU resources in every thread.
