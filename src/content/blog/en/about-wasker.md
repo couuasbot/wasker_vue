@@ -8,7 +8,7 @@ description: "Exploring the evolution of the Wasker ecosystem from static templa
 
 # 📜 The Evolution of Wasker
 
-> This is a story of self-iteration and technical advancement. [Wasker](../../portfolio/en/wasker%20series/wasker_tempalte.md) has evolved from a simple HTML static page into a modern Content Management System integrated with 3D visuals, AI interaction, and a global distribution gateway.
+> This is a story of self-iteration and technical advancement. [Wasker](../../portfolio/en/wasker%20series/wasker_template.md) has evolved from a simple HTML static page into a modern Content Management System integrated with 3D visuals, AI interaction, and a global distribution gateway.
 
 ---
 
