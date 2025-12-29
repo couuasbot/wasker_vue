@@ -8,7 +8,7 @@ description: "回望 Wasker 体系从静态模板到 3D + AI 实战版的演进�
 
 # 📜 关于 Wasker 发展历程
 
-> 这是一个关于自我迭代与技术进阶的故事。[Wasker](../../portfolio/zh/wasker%20series/wasker_tempalte.md) 从最初的纯 HTML 静态页，逐步演进为一套集成了 3D 视觉、AI 交互与全球分发网关的现代化内容管理系统。
+> 这是一个关于自我迭代与技术进阶的故事。[Wasker](../../portfolio/zh/wasker%20series/wasker_template.md) 从最初的纯 HTML 静态页，逐步演进为一套集成了 3D 视觉、AI 交互与全球分发网关的现代化内容管理系统。
 
 ---
 
