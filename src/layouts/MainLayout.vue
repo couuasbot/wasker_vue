@@ -226,7 +226,7 @@ const onAfterLeave = () => {
           </router-view>
           
           <!-- Mobile RightBar (Visible only on mobile via CSS) -->
-          <div class="mil-mobile-right-bar" :class="{ 'mil-hidden-trigger': !shouldShowRightBar }">
+          <div v-if="isDesktop" class="mil-mobile-right-bar" :class="{ 'mil-hidden-trigger': !shouldShowRightBar }">
              <TheRightBar />
           </div>
         </div>
