@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router'
 import { useMarkdown } from '@/composables/useMarkdown'
 import { useScrollAnimations } from '@/composables/useScrollAnimations'
 import { useAppStore } from '@/stores/app'
+import ToastNotification from '@/components/ToastNotification.vue'
 import { storeToRefs } from 'pinia'
 
 const { getPosts, getCategories } = useMarkdown()
@@ -126,10 +127,24 @@ const formatDate = (date) => {
     const d = new Date(date)
     return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
 }
+
+// Share Logic
+const copied = ref(false)
+const toastRef = ref(null)
+
+const copyLink = () => {
+    navigator.clipboard.writeText(window.location.href)
+    copied.value = true
+    if (toastRef.value) {
+        toastRef.value.show('Link copied to clipboard', 'success')
+    }
+    setTimeout(() => { copied.value = false }, 2000)
+}
 </script>
 
 <template>
     <div class="mil-content-frame">
+        <ToastNotification ref="toastRef" />
         <div class="mil-scroll mil-half-1 mil-bp-fix">
             <div class="mil-row-fix">
                 
@@ -185,9 +200,9 @@ const formatDate = (date) => {
             <div class="mil-bottom-panel mil-up-instant">
                 <div class="mil-w-100 mil-list-footer">
                     
-                    <!-- Left: Fixed Filter Icon -->
-                    <div class="mil-fixed-icon mil-left-icon">
-                        <i class="fal fa-tags"></i>
+                    <!-- Left: Share Button -->
+                    <div class="mil-fixed-icon mil-left-icon" @click="copyLink" style="cursor: pointer;" title="Copy Link">
+                        <i :class="['fas', copied ? 'fa-check' : 'fa-share-alt']"></i>
                     </div>
 
                     <!-- Center: Filter Categories -->
@@ -298,6 +313,130 @@ const formatDate = (date) => {
     text-overflow: ellipsis;
 }
 
+.mil-action-list {
+    position: absolute;
+    bottom: 75px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0, 0, 0.3642, 1);
+    z-index: 10;
+}
+
+.mil-action-trigger {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(15px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.mil-action-trigger::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(219, 169, 28, 0.3), transparent);
+    transform: translate(-50%, -50%);
+    transition: width 0.5s ease, height 0.5s ease;
+}
+
+.mil-action-trigger:hover::before {
+    width: 200%;
+    height: 200%;
+}
+
+.mil-action-trigger:hover {
+    transform: translateY(-3px) scale(1.05);
+    border-color: rgba(219, 169, 28, 0.4);
+    box-shadow: 0 8px 24px rgba(219, 169, 28, 0.2);
+}
+
+.mil-action-trigger i {
+    font-size: 20px;
+    color: #fff;
+    transition: all 0.4s ease;
+}
+
+.mil-action-trigger.mil-active {
+    background: linear-gradient(135deg, #DBA91C, #C89D1A);
+    border-color: transparent;
+    box-shadow: 0 8px 24px rgba(219, 169, 28, 0.5), 0 0 30px rgba(219, 169, 28, 0.3);
+    transform: scale(1.1);
+}
+
+.mil-action-trigger.mil-active i {
+    color: #000;
+    transform: rotate(90deg);
+}
+
+.mil-action-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(18, 18, 18, 0.95), rgba(18, 18, 18, 0.85));
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.mil-action-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(219, 169, 28, 0.3), transparent);
+    transform: translate(-50%, -50%);
+    transition: width 0.5s ease, height 0.5s ease;
+}
+
+.mil-action-btn:hover::before {
+    width: 200%;
+    height: 200%;
+}
+
+.mil-action-btn:hover {
+    background: linear-gradient(135deg, #DBA91C, #C89D1A);
+    border-color: transparent;
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 8px 24px rgba(219, 169, 28, 0.5), 0 0 30px rgba(219, 169, 28, 0.3);
+}
+
+.mil-action-btn i {
+    font-size: 17px;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
+}
+
+.mil-action-btn:hover i {
+    color: #121212;
+    transform: scale(1.1);
+}
+
 .mil-list-desc {
     margin: 5px 0 0 0;
     font-size: 0.85rem;
@@ -348,22 +487,50 @@ const formatDate = (date) => {
 .mil-list-footer {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* 3-column layout */
+    justify-content: space-between;
     width: 100%;
-    padding: 0 10px; /* Small equal margins for left/right icons */
-    gap: 10px;
+    padding: 0 15px;
+    gap: 15px;
 }
 
 /* Fixed Icons (Left & Right) */
 .mil-fixed-icon {
-    flex: 0 0 40px; /* Fixed width */
-    height: 40px;
+    flex: 0 0 48px;
+    height: 48px;
     display: flex;
     justify-content: center;
     align-items: center;
     color: #fff;
-    font-size: 18px;
-    opacity: 0.7;
+    font-size: 20px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    backdrop-filter: blur(15px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.mil-fixed-icon::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(219, 169, 28, 0.3), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.mil-fixed-icon:hover::before {
+    opacity: 1;
+}
+
+.mil-fixed-icon:hover {
+    transform: translateY(-3px) scale(1.05);
+    border-color: rgba(219, 169, 28, 0.4);
+    box-shadow: 0 8px 24px rgba(219, 169, 28, 0.2);
 }
 
 .mil-fixed-icon a {
@@ -376,26 +543,50 @@ const formatDate = (date) => {
 }
 
 .mil-left-icon i {
-    color: #DBA91C;
+    color: #fff; /* Changed from gold to white to match detail page share button */
+    transition: all 0.4s ease;
 }
 
 /* Center Container */
 .mil-filter-container {
-    flex: 1; /* Take remaining space */
+    flex: 1;
     display: flex;
-    justify-content: center; /* Default center align */
-    overflow: hidden; /* Mask inner scroll */
-    padding: 5px;
-    border-radius: 40px; /* Add some radius for the border indication */
-    border: 1px solid transparent; /* Hidden by default */
-    transition: border-color 0.3s ease;
+    justify-content: center;
+    overflow: hidden;
+    padding: 8px;
+    border-radius: 50px;
+    border: 1px solid transparent;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+    backdrop-filter: blur(20px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.mil-filter-container::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(219, 169, 28, 0.3), rgba(255, 255, 255, 0.1));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.mil-filter-container:hover::before {
+    opacity: 1;
 }
 
 /* Active Overflow State */
 .mil-filter-container.mil-has-overflow {
-    justify-content: flex-start; /* Left align if overflowing */
-    border-color: rgba(255, 255, 255, 0.1); /* Show border when scrollable */
-    background: rgba(255, 255, 255, 0.02); /* Slight bg */
+    justify-content: flex-start;
+    border-color: rgba(219, 169, 28, 0.2);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .mil-filter {
@@ -404,11 +595,11 @@ const formatDate = (date) => {
     flex-wrap: nowrap;
     overflow-x: auto;
     white-space: nowrap;
-    gap: 15px;
+    gap: 12px;
     -ms-overflow-style: none;
     scrollbar-width: none;
-    padding: 5px; /* Inner padding */
-    width: 100%; /* Ensure it fills container to measure overflow */
+    padding: 6px;
+    width: 100%;
 }
 
 /* If not overflowing, let content be natural width to center properly */
@@ -423,32 +614,59 @@ const formatDate = (date) => {
 
 /* Pill Styling */
 .mil-link.mil-pill {
-    padding: 8px 16px;
-    background-color: rgba(255, 255, 255, 0.05);
+    padding: 10px 20px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
     border-radius: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 12px;
-    letter-spacing: 1px;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     text-transform: uppercase;
-    color: #A5A5A5;
+    color: rgba(255, 255, 255, 0.6);
     text-decoration: none;
     white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.mil-link.mil-pill::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.mil-link.mil-pill:hover::before {
+    width: 200%;
+    height: 200%;
 }
 
 .mil-link.mil-pill:hover {
-    background-color: rgba(255, 255, 255, 0.15);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
     color: #fff;
-    transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 .mil-link.mil-pill.mil-current {
-    background-color: #DBA91C;
+    background: linear-gradient(135deg, #DBA91C, #C89D1A);
     color: #121212;
-    border-color: #DBA91C;
-    box-shadow: 0 4px 10px rgba(219, 169, 28, 0.2);
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(219, 169, 28, 0.25), 0 2px 6px rgba(219, 169, 28, 0.15);
     font-weight: 700;
+    transform: translateY(-2px);
+}
+
+.mil-link.mil-pill.mil-current::before {
+    display: none;
 }
 </style>

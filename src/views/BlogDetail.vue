@@ -6,6 +6,7 @@ import md from '@/utils/markdown'
 import { useAppStore } from '@/stores/app'
 import { storeToRefs } from 'pinia'
 import mermaid from 'mermaid'
+import ToastNotification from '@/components/ToastNotification.vue'
 
 mermaid.initialize({
     startOnLoad: false,
@@ -146,9 +147,14 @@ const toggleFullScreen = () => {
 
 // Share Logic
 const copied = ref(false)
+const toastRef = ref(null)
+
 const copyLink = () => {
     navigator.clipboard.writeText(window.location.href)
     copied.value = true
+    if (toastRef.value) {
+        toastRef.value.show('Link copied to clipboard', 'success')
+    }
     setTimeout(() => { copied.value = false }, 2000)
 }
 
@@ -225,6 +231,7 @@ onUpdated(() => {
 
 <template>
     <div class="mil-content-frame">
+        <ToastNotification ref="toastRef" />
         <div class="mil-scroll mil-half-1 mil-bp-fix-2">
             <div class="mil-main-content" v-if="post">
                 <div class="mil-banner">
@@ -296,7 +303,7 @@ onUpdated(() => {
                                  <router-link v-if="adjacentPosts.prev" :to="'/blog/' + adjacentPosts.prev.slug" class="mil-link mil-icon-link-left" title="Previous Post">
                                     <i class="fas fa-chevron-left"></i> <span>Previous</span>
                                  </router-link>
-                                 <span v-else class="mil-link mil-disabled" style="opacity: 0.5;"><i class="fas fa-chevron-left"></i> Previous</span>
+                                 <span v-else class="mil-link mil-disabled" style="opacity: 0.5;"><i class="fas fa-chevron-left"></i> <span>Previous</span></span>
                              </div>
 
                         <!-- Center Group: Back -->
@@ -309,7 +316,7 @@ onUpdated(() => {
                             <router-link v-if="adjacentPosts.next" :to="'/blog/' + adjacentPosts.next.slug" class="mil-link mil-icon-link" title="Next Post">
                                 <span>Next</span> <i class="fas fa-chevron-right"></i>
                             </router-link>
-                            <span v-else class="mil-link mil-disabled" style="opacity: 0.5;">Next <i class="fas fa-chevron-right"></i></span>
+                            <span v-else class="mil-link mil-disabled" style="opacity: 0.5;"><span>Next</span> <i class="fas fa-chevron-right"></i></span>
                         </div>
 
                         <!-- Unified Action Menu (Far Right) -->
@@ -392,6 +399,14 @@ onUpdated(() => {
     font-size: 14px;
     font-weight: 600;
 }
+
+/* Semi-transparent blur for cover image overlay */
+.mil-banner-overlay {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.3);
+}
+
 .mil-lang-btn {
     cursor: pointer;
     opacity: 0.5;
@@ -420,21 +435,47 @@ onUpdated(() => {
 }
 
 .mil-back-btn {
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 8px 25px;
+    border: 1px solid rgba(219, 169, 28, 0.3);
+    padding: 10px 28px;
     border-radius: 30px;
-    font-size: 14px;
-    transition: all 0.3s ease;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 40px; /* Match height with other icons */
+    height: 44px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    backdrop-filter: blur(15px);
+    position: relative;
+    overflow: hidden;
+}
+
+.mil-back-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(219, 169, 28, 0.2), transparent);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.mil-back-btn:hover::before {
+    width: 300%;
+    height: 300%;
 }
 
 .mil-back-btn:hover {
-    border-color: rgba(255, 255, 255, 0.6);
-    background: rgba(255, 255, 255, 0.05);
-    transform: translateY(-2px);
+    border-color: rgba(219, 169, 28, 0.6);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(219, 169, 28, 0.3), 0 0 20px rgba(219, 169, 28, 0.15);
+    color: #DBA91C;
 }
 
 .mil-divider {
@@ -470,17 +511,43 @@ onUpdated(() => {
 }
 
 .mil-action-trigger {
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
-    background: transparent;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
     border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(15px);
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0, 0, 0.3642, 1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    overflow: hidden;
+}
+
+.mil-action-trigger::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(219, 169, 28, 0.3), transparent);
+    transform: translate(-50%, -50%);
+    transition: width 0.5s ease, height 0.5s ease;
+}
+
+.mil-action-trigger:hover::before {
+    width: 200%;
+    height: 200%;
+}
+
+.mil-action-trigger:hover {
+    transform: translateY(-3px) scale(1.05);
+    border-color: rgba(219, 169, 28, 0.4);
+    box-shadow: 0 8px 24px rgba(219, 169, 28, 0.2);
 }
 
 .mil-action-trigger i {
@@ -490,8 +557,10 @@ onUpdated(() => {
 }
 
 .mil-action-trigger.mil-active {
-    background: #DBA91C;
-    border-color: #DBA91C;
+    background: linear-gradient(135deg, #DBA91C, #C89D1A);
+    border-color: transparent;
+    box-shadow: 0 8px 24px rgba(219, 169, 28, 0.5), 0 0 30px rgba(219, 169, 28, 0.3);
+    transform: scale(1.1);
 }
 
 .mil-action-trigger.mil-active i {
@@ -501,11 +570,11 @@ onUpdated(() => {
 
 .mil-action-list {
     position: absolute;
-    bottom: 60px;
+    bottom: 75px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
+    gap: 25px;
     opacity: 0;
     visibility: hidden;
     transform: translateY(20px);
@@ -519,31 +588,55 @@ onUpdated(() => {
 }
 
 .mil-action-btn {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    background: rgba(18, 18, 18, 0.85);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, rgba(18, 18, 18, 0.95), rgba(18, 18, 18, 0.85));
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.mil-action-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(219, 169, 28, 0.3), transparent);
+    transform: translate(-50%, -50%);
+    transition: width 0.5s ease, height 0.5s ease;
+}
+
+.mil-action-btn:hover::before {
+    width: 200%;
+    height: 200%;
 }
 
 .mil-action-btn i {
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.6);
+    font-size: 17px;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
 }
 
 .mil-action-btn:hover {
-    background: #fff;
-    border-color: #fff;
+    background: linear-gradient(135deg, #DBA91C, #C89D1A);
+    border-color: transparent;
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 8px 24px rgba(219, 169, 28, 0.5), 0 0 30px rgba(219, 169, 28, 0.3);
 }
 
 .mil-action-btn:hover i {
-    color: #000;
+    color: #121212;
+    transform: scale(1.1);
 }
 
 /* TOC Styles Update */
@@ -726,12 +819,12 @@ onUpdated(() => {
         margin-left: 10px;
     }
     .mil-action-list {
-        bottom: 50px;
-        gap: 10px;
+        bottom: 60px; /* Adjusted spacing */
+        gap: 15px; /* Increased gap */
     }
     .mil-action-btn {
-        width: 40px;
-        height: 40px;
+        width: 45px; /* Slightly larger buttons */
+        height: 45px;
     }
 }
 /* Mobile Optimization for Bottom Bar */
@@ -741,26 +834,26 @@ onUpdated(() => {
         display: none;
     }
 
-    /* Hide text labels in Prev/Next navigation, keep icons */
-    .mil-prev-nav span, 
-    .mil-next-nav span {
-        display: none;
+    /* Show icons and text in Prev/Next navigation on mobile */
+    .mil-prev-nav .mil-link span, 
+    .mil-next-nav .mil-link span {
+        display: inline-block !important; /* Force show text */
+        font-size: 12px; /* Slightly smaller font for mobile fit */
     }
 
-    /* Ensure icons are large enough and centered */
+    /* Reset width/height constraints to allow text flow */
     .mil-prev-nav .mil-link, 
     .mil-next-nav .mil-link {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        justify-content: center;
+        display: flex; /* Ensure flexbox for gap to work */
         align-items: center;
-        padding: 0;
+        width: auto;
+        height: 48px;
+        padding: 0 15px;
         border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
+        border-radius: 30px;
+        gap: 10px; /* Increased gap slightly for better visual separation */
     }
     
-    /* Adjust specific margins if needed */
     .mil-prev-nav .mil-link i,
     .mil-next-nav .mil-link i {
         margin: 0 !important;

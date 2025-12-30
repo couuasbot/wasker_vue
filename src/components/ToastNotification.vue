@@ -44,96 +44,126 @@ defineExpose({ show });
 <style scoped>
 .mil-toast {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: #1e1e24; /* Dark background matching the theme */
-    padding: 20px 25px;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px; /* Reduced specific height to cover bottom bar area */
+    background: linear-gradient(135deg, rgba(18, 18, 18, 0.98), rgba(18, 18, 18, 0.95));
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
-    align-items: flex-start;
-    gap: 15px;
+    justify-content: center; /* Center content horizontally */
+    align-items: center;
+    gap: 20px;
     z-index: 9999;
-    max-width: 400px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
+    padding: 0 30px;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
 }
 
 .mil-toast.success {
-    border-left: 4px solid #55e6a5; /* Theme accent color */
+    border-top: 1px solid rgba(85, 230, 165, 0.3);
+    background: linear-gradient(135deg, rgba(18, 18, 18, 0.98), rgba(85, 230, 165, 0.05));
 }
 
 .mil-toast.error {
-    border-left: 4px solid #ff4d4d;
+    border-top: 1px solid rgba(255, 77, 77, 0.3);
+    background: linear-gradient(135deg, rgba(18, 18, 18, 0.98), rgba(255, 77, 77, 0.05));
 }
 
 .mil-toast-icon {
     font-size: 24px;
-    margin-top: -2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .mil-toast.success .mil-toast-icon {
     color: #55e6a5;
+    background: rgba(85, 230, 165, 0.1);
+    box-shadow: 0 0 15px rgba(85, 230, 165, 0.2);
 }
 
 .mil-toast.error .mil-toast-icon {
     color: #ff4d4d;
+    background: rgba(255, 77, 77, 0.1);
 }
 
 .mil-toast-content {
-    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .mil-toast-title {
     font-weight: 700;
     color: #fff;
-    margin-bottom: 5px;
-    font-size: 16px;
+    font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 1px;
+    margin-bottom: 2px;
 }
 
 .mil-toast-message {
-    color: #a4a4b1;
-    font-size: 14px;
-    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
 }
 
 .mil-toast-close {
     cursor: pointer;
-    color: #666;
+    color: rgba(255, 255, 255, 0.4);
     transition: 0.3s;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    margin-left: auto; /* Push close button to far right if not centered */
+    position: absolute; /* Absolute position to ensure centering of content doesn't shift */
+    right: 30px;
 }
 
 .mil-toast-close:hover {
     color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Animations */
 .toast-enter-active,
 .toast-leave-active {
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .toast-enter-from,
 .toast-leave-to {
-    opacity: 0;
-    transform: translateX(100px) scale(0.9);
+    transform: translateY(100%);
 }
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
     .mil-toast {
-        bottom: 20px;
-        left: 20px;
-        right: 20px;
-        max-width: none;
-        padding: 15px 20px;
+        padding: 0 20px;
+        height: 90px;
     }
     
-    .toast-enter-from,
-    .toast-leave-to {
-        transform: translateY(20px) scale(0.9);
+    .mil-toast-title {
+        font-size: 13px;
+    }
+    
+    .mil-toast-message {
+        font-size: 12px;
+    }
+
+    .mil-toast-close {
+        right: 20px;
+        width: 36px;
+        height: 36px;
     }
 }
 </style>

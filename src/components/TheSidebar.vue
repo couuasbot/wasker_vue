@@ -103,7 +103,7 @@ const appStore = useAppStore()
 @media (min-width: 1200px) {
   .mil-sidebar-player {
     width: 100%;
-    margin-top: 2rem; /* Add space between menu and player */
+    margin-top: 3rem; /* Add space between menu and player */
   }
 }
 
