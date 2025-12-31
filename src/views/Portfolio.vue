@@ -495,7 +495,7 @@ const copyLink = () => {
     font-weight: 600;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.85);
     text-decoration: none;
     white-space: nowrap;
     position: relative;
