@@ -434,48 +434,55 @@ onUpdated(() => {
     gap: 15px;
 }
 
+/* Simplified Back Button - Text Style */
 .mil-back-btn {
-    border: 1px solid rgba(219, 169, 28, 0.3);
-    padding: 10px 28px;
-    border-radius: 30px;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 0;
     font-size: 13px;
     font-weight: 600;
-    letter-spacing: 0.5px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 44px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-    backdrop-filter: blur(15px);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.6);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
+    backdrop-filter: none;
+    box-shadow: none;
 }
 
 .mil-back-btn::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(219, 169, 28, 0.2), transparent);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s ease, height 0.6s ease;
-}
-
-.mil-back-btn:hover::before {
-    width: 300%;
-    height: 300%;
+    display: none;
 }
 
 .mil-back-btn:hover {
-    border-color: rgba(219, 169, 28, 0.6);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(219, 169, 28, 0.3), 0 0 20px rgba(219, 169, 28, 0.15);
-    color: #DBA91C;
+    color: #fff;
+    transform: translateY(-2px);
+    background: transparent;
+    box-shadow: none;
+    border-color: transparent;
+}
+
+.mil-back-btn:hover::after {
+   width: 100%; 
+}
+
+/* Underline effect for back button */
+.mil-back-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 0%;
+    height: 1px;
+    background: #DBA91C;
+    transition: width 0.3s ease;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .mil-divider {
@@ -500,7 +507,7 @@ onUpdated(() => {
     transform: scale(1.05);
 }
 
-/* Unified Action Menu Styles */
+/* Unified Action Menu Styles - Icon Only */
 .mil-action-menu-wrapper {
     position: relative;
     z-index: 1000;
@@ -514,9 +521,8 @@ onUpdated(() => {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(15px);
+    background: transparent;
+    border: 1px solid transparent;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -524,60 +530,52 @@ onUpdated(() => {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    backdrop-filter: none;
 }
 
 .mil-action-trigger::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(219, 169, 28, 0.3), transparent);
-    transform: translate(-50%, -50%);
-    transition: width 0.5s ease, height 0.5s ease;
-}
-
-.mil-action-trigger:hover::before {
-    width: 200%;
-    height: 200%;
+    display: none;
 }
 
 .mil-action-trigger:hover {
-    transform: translateY(-3px) scale(1.05);
-    border-color: rgba(219, 169, 28, 0.4);
-    box-shadow: 0 8px 24px rgba(219, 169, 28, 0.2);
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: none;
 }
 
 .mil-action-trigger i {
-    font-size: 20px;
-    color: #fff;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.6);
     transition: all 0.4s ease;
 }
 
+.mil-action-trigger:hover i {
+    color: #fff;
+}
+
 .mil-action-trigger.mil-active {
-    background: linear-gradient(135deg, #DBA91C, #C89D1A);
+    background: rgba(255, 255, 255, 0.1);
     border-color: transparent;
-    box-shadow: 0 8px 24px rgba(219, 169, 28, 0.5), 0 0 30px rgba(219, 169, 28, 0.3);
-    transform: scale(1.1);
+    box-shadow: none;
+    transform: scale(1.05);
 }
 
 .mil-action-trigger.mil-active i {
-    color: #000;
+    color: #fff;
     transform: rotate(90deg);
 }
 
 .mil-action-list {
     position: absolute;
-    bottom: 75px;
+    bottom: 60px; /* Adjusted closer */
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 25px;
+    gap: 15px; /* Tighter gap */
     opacity: 0;
     visibility: hidden;
-    transform: translateY(20px);
+    transform: translateY(10px);
     transition: all 0.4s cubic-bezier(0, 0, 0.3642, 1);
 }
 
@@ -588,12 +586,12 @@ onUpdated(() => {
 }
 
 .mil-action-btn {
-    width: 50px;
-    height: 50px;
+    width: 40px; /* Smaller sub-actions */
+    height: 40px;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(18, 18, 18, 0.95), rgba(18, 18, 18, 0.85));
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(18, 18, 18, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Keep faint border for visibility against blurred bg */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -604,39 +602,123 @@ onUpdated(() => {
 }
 
 .mil-action-btn::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(219, 169, 28, 0.3), transparent);
-    transform: translate(-50%, -50%);
-    transition: width 0.5s ease, height 0.5s ease;
-}
-
-.mil-action-btn:hover::before {
-    width: 200%;
-    height: 200%;
+   display: none;
 }
 
 .mil-action-btn i {
-    font-size: 17px;
+    font-size: 14px;
     color: rgba(255, 255, 255, 0.7);
     transition: all 0.3s ease;
 }
 
 .mil-action-btn:hover {
-    background: linear-gradient(135deg, #DBA91C, #C89D1A);
-    border-color: transparent;
-    transform: translateY(-3px) scale(1.1);
-    box-shadow: 0 8px 24px rgba(219, 169, 28, 0.5), 0 0 30px rgba(219, 169, 28, 0.3);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
 .mil-action-btn:hover i {
-    color: #121212;
+    color: #fff;
     transform: scale(1.1);
+}
+
+
+/* Navigation Buttons (Previous / Next) Styling */
+.mil-prev-nav .mil-link,
+.mil-next-nav .mil-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.03); /* Semi-transparent */
+    border-radius: 30px;
+    border: none; /* No border */
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    height: 44px;
+}
+
+.mil-prev-nav .mil-link:hover,
+.mil-next-nav .mil-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.mil-prev-nav .mil-link i,
+.mil-next-nav .mil-link i {
+    font-size: 14px;
+    transition: transform 0.3s ease;
+}
+
+.mil-prev-nav .mil-link:hover i {
+    transform: translateX(-3px);
+}
+
+.mil-next-nav .mil-link:hover i {
+    transform: translateX(3px);
+}
+.mil-prev-nav .mil-link.mil-disabled,
+.mil-next-nav .mil-link.mil-disabled {
+    opacity: 0.3;
+    pointer-events: none;
+    background: transparent;
+}
+
+/* Ensure icons have spacing */
+.mil-prev-nav .mil-link span { margin-left: 10px; }
+.mil-next-nav .mil-link span { margin-right: 10px; }
+
+/* Mobile Responsiveness for Bottom Bar */
+@media (max-width: 768px) {
+    .mil-bottom-panel .mil-jcb {
+        padding: 15px 0;
+        gap: 10px;
+    }
+    
+    .mil-bottom-centered {
+        flex: 1; 
+        order: 2;
+    }
+
+    .mil-back-btn {
+        padding: 0 10px;
+        height: 40px;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+    
+    /* Ensure Previous/Next are visible but compact on mobile */
+    .mil-prev-nav .mil-link,
+    .mil-next-nav .mil-link {
+        padding: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%; /* Circle on mobile */
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    /* Hide text labels on mobile */
+    .mil-prev-nav .mil-link span,
+    .mil-next-nav .mil-link span {
+        display: none;
+    }
+
+    .mil-prev-nav .mil-link i,
+    .mil-next-nav .mil-link i {
+        margin: 0 !important; /* Reset icon margins */
+    }
+
+    .mil-action-trigger {
+        width: 40px;
+        height: 40px;
+    }
 }
 
 /* TOC Styles Update */

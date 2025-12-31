@@ -373,22 +373,20 @@ const copyLink = () => {
     justify-content: center;
     align-items: center;
     color: #fff;
-    font-size: 20px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 18px;
+    background: transparent;
+    border: 1px solid transparent; /* Invisible border to keep layout stable */
     border-radius: 50%;
-    backdrop-filter: blur(15px);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    cursor: pointer;
 }
 
-
-
 .mil-fixed-icon:hover {
-    transform: translateY(-3px) scale(1.05);
-    border-color: rgba(219, 169, 28, 0.4);
-    box-shadow: 0 8px 24px rgba(219, 169, 28, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
 }
 
 .mil-fixed-icon a {
@@ -401,8 +399,12 @@ const copyLink = () => {
 }
 
 .mil-left-icon i {
-    color: #fff;
+    color: rgba(255, 255, 255, 0.6);
     transition: all 0.4s ease;
+}
+
+.mil-fixed-icon:hover i {
+    color: #fff;
 }
 
 /* Center Container */
@@ -412,22 +414,20 @@ const copyLink = () => {
     justify-content: center;
     overflow: hidden;
     padding: 8px;
-    border-radius: 50px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(20px);
+    /* Removed heavy container styling */
+    background: transparent;
+    border-radius: 0;
+    border: none;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
 }
 
-
-
 /* Active Overflow State */
 .mil-filter-container.mil-has-overflow {
     justify-content: flex-start;
-    border-color: rgba(219, 169, 28, 0.2);
-    background: rgba(255, 255, 255, 0.05);
-    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+    /* Add subtle cue for overflow if needed, or keep clean */
+    mask-image: linear-gradient(to right, transparent, black 20px, black 95%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 20px, black 95%, transparent);
 }
 
 .mil-filter {
@@ -436,7 +436,7 @@ const copyLink = () => {
     flex-wrap: nowrap;
     overflow-x: auto;
     white-space: nowrap;
-    gap: 12px;
+    gap: 20px; /* Increased gap for cleaner look */
     -ms-overflow-style: none;
     scrollbar-width: none;
     padding: 6px;
@@ -453,42 +453,53 @@ const copyLink = () => {
     display: none;
 }
 
-/* Pill Styling */
+/* Pill Styling - Simplified to Minimal Text */
 .mil-link.mil-pill {
-    padding: 10px 20px;
+    padding: 8px 0; /* Removing horizontal padding for text-only look */
     background: transparent;
-    border-radius: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0;
+    border: none; /* Removed border */
     font-size: 11px;
-    letter-spacing: 1.5px;
-    font-weight: 600;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 2px;
+    font-weight: 500;
+    transition: all 0.3s ease;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(255, 255, 255, 0.5); /* Dimmed default state */
     text-decoration: none;
     white-space: nowrap;
     position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
+    backdrop-filter: none;
 }
 
-
-
 .mil-link.mil-pill:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: transparent;
     color: #fff;
-    transform: translateY(-3px);
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.1);
+    transform: translateY(0);
+    border-color: transparent;
+    box-shadow: none;
 }
 
 .mil-link.mil-pill.mil-current {
-    background: #DBA91C;
-    color: #121212;
+    background: transparent;
+    color: #fff; /* Active is bright white */
     border-color: transparent;
-    box-shadow: 0 4px 12px rgba(219, 169, 28, 0.25), 0 2px 6px rgba(219, 169, 28, 0.15);
+    box-shadow: none;
     font-weight: 700;
-    transform: translateY(-2px);
+    transform: translateY(0);
+}
+
+/* Optional: Add a small dot for the active item */
+.mil-link.mil-pill.mil-current::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background-color: #DBA91C; /* Gold accent */
+    border-radius: 50%;
+    box-shadow: 0 0 10px #DBA91C;
 }
 
 .mil-link.mil-pill.mil-current::before {
@@ -513,9 +524,8 @@ const copyLink = () => {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(15px);
+    background: transparent;
+    border: 1px solid transparent;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -523,41 +533,44 @@ const copyLink = () => {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    backdrop-filter: none;
 }
 
-
-
 .mil-action-trigger:hover {
-    transform: translateY(-3px) scale(1.05);
-    border-color: rgba(219, 169, 28, 0.4);
-    box-shadow: 0 8px 24px rgba(219, 169, 28, 0.2);
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 .mil-action-trigger i {
     font-size: 20px;
-    color: #fff;
+    color: rgba(255, 255, 255, 0.6);
     transition: all 0.4s ease;
 }
 
+.mil-action-trigger:hover i {
+    color: #fff;
+}
+
 .mil-action-trigger.mil-active {
-    background: #DBA91C;
+    background: rgba(255, 255, 255, 0.1);
     border-color: transparent;
-    box-shadow: 0 8px 24px rgba(219, 169, 28, 0.5), 0 0 30px rgba(219, 169, 28, 0.3);
-    transform: scale(1.1);
+    transform: scale(1.05);
+    box-shadow: none;
 }
 
 .mil-action-trigger.mil-active i {
-    color: #000;
+    color: #fff;
     transform: rotate(90deg);
 }
 
 .mil-action-btn {
-    width: 50px;
-    height: 50px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     background: rgba(18, 18, 18, 0.95);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -567,23 +580,21 @@ const copyLink = () => {
     overflow: hidden;
 }
 
-
-
 .mil-action-btn:hover {
-    background: #DBA91C;
-    border-color: transparent;
-    transform: translateY(-3px) scale(1.1);
-    box-shadow: 0 8px 24px rgba(219, 169, 28, 0.5), 0 0 30px rgba(219, 169, 28, 0.3);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
 .mil-action-btn i {
-    font-size: 17px;
+    font-size: 16px;
     color: rgba(255, 255, 255, 0.7);
     transition: all 0.3s ease;
 }
 
 .mil-action-btn:hover i {
-    color: #121212;
+    color: #fff;
     transform: scale(1.1);
 }
 </style>
