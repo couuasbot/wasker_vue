@@ -520,6 +520,12 @@ const copyLink = () => {
     z-index: 10;
 }
 
+.mil-action-menu-wrapper.mil-active .mil-action-list {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
 .mil-action-trigger {
     width: 48px;
     height: 48px;
