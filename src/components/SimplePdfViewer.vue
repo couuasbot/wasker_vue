@@ -1,6 +1,9 @@
+
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+
 import VuePdfEmbed from 'vue-pdf-embed';
+
 
 const props = defineProps({
   src: {
@@ -11,6 +14,22 @@ const props = defineProps({
 
 const page = ref(1);
 const pageCount = ref(1);
+const isVisible = ref(false);
+const pdfContainer = ref(null);
+
+onMounted(() => {
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            isVisible.value = true;
+            observer.disconnect();
+        }
+    }, { rootMargin: '200px' });
+
+    if (pdfContainer.value) {
+        observer.observe(pdfContainer.value);
+    }
+});
+
 
 function handleDocumentLoad(doc) {
   pageCount.value = doc.numPages;
@@ -31,13 +50,19 @@ function nextPage() {
 
 <template>
   <div class="simple-pdf-viewer">
-    <div class="pdf-wrapper">
+    <div class="pdf-wrapper" ref="pdfContainer">
+        <div v-if="!isVisible" class="pdf-placeholder">
+            <div class="loading-spinner"></div>
+            <span>Loading PDF...</span>
+        </div>
         <VuePdfEmbed 
+            v-else
             :source="src" 
             :page="page"
             @loaded="handleDocumentLoad" 
         />
     </div>
+
 
     <!-- Navigation Controls -->
     <div class="pdf-controls" v-if="pageCount > 1">
@@ -127,4 +152,29 @@ function nextPage() {
     min-width: 60px;
     text-align: center;
 }
+
+.pdf-placeholder {
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.5);
+    gap: 15px;
+}
+
+.loading-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(255,255,255,0.1);
+    border-top-color: #DBA91C;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 </style>

@@ -1,8 +1,9 @@
 <script setup>
-import { computed, onMounted, onUpdated, nextTick, ref } from 'vue'
+import { computed, onMounted, onUpdated, nextTick, ref, shallowRef } from 'vue'
 import { useRoute, useRouter, RouterLink } from 'vue-router'
 import { useMarkdown } from '@/composables/useMarkdown'
-import md from '@/utils/markdown'
+// import md from '@/utils/markdown'
+const md = shallowRef(null)
 import { useAppStore } from '@/stores/app'
 import { storeToRefs } from 'pinia'
 // Dynamic import of mermaid
@@ -11,6 +12,13 @@ let mermaid;
 import ToastNotification from '@/components/ToastNotification.vue'
 
 // Mermaid config (same as Blog)
+
+const initMarkdown = async () => {
+    if (!md.value) {
+        const m = await import('@/utils/markdown');
+        md.value = m.default;
+    }
+}
 
 const initMermaid = async () => {
     if (!mermaid) {
@@ -88,7 +96,7 @@ const toggleLang = () => {
 // <div class="mil-action-btn" :class="{ 'mil-disabled': !canSwitchLang }" @click="toggleLang" :title="canSwitchLang ? 'Switch Language' : 'Translation not available'">
 
 const renderedBody = computed(() => {
-    return post.value ? md.render(post.value.body) : ''
+    return (post.value && md.value) ? md.value.render(post.value.body) : ''
 })
 
 const formattedDate = computed(() => {
@@ -201,8 +209,8 @@ const attachCopyListeners = () => {
     });
 };
 
-onMounted(() => { nextTick(() => { attachCopyListeners(); initMermaid(); }); })
-onUpdated(() => { nextTick(() => { attachCopyListeners(); initMermaid(); }); })
+onMounted(() => { nextTick(() => { attachCopyListeners(); initMarkdown(); initMermaid(); }); })
+onUpdated(() => { nextTick(() => { attachCopyListeners(); initMarkdown(); initMermaid(); }); })
 
 
 </script>

@@ -3,7 +3,9 @@ import { onMounted, nextTick, onUnmounted, ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import TheSidebar from '../components/TheSidebar.vue'
 import TheRightBar from '../components/TheRightBar.vue'
+import GlobalAudio from '../components/GlobalAudio.vue'
 import { useAppStore } from '../stores/app'
+
 import { useScrollAnimations } from '../composables/useScrollAnimations'
 import { Fancybox } from "@fancyapps/ui"
 import "@fancyapps/ui/dist/fancybox/fancybox.css"
@@ -197,7 +199,9 @@ const onAfterLeave = () => {
 
 <template>
   <div class="mil-frame-wrapper">
+      <GlobalAudio />
       <div :class="preloaderClass" v-if="isLoading">
+
           <div class="mil-preloader-content">
               <h1 class="mil-mb-30"><span class="mil-h3">Loading:</span> <span class="mil-accent mil-percent">{{ percent }}</span> <span class="mil-h3">%</span></h1>
               <div class="mil-preload-track">

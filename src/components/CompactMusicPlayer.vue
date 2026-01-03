@@ -1,20 +1,15 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useMusicStore } from '../stores/musicStore'
 
 const musicStore = useMusicStore()
-const audio = ref(null)
-
-onMounted(() => {
-  musicStore.initAudio(audio.value)
-})
 </script>
 
 <template>
   <div class="compact-music-player" :class="{ 'is-playing': musicStore.isPlaying }">
-    <audio ref="audio" preload="metadata"></audio>
     
     <div class="compact-disc-container" @click="musicStore.togglePlay" title="Play/Pause">
+
       <!-- Circular Progress (SVG) -->
       <svg class="progress-ring" viewBox="0 0 36 36">
         <circle 

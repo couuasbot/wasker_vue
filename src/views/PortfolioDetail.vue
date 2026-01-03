@@ -1,8 +1,9 @@
 <script setup>
-import { computed, onMounted, onUpdated, nextTick, ref } from 'vue'
+import { computed, onMounted, onUpdated, nextTick, ref, shallowRef } from 'vue'
 import { useRoute, useRouter, RouterLink } from 'vue-router'
 import { useMarkdown } from '@/composables/useMarkdown'
-import md from '@/utils/markdown'
+// import md from '@/utils/markdown'
+const md = shallowRef(null)
 import SimplePdfViewer from '@/components/SimplePdfViewer.vue'
 import { useAppStore } from '@/stores/app'
 import { storeToRefs } from 'pinia'
@@ -10,6 +11,13 @@ import { storeToRefs } from 'pinia'
 let mermaid;
 
 import ToastNotification from '@/components/ToastNotification.vue'
+
+const initMarkdown = async () => {
+    if (!md.value) {
+        const m = await import('@/utils/markdown');
+        md.value = m.default;
+    }
+}
 
 const initMermaid = async () => {
     if (!mermaid) {
@@ -83,7 +91,7 @@ const toggleLang = () => {
 }
 
 const renderedBody = computed(() => {
-    return work.value ? md.render(work.value.body) : ''
+    return (work.value && md.value) ? md.value.render(work.value.body) : ''
 })
 
 // TOC Extraction
@@ -212,6 +220,7 @@ const attachCopyListeners = () => {
 onMounted(() => {
    nextTick(() => {
        attachCopyListeners();
+       initMarkdown();
        initMermaid();
    });
 })
@@ -220,6 +229,7 @@ onMounted(() => {
 onUpdated(() => {
     nextTick(() => {
         attachCopyListeners();
+        initMarkdown();
         initMermaid();
     });
 })
