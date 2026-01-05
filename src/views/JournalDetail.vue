@@ -349,43 +349,436 @@ onUpdated(() => { nextTick(() => { attachCopyListeners(); initMarkdown(); initMe
     opacity: 0.2;
 }
 
-/* Reusing BlogDetail styles implicitly via class names, adding specific tweaks if needed */
-/* Ensure toc styles are present if not global (they were in BlogDetail scoped, so need to copy or make global) */
-/* Ideally, we should have moved these to global css, but for now copying ensures it works */
-.mil-toc-backdrop {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px);
-    z-index: 998; opacity: 0; visibility: hidden;
+/* Semi-transparent blur for cover image overlay */
+.mil-banner-overlay {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.mil-lang-btn {
+    cursor: pointer;
+    opacity: 0.5;
+    transition: 0.3s;
+}
+.mil-lang-btn.active {
+    opacity: 1;
+    color: #DBA91C;
+}
+.mil-lang-btn.disabled {
+    cursor: not-allowed;
+    opacity: 0.2;
+    pointer-events: none;
+}
+.mil-lang-btn:hover:not(.disabled) {
+    opacity: 1;
+}
+
+/* Bottom Bar Layout Styling */
+.mil-bottom-centered {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* Simplified Back Button - Text Style */
+.mil-back-btn {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 0;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.6);
+    position: relative;
+    overflow: visible;
+    backdrop-filter: none;
+    box-shadow: none;
+}
+
+.mil-back-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 0%;
+    height: 1px;
+    background: #DBA91C;
+    transition: width 0.3s ease;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.mil-back-btn:hover {
+    color: #fff;
+    transform: translateY(-2px);
+    background: transparent;
+}
+
+.mil-back-btn:hover::after {
+   width: 100%; 
+}
+
+/* Navigation Buttons (Previous / Next) Styling */
+.mil-prev-nav .mil-link,
+.mil-next-nav .mil-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 30px;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    height: 44px;
+}
+
+.mil-prev-nav .mil-link:hover,
+.mil-next-nav .mil-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.mil-prev-nav .mil-link i,
+.mil-next-nav .mil-link i {
+    font-size: 14px;
+    transition: transform 0.3s ease;
+}
+
+.mil-prev-nav .mil-link:hover i {
+    transform: translateX(-3px);
+}
+
+.mil-next-nav .mil-link:hover i {
+    transform: translateX(3px);
+}
+.mil-prev-nav .mil-link.mil-disabled,
+.mil-next-nav .mil-link.mil-disabled {
+    opacity: 0.3;
+    pointer-events: none;
+    background: transparent;
+}
+
+.mil-prev-nav .mil-link span { margin-left: 10px; }
+.mil-next-nav .mil-link span { margin-right: 10px; }
+
+/* Action Menu & Buttons */
+.mil-action-menu-wrapper {
+    position: relative;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.mil-action-trigger {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.mil-action-trigger:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.mil-action-trigger i {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.6);
     transition: all 0.4s ease;
 }
-.mil-toc-backdrop.mil-active { opacity: 1; visibility: visible; }
+
+.mil-action-trigger:hover i {
+    color: #fff;
+}
+
+.mil-action-trigger.mil-active {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+}
+
+.mil-action-trigger.mil-active i {
+    color: #fff;
+    transform: rotate(90deg);
+}
+
+.mil-action-list {
+    position: absolute;
+    bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.4s cubic-bezier(0, 0, 0.3642, 1);
+}
+
+.mil-active .mil-action-list {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.mil-action-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(18, 18, 18, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mil-action-btn i {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
+}
+
+.mil-action-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.mil-action-btn:hover i {
+    color: #fff;
+}
+
+.mil-action-btn.mil-disabled {
+    opacity: 0.3;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+/* TOC Styles */
+.mil-toc-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.mil-toc-backdrop.mil-active {
+    opacity: 1;
+    visibility: visible;
+}
+
 .mil-toc-wrapper {
-    position: fixed; bottom: 0; left: 0; width: 100%; z-index: 1001;
-    display: flex; justify-content: center; pointer-events: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1001;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
     transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.mil-toc-menu {
-    pointer-events: auto; width: 100%; max-width: 100rem; max-height: 85vh;
-    background: rgba(18, 18, 18, 0.98); backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px 30px 0 0;
-    padding: 20px 25px 40px; opacity: 0; visibility: hidden;
-    transform: translateY(100%); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.mil-toc-active .mil-toc-menu { opacity: 1; visibility: visible; transform: translateY(0); }
-.mil-toc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-.mil-sheet-handle { width: 40px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin: 0 auto 20px; }
-.mil-toc-item { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.3s; opacity: 0.7; }
-.mil-toc-item:hover { opacity: 1; color: #DBA91C; transform: translateX(5px); }
-.mil-level-1 { font-weight: 700; font-size: 1.1em; }
-.mil-level-2 { padding-left: 20px; }
-.mil-level-3 { padding-left: 40px; font-size: 0.9em; }
 
-/* Action Menu & Buttons (copied from BlogDetail for consistency) */
-.mil-action-menu-wrapper { position: relative; z-index: 1000; display: flex; flex-direction: column; align-items: center; margin-left: 20px; }
-.mil-action-list { position: absolute; bottom: 60px; display: flex; flex-direction: column; align-items: center; gap: 15px; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.4s; }
-.mil-active .mil-action-list { opacity: 1; visibility: visible; transform: translateY(0); }
-.mil-action-trigger, .mil-action-btn { width: 48px; height: 48px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; background: transparent; border: 1px solid transparent; }
-.mil-action-trigger:hover, .mil-action-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
-.mil-action-btn { width: 40px; height: 40px; background: rgba(18,18,18,0.9); border: 1px solid rgba(255,255,255,0.1); }
-.mil-action-btn.mil-disabled { opacity: 0.3; pointer-events: none; cursor: not-allowed; }
+.mil-toc-menu {
+    pointer-events: auto;
+    width: 100%;
+    max-width: 100rem;
+    max-height: 85vh;
+    background: rgba(18, 18, 18, 0.98);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px 30px 0 0;
+    padding: 20px 25px 40px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease, visibility 0.4s;
+    box-shadow: 0 -20px 60px rgba(0,0,0,0.8);
+}
+
+.mil-toc-active .mil-toc-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.mil-sheet-handle {
+    width: 40px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    margin: 0 auto 20px;
+}
+
+.mil-toc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mil-toc-close {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.mil-toc-close:hover {
+    background: #ff5e5e;
+    color: #fff;
+}
+
+.mil-toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.mil-toc-item {
+    padding: 10px 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-left: 2px solid transparent;
+}
+
+.mil-toc-item span {
+    font-size: 1.3rem;
+    line-height: 1.5;
+    transition: all 0.3s ease;
+}
+
+.mil-toc-item:hover {
+    padding-left: 15px;
+    border-left-color: #DBA91C;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.mil-toc-item:hover span {
+    color: #fff !important;
+}
+
+.mil-level-1 { font-weight: 700; margin-top: 10px; font-size: 1.4rem; color: #fff !important; }
+.mil-level-2 { padding-left: 15px; font-weight: 500; font-size: 1.3rem; }
+.mil-level-3 { padding-left: 30px; font-size: 1.2rem; opacity: 0.9; }
+
+.mil-toc-dot {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 10px;
+    height: 10px;
+    background: #DBA91C;
+    border-radius: 50%;
+    animation: mil-pulsing 2s infinite;
+}
+
+@keyframes mil-pulsing {
+    0% { transform: scale(0.6); opacity: 1; }
+    100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .mil-bottom-panel .mil-jcb {
+        padding: 15px 0;
+        gap: 10px;
+    }
+    
+    /* Hide the center "Back to..." button */
+    .mil-bottom-centered {
+        display: none;
+    }
+
+    /* Show icons and text in Prev/Next navigation on mobile */
+    .mil-prev-nav .mil-link span, 
+    .mil-next-nav .mil-link span {
+        display: inline-block !important; /* Force show text */
+        font-size: 11px;
+    }
+
+    /* Reset width/height constraints to allow text flow */
+    .mil-prev-nav .mil-link, 
+    .mil-next-nav .mil-link {
+        display: flex;
+        align-items: center;
+        width: auto;
+        height: 44px;
+        padding: 0 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 30px;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .mil-prev-nav .mil-link i,
+    .mil-next-nav .mil-link i {
+        margin: 0 !important;
+    }
+
+    .mil-action-trigger {
+        width: 40px;
+        height: 40px;
+    }
+
+    .mil-action-menu-wrapper {
+        margin-left: 10px;
+    }
+    
+    .mil-toc-menu {
+        padding: 15px 25px 40px;
+    }
+    
+    .mil-toc-item span {
+        font-size: 1.4rem;
+        color: #E0E0E0 !important;
+    }
+}
 </style>
+

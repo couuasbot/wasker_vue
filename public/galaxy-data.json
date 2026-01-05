@@ -1,34 +1,6 @@
 {
   "nodes": [
     {
-      "id": "en/blog/performance_bottleneck_analysis",
-      "slug": "performance_bottleneck_analysis",
-      "type": "blog",
-      "lang": "en",
-      "name": "TRICYS Performance Bottleneck Analysis and Optimization",
-      "category": "Performance",
-      "val": 1,
-      "desc": "An in-depth analysis of TRICYS simulation program bottlenecks, proposing the 'Compile Once, Run Many' strategy to solve crashes and efficiency issues in large-scale concurrency.",
-      "filePath": "blog/en/performance_bottleneck_analysis.md",
-      "x": 23.1,
-      "y": 32.5,
-      "z": -163.1
-    },
-    {
-      "id": "en/blog/about-wasker",
-      "slug": "about-wasker",
-      "type": "blog",
-      "lang": "en",
-      "name": "About Wasker Vue",
-      "category": "Project",
-      "val": 1,
-      "desc": "Exploring the evolution of the Wasker ecosystem from static templates to the 3D + AI production version.",
-      "filePath": "blog/en/about-wasker.md",
-      "x": 33.6,
-      "y": -28.4,
-      "z": 24.8
-    },
-    {
       "id": "zh/blog/performance_bottleneck_analysis",
       "slug": "performance_bottleneck_analysis",
       "type": "blog",
@@ -52,6 +24,34 @@
       "val": 1,
       "desc": "回望 Wasker 体系从静态模板到 3D + AI 实战版的演进之路，见证个人站点的技术迭代。",
       "filePath": "blog/zh/about-wasker.md",
+      "x": 33.6,
+      "y": -28.4,
+      "z": 24.8
+    },
+    {
+      "id": "en/blog/performance_bottleneck_analysis",
+      "slug": "performance_bottleneck_analysis",
+      "type": "blog",
+      "lang": "en",
+      "name": "TRICYS Performance Bottleneck Analysis and Optimization",
+      "category": "Performance",
+      "val": 1,
+      "desc": "An in-depth analysis of TRICYS simulation program bottlenecks, proposing the 'Compile Once, Run Many' strategy to solve crashes and efficiency issues in large-scale concurrency.",
+      "filePath": "blog/en/performance_bottleneck_analysis.md",
+      "x": 23.1,
+      "y": 32.5,
+      "z": -163.1
+    },
+    {
+      "id": "en/blog/about-wasker",
+      "slug": "about-wasker",
+      "type": "blog",
+      "lang": "en",
+      "name": "About Wasker Vue",
+      "category": "Project",
+      "val": 1,
+      "desc": "Exploring the evolution of the Wasker ecosystem from static templates to the 3D + AI production version.",
+      "filePath": "blog/en/about-wasker.md",
       "x": 33.6,
       "y": -28.4,
       "z": 24.8
@@ -115,12 +115,12 @@
   ],
   "links": [
     {
-      "source": "en/blog/about-wasker",
-      "target": "en/portfolio/wasker_template"
-    },
-    {
       "source": "zh/blog/about-wasker",
       "target": "zh/portfolio/wasker_template"
+    },
+    {
+      "source": "en/blog/about-wasker",
+      "target": "en/portfolio/wasker_template"
     },
     {
       "source": "zh/portfolio/wasker_template",
