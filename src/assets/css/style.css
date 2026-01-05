@@ -1389,6 +1389,77 @@ Unified Page Transition Classes
 }
 
 
+/* Transition Loader */
+.mil-transition-loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  visibility: hidden;
+}
+
+.mil-transition-loader.mil-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mil-transition-loader .mil-loader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.mil-transition-loader .mil-loader-circle {
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(224, 224, 224, 0.05);
+  border-top-color: #DBA91C;
+  border-radius: 50%;
+  animation: mil-spin 0.8s linear infinite;
+}
+
+.mil-transition-loader .mil-loader-text {
+  font-family: "clesmont", sans-serif;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3rem;
+  color: #DBA91C;
+  animation: mil-pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes mil-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes mil-pulse {
+
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.98);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 /* -------------------------------------------
 
 space
