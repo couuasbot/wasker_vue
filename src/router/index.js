@@ -95,10 +95,6 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to) => {
-    // Scroll to top immediately on route change to prevent visual jump 
-    // when the new content starts fading in.
-    window.scrollTo(0, 0)
-
     // Ensure body class is synced even if transition hooks delay (as a safety fallback)
     if (to.meta.bodyClass) {
         // We don't apply it here because MainLayout does it in onLeave for sync,

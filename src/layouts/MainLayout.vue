@@ -111,34 +111,38 @@ const onEnter = (el, done) => {
     rightPart.classList.remove('mil-leaving', 'mil-ready')
   }
   
-  // 4. Small delay then trigger entrance animation by removing entering class
+  // 4. Wait for the old page to fade out (approx 400ms) before starting the new page entrance
   setTimeout(() => {
-    // Remove entering class to trigger CSS transition to normal state
+    // Scroll to top when the new page is about to fade in (while black screen is solid)
+    window.scrollTo(0, 0)
+    
+    // Remove entering class to trigger CSS transition
     el.classList.remove('mil-page-entering')
     
-    // Animate right sidebar to ready state if entering (only for Full → Half)
+    // Animate right sidebar to ready state if entering
     if (shouldAnimateSidebar && rightPart) {
       rightPart.classList.remove('mil-entering')
       rightPart.classList.add('mil-ready')
     }
     
-    // 5. Wait for animation to complete (0.5s), then cleanup
+    // 5. Briefly keep the black screen solid, then fade it out
     setTimeout(() => {
-      appStore.setTransitioning(false)
-      // Cleanup
+       appStore.setTransitioning(false)
+    }, 150)
+
+    // 6. Cleanup after everything is settled
+    setTimeout(() => {
       document.documentElement.classList.remove('is-animating')
       el.classList.remove('mil-page-leaving')
       
       if (rightPart) {
         rightPart.classList.remove('mil-leaving', 'mil-entering')
-        // Keep mil-ready if sidebar is visible
       }
       
-      // Re-init scroll trigger animations
       initAnimations()
       done()
     }, 500)
-  }, 100)
+  }, 400) // Match this with onLeave duration
 }
 
 const onLeave = (el, done) => {
@@ -187,10 +191,10 @@ const onLeave = (el, done) => {
   // 6. Add CSS class to trigger leave animation
   el.classList.add('mil-page-leaving')
   
-  // 7. Wait for CSS animation to complete (0.8s for drawer effect), then callback
+  // 7. Wait for leave animation to finish
   setTimeout(() => {
     done()
-  }, 800)
+  }, 400)
 }
 
 const onAfterLeave = () => {

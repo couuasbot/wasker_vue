@@ -1356,20 +1356,16 @@ Unified Page Transition Classes
 
 ------------------------------------------- */
 
-/* Page entering state - content starts slightly below and transparent */
+/* Page entering state - pure fade from black */
 .mil-page-entering {
   opacity: 0;
-  -webkit-transform: translateY(20px);
-  transform: translateY(20px);
 }
 
-/* Page leaving state - content ends slightly above and transparent */
+/* Page leaving state - pure fade to black */
 .mil-page-leaving {
   opacity: 0;
-  -webkit-transform: translateY(-20px);
-  transform: translateY(-20px);
-  -webkit-transition: all 0.4s cubic-bezier(0, 0, 0.3642, 1);
-  transition: all 0.4s cubic-bezier(0, 0, 0.3642, 1);
+  -webkit-transition: opacity 0.4s cubic-bezier(0, 0, 0.3642, 1);
+  transition: opacity 0.4s cubic-bezier(0, 0, 0.3642, 1);
 }
 
 /* Right sidebar state modifiers for JS orchestration */
@@ -1399,13 +1395,13 @@ Unified Page Transition Classes
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 1001;
   /* Higher z-index to cover everything */
   pointer-events: none;
   opacity: 0;
   background: #000;
   /* Create the black screen effect */
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
   transition: opacity 0.4s ease, visibility 0.4s;
   visibility: hidden;
 }
@@ -1413,6 +1409,8 @@ Unified Page Transition Classes
 .mil-transition-loader.mil-active {
   opacity: 1;
   visibility: visible;
+  transition: opacity 0.2s ease;
+  /* Show black cover fast */
 }
 
 .mil-transition-loader .mil-loader-content {
