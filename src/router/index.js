@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Portfolio from '../views/Portfolio.vue'
+import { useAppStore } from '../stores/app'
 
 import Blog from '../views/Blog.vue'
 import Contact from '../views/Contact.vue'
@@ -82,11 +83,27 @@ const router = createRouter({
 })
 
 // Set body class based on route meta
-// Removed: Handling this in MainLayout to sync// Set body class based on route meta
 router.beforeEach((to, from, next) => {
-    // Body class handling is primarily done in MainLayout.vue transition hooks
-    // to ensure smooth transitions. We only set it here if needed for initial load or as fallback.
+    const appStore = useAppStore()
+
+    // Only show transition loader if it's an internal navigation (not first load/refresh)
+    if (from.name && to.path !== from.path) {
+        appStore.setTransitioning(true)
+    }
+
     next()
+})
+
+router.afterEach((to) => {
+    // Scroll to top immediately on route change to prevent visual jump 
+    // when the new content starts fading in.
+    window.scrollTo(0, 0)
+
+    // Ensure body class is synced even if transition hooks delay (as a safety fallback)
+    if (to.meta.bodyClass) {
+        // We don't apply it here because MainLayout does it in onLeave for sync,
+        // but we could set a flag if needed.
+    }
 })
 
 export default router

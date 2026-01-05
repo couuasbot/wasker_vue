@@ -14,7 +14,6 @@ import gsap from 'gsap'
 const appStore = useAppStore()
 const route = useRoute()
 const { initAnimations, killAnimations } = useScrollAnimations()
-const isTransitioning = ref(false)
 
 // Responsive window width detection
 const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 1920)
@@ -78,6 +77,7 @@ onMounted(() => {
       setTimeout(() => {
         isLoading.value = false
         appStore.setLoading(false)
+        appStore.setTransitioning(false) // Safety reset
       }, 800) 
     }
    }, 100) 
@@ -124,7 +124,7 @@ const onEnter = (el, done) => {
     
     // 5. Wait for animation to complete (0.8s), then cleanup
     setTimeout(() => {
-      isTransitioning.value = false
+      appStore.setTransitioning(false)
       // Cleanup
       document.documentElement.classList.remove('is-animating')
       el.classList.remove('mil-page-leaving')
@@ -150,7 +150,7 @@ const onLeave = (el, done) => {
   
   // 1. Add is-animating class to trigger CSS animations
   document.documentElement.classList.add('is-animating')
-  isTransitioning.value = true
+  // transitioning is already set to true in router.beforeEach
   
   // 2. Determine transition type
   const isLeavingHalfPage = currentBodyClass.value === 'mil-half-page'
@@ -233,7 +233,7 @@ const onAfterLeave = () => {
           </router-view>
           
           <!-- Page Transition Loader -->
-          <div class="mil-transition-loader" :class="{ 'mil-active': isTransitioning }">
+          <div class="mil-transition-loader" :class="{ 'mil-active': appStore.transitioning }">
               <div class="mil-loader-content">
                   <div class="mil-loader-circle"></div>
                   <div class="mil-loader-text">Loading</div>

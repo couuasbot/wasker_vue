@@ -54,6 +54,19 @@ export default defineConfig({
               return 'd3';
             }
           }
+
+          // Group main content views together to reduce navigation latency (INTERNAL navigation)
+          if (id.includes('src/views/')) {
+            if (
+              id.includes('Blog') ||
+              id.includes('Portfolio') ||
+              id.includes('Journal') ||
+              id.includes('Contact') ||
+              id.includes('Friends')
+            ) {
+              return 'views-main';
+            }
+          }
         }
       }
     },

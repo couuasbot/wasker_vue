@@ -36,9 +36,15 @@ export const useAppStore = defineStore('app', () => {
         setLang(newLang)
     }
 
+    const transitioning = ref(false)
+    function setTransitioning(val) {
+        transitioning.value = val
+    }
+
     return {
         isMenuOpen, toggleMenu, closeMenu,
         isLoading, setLoading,
+        transitioning, setTransitioning,
         triggerAssistant, openAssistant,
         currentLang, setLang, toggleLang
     }
