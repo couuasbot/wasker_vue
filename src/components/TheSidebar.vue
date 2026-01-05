@@ -1,9 +1,10 @@
 <script setup>
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import { useAppStore } from '../stores/app'
 import CompactMusicPlayer from './CompactMusicPlayer.vue'
 
 const appStore = useAppStore()
+const route = useRoute()
 </script>
 
 <template>
@@ -17,50 +18,74 @@ const appStore = useAppStore()
       <nav class="mil-main-menu" :class="{ 'mil-active': appStore.isMenuOpen }">
         
         <ul id="swupMenu">
+          <!-- Home -->
           <router-link to="/" custom v-slot="{ href, navigate, isExactActive }">
             <li :class="{ 'mil-current': isExactActive }" @click="appStore.closeMenu">
               <a :href="href" @click="navigate" :class="{ 'mil-active': isExactActive }">
-                <i class="fal fa-home"></i><span>Home</span>
+                <i class="fal fa-home"></i>
+                <span>
+                    Home
+                </span>
               </a>
             </li>
           </router-link>
           
-          <router-link to="/portfolio" custom v-slot="{ href, navigate, isActive }">
-            <li :class="{ 'mil-current': isActive }" @click="appStore.closeMenu">
-              <a :href="href" @click="navigate" :class="{ 'mil-active': isActive }">
-                <i class="fal fa-palette"></i><span>Portfolio</span>
+          <!-- Portfolio -->
+          <router-link to="/portfolio" custom v-slot="{ href, navigate, isExactActive }">
+            <li :class="{ 'mil-current': isExactActive || route.name === 'portfolio-detail' }" @click="appStore.closeMenu">
+              <a :href="href" @click="navigate" :class="{ 'mil-active': isExactActive || route.name === 'portfolio-detail' }">
+                <i class="fal fa-palette"></i>
+                <span>
+                    {{ route.name === 'portfolio-detail' ? 'Back to Portfolio' : 'Portfolio' }}
+                </span>
               </a>
             </li>
           </router-link>
 
-          <router-link to="/blog" custom v-slot="{ href, navigate, isActive }">
-            <li :class="{ 'mil-current': isActive }" @click="appStore.closeMenu">
-              <a :href="href" @click="navigate" :class="{ 'mil-active': isActive }">
-                <i class="fal fa-book"></i><span>Blog</span>
+          <!-- Blog -->
+          <router-link to="/blog" custom v-slot="{ href, navigate, isExactActive }">
+            <li :class="{ 'mil-current': isExactActive || route.name === 'blog-detail' }" @click="appStore.closeMenu">
+              <a :href="href" @click="navigate" :class="{ 'mil-active': isExactActive || route.name === 'blog-detail' }">
+                <i class="fal fa-book"></i>
+                <span>
+                    {{ route.name === 'blog-detail' ? 'Back to Blog' : 'Blog' }}
+                </span>
               </a>
             </li>
           </router-link>
 
-          <router-link to="/journal" custom v-slot="{ href, navigate, isActive }">
-            <li :class="{ 'mil-current': isActive }" @click="appStore.closeMenu">
-              <a :href="href" @click="navigate" :class="{ 'mil-active': isActive }">
-                <i class="fal fa-pen-nib"></i><span>Journal</span>
+          <!-- Journal -->
+          <router-link to="/journal" custom v-slot="{ href, navigate, isExactActive }">
+            <li :class="{ 'mil-current': isExactActive || route.name === 'journal-detail' }" @click="appStore.closeMenu">
+              <a :href="href" @click="navigate" :class="{ 'mil-active': isExactActive || route.name === 'journal-detail' }">
+                <i class="fal fa-pen-nib"></i>
+                <span>
+                    {{ route.name === 'journal-detail' ? 'Back to Journal' : 'Journal' }}
+                </span>
               </a>
             </li>
           </router-link>
 
-          <router-link to="/friends" custom v-slot="{ href, navigate, isActive }">
-            <li :class="{ 'mil-current': isActive }" @click="appStore.closeMenu">
-              <a :href="href" @click="navigate" :class="{ 'mil-active': isActive }">
-                <i class="fal fa-link"></i><span>Friends</span>
+          <!-- Friends -->
+          <router-link to="/friends" custom v-slot="{ href, navigate, isExactActive }">
+            <li :class="{ 'mil-current': isExactActive }" @click="appStore.closeMenu">
+              <a :href="href" @click="navigate" :class="{ 'mil-active': isExactActive }">
+                <i class="fal fa-link"></i>
+                <span>
+                    Friends
+                </span>
               </a>
             </li>
           </router-link>
 
-          <router-link to="/contact" custom v-slot="{ href, navigate, isActive }">
-            <li :class="{ 'mil-current': isActive }" @click="appStore.closeMenu">
-              <a :href="href" @click="navigate" :class="{ 'mil-active': isActive }">
-                <i class="fal fa-envelope"></i><span>Contact</span>
+          <!-- Contact -->
+          <router-link to="/contact" custom v-slot="{ href, navigate, isExactActive }">
+            <li :class="{ 'mil-current': isExactActive }" @click="appStore.closeMenu">
+              <a :href="href" @click="navigate" :class="{ 'mil-active': isExactActive }">
+                <i class="fal fa-envelope"></i>
+                <span>
+                    Contact
+                </span>
               </a>
             </li>
           </router-link>
@@ -68,15 +93,17 @@ const appStore = useAppStore()
           <!-- Separator between Contact and Galaxy -->
           <li class="mil-sidebar-separator"></li>
           
-          <router-link to="/galaxy" custom v-slot="{ href, navigate, isActive }">
-            <li :class="{ 'mil-current': isActive }" @click="appStore.closeMenu" class="mil-lab-item">
-              <a :href="href" @click="navigate" :class="{ 'mil-active': isActive }">
-                <i class="fal fa-atom"></i><span>Galaxy</span>
+          <!-- Galaxy -->
+          <router-link to="/galaxy" custom v-slot="{ href, navigate, isExactActive }">
+            <li :class="{ 'mil-current': isExactActive }" @click="appStore.closeMenu" class="mil-lab-item">
+              <a :href="href" @click="navigate" :class="{ 'mil-active': isExactActive }">
+                <i class="fal fa-atom"></i>
+                <span>
+                    Galaxy
+                </span>
               </a>
             </li>
           </router-link>
-          
-
           
           <li class="mil-lab-item" @click="appStore.openAssistant">
               <a href="javascript:void(0);">
@@ -118,9 +145,18 @@ const appStore = useAppStore()
 /* Scoped styles if needed, otherwise global CSS handles it */
 .mil-main-menu li a.mil-active {
     /* Ensure active state style matches .mil-current */
-    color: #DBA91C; /* Example from style.css likely */
+    color: #DBA91C;
+    font-weight: 700;
 }
-/* Just relies on global .mil-current style mostly, but we use .mil-active */
+
+.mil-current-tag {
+    font-size: 8px;
+    font-weight: 400;
+    opacity: 0.5;
+    margin-left: 6px;
+    letter-spacing: 0.5px;
+    vertical-align: top;
+}
 
 /* Lab Badge Styles */
 .mil-lab-item a {
