@@ -12,6 +12,8 @@ const typeSpeed = 70
 const backSpeed = 20
 const backDelay = 1500
 
+const showICP = import.meta.env.VITE_SHOW_ICP === 'true'
+
 let timeoutId = null
 
 function typeText(element, strings) {
@@ -199,6 +201,9 @@ onUnmounted(() => {
       <footer>
         <div class="mil-space-90 mil-jcb" v-if="profile && profile.footer">
           <p>{{ profile.footer.copyright }}</p>
+          <p v-if="profile.footer.icp_number && showICP" style="margin: 0 10px;">
+            <a href="https://beian.miit.gov.cn/" target="_blank" class="mil-text-link">{{ profile.footer.icp_number }}</a>
+          </p>
           <p>Design by: <a :href="profile.footer.designer_url" class="mil-text-link" target="_blank">{{ profile.footer.designer }}</a></p>
         </div>
       </footer>

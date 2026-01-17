@@ -62,5 +62,6 @@ work:
 footer:
   copyright: "©2025. All rights reserved."
   designer: "COUUAS"
-  designer_url: "https://couuas.pp.ua"
+  designer_url: "https://github.com/couuas"
+  icp_number: "湘ICP备2026001812号" # e.g. 京ICP备12345678号
 ---
