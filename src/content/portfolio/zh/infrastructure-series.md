@@ -1,20 +1,30 @@
 ---
-title: "Infrastructure & Tools"
+title: "分布式运维：Serv00 Ghost 与基础设施工具"
 date: 2026-02-13
-category: "DevOps & Utilities"
-description: "Distributed server management solutions and automated infrastructure tools."
+category: "分布式系统 & DevOps"
+description: "专注于解决多节点、跨地域服务器的统一管理与远程运维问题，打造高可用的 WebSSH 解决方案。"
 ---
 
-## 核心项目集 (Project Suite)
+## 核心项目：Serv00 Ghost
 
-### 1. Serv00 Ghost
-一个先进的 **WebSSH** 解决方案，采用分布式 Master/Slave 架构，能够管理多个服务器节点（如 Serv00 节点）。
-- **特色**：解决了分布式环境下的统一运维与远程访问难题。
+### 1. 架构设计 (Master/Slave Architecture)
+- **多节点管理**：针对 Serv00 这种多节点、多实例的服务器环境，设计了分布式的 Master/Slave 管理模型。
+- **状态同步**：实现了一套轻量级的节点存活检测与任务下发协议，确保在任意 Master 节点都能全局操控后端 Slave 实例。
 
-### 2. OpenModelica (Fork/Contribution)
-深度参与开源建模与仿真环境 OpenModelica 的开发与应用，主要用于工业和学术界的复杂系统建模。
+### 2. WebSSH 技术实现
+- **实时传输**：基于 **Xterm.js** 与 **WebSocket** 实现完整的终端仿真。
+- **并发处理**：后端采用协程并发模式，能够同时维持与数百个服务器节点的 SSH 长连接，且保证极低的资源占用。
+- **安全性**：实现了基于内存的凭据加密存储，避免敏感信息落盘。
+
+---
+
+## 基础设施贡献 (OpenModelica)
+
+### 1. 开源社区贡献
+- 深度参与 OpenModelica 这一顶级开源建模环境的 Bug 修复与功能增强，特别是在 arm64 架构适配和 Linux 环境兼容性方面的贡献。
+- 维护了多个针对特定物理场景的仿真补丁包。
 
 ---
 
 ## 项目价值
-专注于提升开发与运维效率，通过构建分布式管理工具和参与顶级开源项目，不断打磨底层技术实力。
+该系列项目展现了我在处理高并发长连接、分布式系统同步以及底层开源软件适配方面的工程能力。

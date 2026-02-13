@@ -1,26 +1,30 @@
 ---
-title: "TRICYS Ecosystem"
+title: "TRICYS 生态系统：聚变燃料循环仿真平台"
 date: 2026-02-13
-category: "Engineering & Simulation"
-description: "A comprehensive simulation system for fusion fuel cycle analysis, including backend APIs and visualization platforms."
+category: "计算物理 & 全栈工程"
+description: "基于 OpenModelica 的核聚变氚循环集成仿真系统，实现了从复杂物理建模到跨平台 Web 监控的全链路闭环。"
 ---
 
-## 核心项目集 (Project Suite)
+## 项目背景
+TRICYS (TRitium Integrated CYcle Simulation) 是针对聚变堆氚燃料循环设计的专业仿真环境。该项目旨在解决聚变堆运行中氚自持、平衡与安全分析的复杂计算需求。
 
-### 1. TRICYS (Core)
-**TRICYS (TRitium Integrated CYcle Simulation)** 是一个用于分析聚变燃料循环的模拟系统，基于 **OpenModelica** 平台开发。它是整个生态系统的物理与逻辑核心。
+## 技术深度与架构
 
-### 2. TRICYS Backend
-为了提升用户体验并扩展应用场景（如 Web 远程访问或现代桌面客户端），我为 TRICYS 构建了后端包装层。
-- **技术栈**：Python / RESTful API / WebSocket
-- **功能**：抽象底层 CLI 调用，暴露统一标准化的接口。
+### 1. 核心物理仿真层 (TRICYS Core)
+- **平台基础**：深度定制 OpenModelica 建模环境，利用 Modelica 语言实现非线性微分代数方程组的求解。
+- **模块化建模**：构建了包括等离子体排气处理、同位素分离系统（ISS）和燃料补给系统在内的全套动态模型库。
 
-### 3. TRICYS Visualization & GoView
-针对模拟数据提供直观的可视化方案。
-- **tricys_visual**: 配置、监控与展示平台。
-- **tricys_goview**: 基于 GoView 的低代码大屏展示集成。
+### 2. 高性能后端包装 (TRICYS Backend)
+- **异构解耦**：采用 Python 构建异步后端，通过 `subprocess` 和 `pipe` 技术与底层的 OpenModelica 仿真引擎进行非阻塞式通信。
+- **实时数据流**：利用 **WebSocket** 协议实现仿真过程数据的实时推送，确保前端监控的亚秒级延迟。
+- **标准化接口**：设计了统一的 RESTful API 规范，支持第三方科研工具链的接入。
+
+### 3. 数据可视化监控 (Visual & GoView)
+- **低代码集成**：集成 **GoView** 平台，实现了仿真结果的实时大屏看板。
+- **交互设计**：针对海量仿真时序数据，采用 Canvas 渲染技术优化前端展示性能，确保在处理万级数据点时的流畅体验。
 
 ---
 
-## 项目价值
-该生态系统实现了从复杂物理建模到直观前端展示的全链路闭环，为科研与工业应用提供了高效的决策支持。
+## 核心贡献
+- 实现了国内稀缺的聚变燃料循环全流程动态仿真自研工具链。
+- 解决了传统物理仿真软件“重计算、轻交互”的痛点，将科研工具向工业级产品化推进。
