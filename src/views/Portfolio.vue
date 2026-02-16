@@ -13,7 +13,7 @@ const appStore = useAppStore()
 const { currentLang, isFullScreen } = storeToRefs(appStore)
 
 const allWorks = getPosts('portfolio')
-const categories = getCategories('portfolio')
+const categories = getCategories('portfolio', currentLang)
 
 const activeCategory = ref('All')
 const isExpanded = ref(false)
@@ -422,13 +422,14 @@ const selectCategory = (cat) => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
+    width: fit-content;
+    max-width: 100%;
     box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 
 .mil-bottom-menu {
     list-style: none;
-    padding: 0;
+    padding: 0 10px; /* Added horizontal padding */
     margin: 0;
     display: flex;
     overflow-x: auto;
@@ -437,7 +438,7 @@ const selectCategory = (cat) => {
     flex-grow: 1;
     gap: 5px;
     cursor: grab;
-    justify-content: center;
+    justify-content: flex-start; /* Changed from center to prevent obscuring first item on overflow */
 }
 
 .mil-bottom-menu:active {
@@ -461,7 +462,6 @@ const selectCategory = (cat) => {
     flex-shrink: 0;
 }
 
-.mil-bottom-menu li:hover,
 .mil-bottom-menu li.mil-active {
     background-color: #FFD700;
     color: #000;
@@ -490,7 +490,6 @@ const selectCategory = (cat) => {
     flex-shrink: 0;
 }
 
-.mil-add-btn:hover,
 .mil-add-btn.mil-active {
     background-color: #FFD700;
     color: #000;

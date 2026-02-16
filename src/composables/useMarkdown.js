@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue';
+import { ref, computed, unref } from 'vue';
 import fm from 'front-matter';
 
 // State to cache posts to avoid re-parsing on every call if not needed
@@ -120,9 +120,12 @@ export function useMarkdown() {
         });
     };
 
-    const getCategories = (type) => {
+    const getCategories = (type, lang) => {
         return computed(() => {
-            const list = type ? posts.value.filter(p => p.type === type) : posts.value;
+            let list = type ? posts.value.filter(p => p.type === type) : posts.value;
+            if (lang) {
+                list = list.filter(p => p.lang === unref(lang));
+            }
             const allCats = list.map(p => p.category).filter(Boolean);
             // Deduplicate
             return ['All', ...new Set(allCats)];
