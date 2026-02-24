@@ -27,3 +27,11 @@ jobs:
             git commit -m "chore: update content submodule to latest"
             git push
           fi
+
+      - name: Trigger Deploy Workflow
+        if: success()
+        run: |
+          echo "Triggering deploy.yml..."
+          gh workflow run deploy.yml --ref main
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || github.token }}
