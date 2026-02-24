@@ -42,9 +42,9 @@ export function useMarkdown() {
             // Determine language
             // Assume default 'zh' unless '/en/' is explicitly found
             // Or strictly check for /zh/ vs /en/
-            let lang = 'zh';
-            if (path.includes('/en/')) lang = 'en';
-            else if (path.includes('/zh/')) lang = 'zh';
+            let lang = 'en';
+            if (path.includes('/zh/')) lang = 'zh';
+            else if (path.includes('/en/')) lang = 'en';
 
             // Generate slug from filename
             const filename = path.split('/').pop().replace('.md', '');
