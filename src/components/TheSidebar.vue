@@ -176,7 +176,7 @@ const route = useRoute()
 /* Separator */
 .mil-sidebar-separator {
     border-top: dotted 2px #2C2C2C;
-    margin: 0 0 3rem 0; /* Top margin 0 to avoid double-counting with previous item's margin-bottom */
+    margin: 0 0 1.5rem 0; /* Reduced from 3rem */
     list-style: none;
     width: 60%;
     margin-left: auto;
@@ -186,7 +186,7 @@ const route = useRoute()
 /* Ensure icons have fixed width for accurate centering on wide screens only */
 @media (min-width: 1201px) {
     .mil-main-menu ul li a i {
-        width: 3rem;
+        width: 2.5rem; /* Reduced from 3rem */
         text-align: center;
         display: flex;
         justify-content: center;
