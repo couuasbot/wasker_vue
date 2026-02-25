@@ -176,7 +176,7 @@ const route = useRoute()
 /* Separator */
 .mil-sidebar-separator {
     border-top: dotted 2px #2C2C2C;
-    margin: 0 0 1.5rem 0; /* Reduced from 3rem */
+    margin: 0.5rem 0 0.5rem 0; /* Reduced from 1.5rem */
     list-style: none;
     width: 60%;
     margin-left: auto;
