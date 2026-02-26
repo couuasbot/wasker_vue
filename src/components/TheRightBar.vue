@@ -94,6 +94,8 @@ onUnmounted(() => {
             <div class="mil-link">I'm a <span class="mil-typing" ref="typingElement"></span></div>
           </div>
         </div>
+
+
         <div class="mil-space-90 mil-p-0-75" v-if="profile">
           <div class="mil-title-line mil-mb-60 mil-up">
             <h2>Services</h2>

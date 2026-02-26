@@ -13,11 +13,11 @@ const route = useRoute()
       <!-- text logo -->
       <span>wa</span>
     </router-link>
-    <div class="mil-menu-panel mil-relative-panel">
+    <div class="mil-menu-panel mil-relative-panel" style="padding-top: 20px;">
 
       <nav class="mil-main-menu" :class="{ 'mil-active': appStore.isMenuOpen }">
         
-        <ul id="swupMenu">
+        <ul id="swupMenu" style="gap: 5px;">
           <!-- Home -->
           <router-link to="/" custom v-slot="{ href, navigate, isExactActive }">
             <li :class="{ 'mil-current': isExactActive }" @click="appStore.closeMenu">
@@ -66,18 +66,6 @@ const route = useRoute()
             </li>
           </router-link>
 
-          <!-- Friends -->
-          <router-link to="/friends" custom v-slot="{ href, navigate, isExactActive }">
-            <li :class="{ 'mil-current': isExactActive }" @click="appStore.closeMenu">
-              <a :href="href" @click="navigate" :class="{ 'mil-active': isExactActive }">
-                <i class="fal fa-link"></i>
-                <span>
-                    Friends
-                </span>
-              </a>
-            </li>
-          </router-link>
-
           <!-- Contact -->
           <router-link to="/contact" custom v-slot="{ href, navigate, isExactActive }">
             <li :class="{ 'mil-current': isExactActive }" @click="appStore.closeMenu">
@@ -115,7 +103,7 @@ const route = useRoute()
       </nav>
 
 
-      <div class="mil-sidebar-player">
+      <div class="mil-sidebar-player" style="margin-top: 15px; margin-bottom: 10px;">
         <CompactMusicPlayer />
       </div>
 
@@ -158,6 +146,11 @@ const route = useRoute()
     vertical-align: top;
 }
 
+/* Margin to space out the menu items and provide some breathing room */
+.mil-main-menu ul li {
+    margin-bottom: 15px; /* Spacings */
+}
+
 /* Lab Badge Styles */
 .mil-lab-item a {
     position: relative;
@@ -188,9 +181,9 @@ const route = useRoute()
 /* Separator */
 .mil-sidebar-separator {
     border-top: dotted 2px #2C2C2C;
-    margin: 0 0 3rem 0; /* Top margin 0 to avoid double-counting with previous item's margin-bottom */
+    margin: 1rem 0 1rem 0; /* Add more margin */
     list-style: none;
-    width: 60%;
+    width: 60%; /* Back to 60 for consistency */
     margin-left: auto;
     margin-right: auto;
 }
@@ -198,7 +191,7 @@ const route = useRoute()
 /* Ensure icons have fixed width for accurate centering on wide screens only */
 @media (min-width: 1201px) {
     .mil-main-menu ul li a i {
-        width: 3rem;
+        width: 2rem; /* Reduced from 2.5rem */
         text-align: center;
         display: flex;
         justify-content: center;
@@ -213,4 +206,3 @@ const route = useRoute()
     }
 }
 </style>
-

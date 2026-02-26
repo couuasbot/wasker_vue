@@ -1,10 +1,11 @@
 <script setup>
-import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { detectRegion, getBotId, getToken } from '../config/ai';
 import { useAppStore } from '../stores/app';
 
 const appStore = useAppStore();
 const isVisible = ref(false);
+
 
 watch(() => appStore.isLoading, (loading) => {
   if (!loading) {
@@ -301,23 +302,10 @@ onUnmounted(() => {
     @mousedown="onMouseDown"
     @touchstart="onTouchStart"
   >
-    <!-- Coze Container -->
-    <!-- We removed the handle. The container itself captures events? 
-         Note: The Coze button is inside an iframe usually, which swallows events.
-         Possible Fix: We need a transparent overlap on top of the button area to capture drag?
-         Or we assume Coze renders a DOM element we can bubble events from?
-         Coze SDK usually puts a button in Shadow DOM or iframe. 
-         
-         We will place a transparent overlay 'shield' only over the button area.
-         But since we drag the container, we might just put a full size shield?
-         But then we can't click the input box inside the chat when open!
-         
-         Dynamic Shield:
-         Only show the drag shield when the chat is CLOSED (small height).
-    -->
+    <!-- Coze Container target -->
     <div id="coze-chat-container" class="coze-target"></div>
-    
-    <!-- Drag Shield: 
+
+    <!-- Drag Shield:
          - Closed: Covers Icon (full)
          - Desktop Open: Covers Header (Top Strip) for dragging
          - Mobile Open: Hidden (via CSS)
@@ -372,15 +360,9 @@ onUnmounted(() => {
     top: 0;
     width: 85%; /* Leave right side open for buttons */
     left: 0;
-    /* DEBUG: Visible Blue Shield to show draggable area */
-    background: rgba(0, 100, 255, 0.3);
-    border-bottom: 2px solid cyan;
+    background: transparent;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
 }
-
-/* If the container grows (chat opens), we must disable the shield so user can interact with chat */
-/* We can use :has() or JS logic. Since we used ResizeObserver before, let's reuse logic? 
-   Actually, simply check if height is large?
-*/
 
 .coze-target {
   width: auto;
