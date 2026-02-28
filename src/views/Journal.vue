@@ -223,7 +223,7 @@ watch(isListView, async () => {
 
 <template>
     <div class="mil-content-frame">
-
+        <div class="mil-journal-page">
             <div class="mil-scroll mil-half-1 mil-bp-fix">
             
             <div class="mil-journal-container" v-if="!isListView">
@@ -297,43 +297,50 @@ watch(isListView, async () => {
                     <div class="mil-list-col mil-list-arrow"><i class="fas fa-arrow-right"></i></div>
                 </router-link>
             </div>
+            </div>
         </div>
 
         <!-- Integrated Bottom Panel (Teleported to body on mobile) -->
         <Teleport to="body" :disabled="!isMobile">
             <div class="mil-bottom-panel">
                     <div class="mil-jcc mil-space-15 mil-w-100">
-                        <div class="mil-jcb mil-w-100 mil-p-30-0" style="display: flex; align-items: center; justify-content: space-between;">
+                        <div class="mil-jcb mil-w-100 mil-p-30-0" :class="{ 'mil-actions-open': isActionMenuOpen }" style="position: relative;">
                             
-                            <!-- Left: Calendar Toggle -->
-                            <div class="mil-action-trigger mil-icon-btn" @click="toggleCalendar" title="Open Calendar" style="margin-right: 20px; order: 1;">
-                                <i class="fas fa-calendar-alt"></i>
-                            </div>
-
-                            <!-- Center: Current Month Display -->
-                            <div class="mil-bottom-centered" style="display: flex; justify-content: center; flex: 1; overflow: hidden; order: 2;">
-                                <div class="mil-current-month-display">
-                                    {{ currentVisibleMonth }}
+                            <!-- Fixed Left Action -->
+                            <div class="mil-bar-left-action">
+                                <div class="mil-action-trigger mil-icon-btn" @click="toggleCalendar" title="Open Calendar">
+                                    <i class="fas fa-calendar-alt"></i>
                                 </div>
                             </div>
 
-                            <!-- Right: Action Menu (Unified style) -->
-                            <div class="mil-action-menu-wrapper" :class="{ 'mil-active': isActionMenuOpen }" style="order: 3;">
+                            <!-- Default Bar Content -->
+                            <div class="mil-bar-default">
+
+                                <div class="mil-bottom-centered" style="display: flex; justify-content: center; flex: 1; overflow: hidden;">
+                                    <div class="mil-current-month-display">
+                                        {{ currentVisibleMonth }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons (slide in from right) -->
+                            <div class="mil-bar-actions">
                                 <div class="mil-action-list">
-                                    <!-- Layout Toggle -->
                                     <div class="mil-action-btn" @click="toggleLayout" :title="isListView ? 'Timeline View' : 'List View'">
                                         <i :class="['fas', isListView ? 'fa-stream' : 'fa-list']"></i>
                                     </div>
-                                    <!-- Language Toggle -->
                                     <div class="mil-action-btn" @click="toggleLang" title="Switch Language">
                                         <i class="fas fa-globe"></i>
                                     </div>
-                                    <!-- Full Screen Toggle -->
                                     <div class="mil-action-btn" @click="toggleFullScreen" :title="isFullScreen ? 'Original View' : 'Full Screen View'">
                                         <i :class="['fas', isFullScreen ? 'fa-compress-alt' : 'fa-expand-alt']"></i>
                                     </div>
                                 </div>
-                                <div class="mil-action-trigger mil-icon-btn" @click="toggleActionMenu" :class="{ 'mil-active': isActionMenuOpen }">
+                            </div>
+
+                            <!-- Fixed Trigger -->
+                            <div class="mil-bar-trigger">
+                                <div class="mil-action-trigger mil-icon-btn" :class="{ 'mil-active': isActionMenuOpen }" @click="toggleActionMenu">
                                     <i :class="['fas', isActionMenuOpen ? 'fa-times' : 'fa-ellipsis-v']"></i>
                                 </div>
                             </div>
@@ -360,6 +367,16 @@ watch(isListView, async () => {
 </template>
 
 <style scoped>
+.mil-journal-page {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #121212;
+  border-radius: 1rem;
+  border: solid 0.1rem rgba(44, 44, 44, 0.2);
+  overflow: hidden;
+}
+
 .mil-journal-container {
     padding: 60px 0 120px;
     position: relative;

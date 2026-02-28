@@ -35,17 +35,12 @@ const router = createRouter({
             component: () => import('../views/JournalDetail.vue'),
             meta: { bodyClass: 'mil-half-page' }
         },
-        {
-            path: '/contact',
-            name: 'contact',
-            component: () => import('../views/Contact.vue'),
-            meta: { bodyClass: 'mil-half-page' }
-        },
+
         {
             path: '/galaxy',
             name: 'galaxy',
             component: () => import('../views/GalaxyPage.vue'),
-            meta: { bodyClass: 'mil-fw-page' }
+            meta: { bodyClass: 'mil-half-page' }
         },
         {
             path: '/presentation/:id',

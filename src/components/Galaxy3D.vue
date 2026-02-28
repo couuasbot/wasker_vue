@@ -2,7 +2,7 @@
 import { onMounted, ref, onUnmounted, watch, toRaw } from 'vue';
 import * as THREE from 'three';
 import ForceGraph3D from '3d-force-graph';
-
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
 const props = defineProps({
   graphData: {
@@ -25,54 +25,23 @@ let resizeObserver = null;
 
 // Resource Cache to prevent redundant object creation
 const materialCache = new Map();
-const textureCache = new Map();
+const geometryCache = new THREE.SphereGeometry(1, 32, 32);
 
 function getOrCreateNodeMaterial(category, isSelected = false) {
     const cacheKey = `${category}-${isSelected}`;
     if (materialCache.has(cacheKey)) return materialCache.get(cacheKey);
 
-    const color = isSelected ? '#DBA91C' : getNodeColor(category);
+    const color = isSelected ? '#38bdf8' : getNodeColor(category);
     
-    // Create Texture with "Glitch" influence
-    let texture = textureCache.get(`${color}-${isSelected}`);
-    if (!texture) {
-        const canvas = document.createElement('canvas');
-        canvas.width = 64;
-        canvas.height = 64;
-        const context = canvas.getContext('2d');
-        
-        // Base Glow
-        const gradient = context.createRadialGradient(32, 32, 0, 32, 32, 32);
-        gradient.addColorStop(0, color);
-        gradient.addColorStop(0.2, color);
-        gradient.addColorStop(0.5, 'rgba(' + hexToRgb(color) + ', 0.3)');
-        gradient.addColorStop(1, 'rgba(0,0,0,0)');
-        
-        context.fillStyle = gradient;
-        context.fillRect(0, 0, 64, 64);
-
-        // Subtle Glitch Lines for selected nodes
-        if (isSelected) {
-            context.strokeStyle = '#ffffff';
-            context.lineWidth = 1;
-            for(let i=0; i<3; i++) {
-                const y = Math.random() * 64;
-                context.beginPath();
-                context.moveTo(10, y);
-                context.lineTo(54, y);
-                context.stroke();
-            }
-        }
-        
-        texture = new THREE.CanvasTexture(canvas);
-        textureCache.set(`${color}-${isSelected}`, texture);
-    }
-
-    const material = new THREE.SpriteMaterial({ 
-        map: texture,
+    // We use MeshStandardMaterial for volume and realistic lighting response.
+    const material = new THREE.MeshStandardMaterial({
+        color: color,
+        emissive: color,
+        emissiveIntensity: isSelected ? 0.9 : 0.4,
+        roughness: 0.2,
+        metalness: 0.8,
         transparent: true,
-        depthWrite: false,
-        blending: THREE.AdditiveBlending
+        opacity: 0.95,
     });
     
     materialCache.set(cacheKey, material);
@@ -117,25 +86,29 @@ onMounted(async () => {
   // Initialize graph
   graph = ForceGraph3D()(galaxyContainer.value)
     .graphData(structuredClone(toRaw(props.graphData)))
-    .backgroundColor('#000005') // Deep black
+    .backgroundColor('#000000') // Pure black to prevent bloom wash-out
     .showNavInfo(false)
     .cameraPosition({ z: 1200 }) // Start far away to prevent "shrinking" stutter
     .nodeLabel('name') // Show name on hover
     .nodeRelSize(4)
     .linkWidth(1)
-    .linkOpacity(0.3)
-    .linkColor(() => '#ffffff') // White links
+    .linkOpacity(0.15)
+    .linkColor(() => '#a8b2c1') // Subtle blue-ish grey links
+    .linkDirectionalParticles(2)
+    .linkDirectionalParticleWidth(1.2)
+    .linkDirectionalParticleSpeed(0.005)
+    .linkDirectionalParticleColor(() => '#ffffff')
     .nodeThreeObject(node => {
       const isSelected = node.id === props.selectedNodeId;
       const material = getOrCreateNodeMaterial(node.category, isSelected);
-      const sprite = new THREE.Sprite(material);
+      const sphere = new THREE.Mesh(geometryCache, material);
       
       // Scale based on "val" (citation count/weight)
       let scale = 4 + (node.val || 0) * 2;
       if (isSelected) scale *= 1.5;
-      sprite.scale.set(scale, scale, scale);
+      sphere.scale.set(scale, scale, scale);
       
-      return sprite;
+      return sphere;
     })
     .enableNodeDrag(false) // Disable dragging to prevent nodes from scattering and improve navigation
     .onNodeClick(node => {
@@ -186,8 +159,23 @@ onMounted(async () => {
       controls.autoRotateSpeed = 0.5;
   }
 
-  // Add background cosmic dust
-  addCosmicDust(graph.scene());
+  // Add Scene Lighting for 3D objects
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+  graph.scene().add(ambientLight);
+  
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+  directionalLight.position.set(200, 300, 400);
+  graph.scene().add(directionalLight);
+
+  const pointLight = new THREE.PointLight(0xffffff, 0.5, 2000);
+  graph.scene().add(pointLight);
+
+  // Add Post-Processing Bloom
+  const bloomPass = new UnrealBloomPass();
+  bloomPass.strength = 0.8;
+  bloomPass.radius = 0.6;
+  bloomPass.threshold = 0.1;
+  graph.postProcessingComposer().addPass(bloomPass);
 
   // Disable auto-rotate on interaction
   const stopAutoRotate = () => {
@@ -252,50 +240,20 @@ onUnmounted(() => {
     }
     // Clear caches
     materialCache.forEach(m => m.dispose());
-    textureCache.forEach(t => t.dispose());
+    geometryCache.dispose();
     materialCache.clear();
-    textureCache.clear();
 });
 
 function getNodeColor(category) {
     const colors = {
-        'Design': '#00d2ff', // Blue
-        'Code': '#00ff41',   // Green
-        'Essay': '#ffffff',  // White
-        'Life': '#ff0055',   // Red/Pink
+        'Design': '#3b82f6', // Bright Blue
+        'Code': '#10b981',   // Emerald Green
+        'Essay': '#8b5cf6',  // Violet
+        'Life': '#f43f5e',   // Rose
     };
-    return colors[category] || '#ffffff';
+    return colors[category] || '#94a3b8';
 }
 
-function hexToRgb(hex) {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? 
-        parseInt(result[1], 16) + ',' + parseInt(result[2], 16) + ',' + parseInt(result[3], 16)
-        : '255,255,255';
-}
-
-function addCosmicDust(scene) {
-    const geometry = new THREE.BufferGeometry();
-    const vertices = [];
-    const count = window.innerWidth < 768 ? 500 : 1500; // Reduce count on mobile
-    for (let i = 0; i < count; i++) {
-        vertices.push(
-            Math.random() * 2000 - 1000,
-            Math.random() * 2000 - 1000,
-            Math.random() * 2000 - 1000
-        );
-    }
-    geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-    const material = new THREE.PointsMaterial({
-        color: 0x888888,
-        size: 1.5,
-        transparent: true,
-        opacity: 0.5,
-        sizeAttenuation: true
-    });
-    const points = new THREE.Points(geometry, material);
-    scene.add(points);
-}
 
 </script>
 

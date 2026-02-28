@@ -174,7 +174,7 @@ const handleWheel = (e) => {
 </script>
 
 <template>
-    <div class="mil-content-frame">
+    <div class="mil-content-frame mil-page">
         <ToastNotification ref="toastRef" />
         <div class="mil-scroll mil-half-1 mil-bp-fix">
             <div class="mil-row-fix">
@@ -241,52 +241,59 @@ const handleWheel = (e) => {
         <Teleport to="body" :disabled="!isMobile">
             <div class="mil-bottom-panel">
                     <div class="mil-jcc mil-space-15 mil-w-100">
-                        <div class="mil-jcb mil-w-100 mil-p-30-0" style="display: flex; align-items: center; justify-content: space-between;">
+                        <div class="mil-jcb mil-w-100 mil-p-30-0" :class="{ 'mil-actions-open': isActionMenuOpen }" style="position: relative;">
                             
-                            <!-- Left: Share Button (matches detail layout) -->
-                            <div class="mil-action-trigger mil-icon-btn" @click="copyLink" title="Copy Link" style="margin-right: 20px; order: 1;">
-                                <i :class="['fas', copied ? 'fa-check' : 'fa-share-alt']"></i>
+                            <!-- Fixed Left Action -->
+                            <div class="mil-bar-left-action">
+                                <div class="mil-action-trigger mil-icon-btn" @click="copyLink" title="Copy Link">
+                                    <i :class="['fas', copied ? 'fa-check' : 'fa-share-alt']"></i>
+                                </div>
                             </div>
 
-                            <!-- Center: Categories Filter (Scrollable) -->
-                            <div class="mil-bottom-centered" style="display: flex; justify-content: center; flex: 1; overflow: hidden; order: 2;">
-                                <ul 
-                                    class="mil-bottom-menu"
-                                    ref="scrollContainer"
-                                    @mousedown="startDrag"
-                                    @mouseleave="stopDrag"
-                                    @mouseup="stopDrag"
-                                    @mousemove="doDrag"
-                                    @wheel.prevent="handleWheel"
-                                >
-                                    <li 
-                                        v-for="cat in categories" 
-                                        :key="cat" 
-                                        :class="{ 'mil-active': activeCategory === cat }"
-                                        @click="switchCategory(cat)"
+                            <!-- Default Bar Content -->
+                            <div class="mil-bar-default">
+
+                                <!-- Center: Categories Filter (Scrollable) -->
+                                <div class="mil-bottom-centered" style="display: flex; justify-content: center; flex: 1; overflow: hidden;">
+                                    <ul 
+                                        class="mil-bottom-menu"
+                                        ref="scrollContainer"
+                                        @mousedown="startDrag"
+                                        @mouseleave="stopDrag"
+                                        @mouseup="stopDrag"
+                                        @mousemove="doDrag"
+                                        @wheel.prevent="handleWheel"
                                     >
-                                        {{ cat }}
-                                    </li>
-                                </ul>
+                                        <li 
+                                            v-for="cat in categories" 
+                                            :key="cat" 
+                                            :class="{ 'mil-active': activeCategory === cat }"
+                                            @click="switchCategory(cat)"
+                                        >
+                                            {{ cat }}
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
 
-                            <!-- Right: Action Menu (Unified style) -->
-                            <div class="mil-action-menu-wrapper" :class="{ 'mil-active': isActionMenuOpen }" style="order: 3;">
+                            <!-- Action Buttons (slide in from right) -->
+                            <div class="mil-bar-actions">
                                 <div class="mil-action-list">
-                                    <!-- Layout Toggle -->
                                     <div class="mil-action-btn" @click="toggleLayout" :title="isListView ? 'Grid View' : 'List View'">
                                         <i :class="['fas', isListView ? 'fa-th-large' : 'fa-list']"></i>
                                     </div>
-                                    <!-- Language Toggle -->
                                     <div class="mil-action-btn" @click="toggleLang" title="Switch Language">
                                         <i class="fas fa-globe"></i>
                                     </div>
-                                    <!-- Full Screen Toggle -->
                                     <div class="mil-action-btn" @click="toggleFullScreen" :title="isFullScreen ? 'Original View' : 'Full Screen View'">
                                         <i :class="['fas', isFullScreen ? 'fa-compress-alt' : 'fa-expand-alt']"></i>
                                     </div>
                                 </div>
-                                <div class="mil-action-trigger mil-icon-btn" @click="toggleActionMenu" :class="{ 'mil-active': isActionMenuOpen }">
+                            </div>
+
+                            <!-- Fixed Trigger (never moves) -->
+                            <div class="mil-bar-trigger">
+                                <div class="mil-action-trigger mil-icon-btn" :class="{ 'mil-active': isActionMenuOpen }" @click="toggleActionMenu">
                                     <i :class="['fas', isActionMenuOpen ? 'fa-times' : 'fa-ellipsis-v']"></i>
                                 </div>
                             </div>
@@ -299,6 +306,16 @@ const handleWheel = (e) => {
 </template>
 
 <style scoped>
+.mil-page {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #121212;
+  border-radius: 1rem;
+  border: solid 0.1rem rgba(44, 44, 44, 0.2);
+  overflow: hidden;
+}
+
 .cursor-pointer {
     cursor: pointer;
 }

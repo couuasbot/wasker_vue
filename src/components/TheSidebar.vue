@@ -56,16 +56,7 @@ const route = useRoute()
               </a>
             </li>
           </router-link>
-          
-          <!-- Contact -->
-          <router-link to="/contact" custom v-slot="{ href, navigate, isExactActive }">
-            <li :class="{ 'mil-current': isExactActive }" @click="appStore.closeMenu">
-              <a :href="href" @click="navigate" :class="{ 'mil-active': isExactActive }">
-                <i class="fal fa-envelope"></i>
-                <span>Contact</span>
-              </a>
-            </li>
-          </router-link>
+    
 
         </ul>
       </nav>
@@ -83,7 +74,7 @@ const route = useRoute()
 .mil-main-menu ul {
     display: flex;
     flex-direction: column;
-    padding: 0 1rem; /* Container padding */
+    padding: 0 0.5rem; /* Container padding */
 }
 
 /* Base item spacing */
@@ -96,7 +87,7 @@ const route = useRoute()
 .mil-main-menu ul li a {
     display: flex;
     align-items: center;
-    padding: 10px 15px;
+    padding: 10px 8px;
     border-radius: 12px;
     color: #A5A5A5;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -113,7 +104,7 @@ const route = useRoute()
 
 /* Icon Styling and Micro-animations */
 .mil-main-menu ul li a i {
-    width: 2.5rem;
+    width: 2.2rem;
     text-align: center;
     font-size: 1.4rem;
     transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55), color 0.3s ease;
@@ -181,6 +172,10 @@ const route = useRoute()
 /* Lab Badge Styles */
 .mil-lab-item a {
     justify-content: flex-start;
+}
+
+.mil-lab-item a i {
+    font-size: 1.8rem;
 }
 
 .mil-lab-badge {

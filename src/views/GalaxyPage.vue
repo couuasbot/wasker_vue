@@ -6,7 +6,7 @@ import Galaxy3D from '../components/Galaxy3D.vue';
 import GalaxyBottomSheet from '../components/GalaxyBottomSheet.vue';
 
 const appStore = useAppStore()
-const { currentLang } = storeToRefs(appStore)
+const { currentLang, isFullScreen } = storeToRefs(appStore)
 
 const selectedNode = shallowRef(null);
 const graphData = shallowRef({ nodes: [], links: [] });
@@ -107,65 +107,74 @@ watch(currentLang, (newLang) => {
 </script>
 
 <template>
-  <div class="galaxy-page">
-    <div class="ui-overlay">
-        <!-- Back Link (optional or removed if we use main nav, but keeping placeholder) -->
-    </div>
+  <div class="mil-content-frame">
+    <div class="galaxy-page">
+      <div class="ui-overlay">
+          <!-- Back Link (optional or removed if we use main nav, but keeping placeholder) -->
+      </div>
 
-    <!-- Language Switcher & Reset -->
-    <div class="galaxy-lang-switch">
-        <span 
-            class="lang-btn" 
-            :class="{ 'active': currentLang === 'zh' }" 
-            @click="appStore.setLang('zh')">ZH</span>
-        <span class="divider">/</span>
-        <span 
-            class="lang-btn" 
-            :class="{ 'active': currentLang === 'en' }" 
-            @click="appStore.setLang('en')">EN</span>
-        <span class="divider">/</span>
-        <span 
-            class="lang-btn" 
-            @click="handleReset"
-            title="Reset View">
-            <i class="fal fa-dot-circle"></i>
-        </span>
-    </div>
+      <!-- Language Switcher & Reset & Fullscreen -->
+      <div class="galaxy-lang-switch">
+          <span 
+              class="lang-btn" 
+              :class="{ 'active': currentLang === 'zh' }" 
+              @click="appStore.setLang('zh')">ZH</span>
+          <span class="divider">/</span>
+          <span 
+              class="lang-btn" 
+              :class="{ 'active': currentLang === 'en' }" 
+              @click="appStore.setLang('en')">EN</span>
+          <span class="divider">/</span>
+          <span 
+              class="lang-btn" 
+              @click="handleReset"
+              title="Reset View">
+              <i class="fal fa-dot-circle"></i>
+          </span>
+          <span class="divider">/</span>
+          <span 
+              class="lang-btn" 
+              @click="appStore.toggleFullScreen()"
+              :title="isFullScreen ? 'Exit Fullscreen' : 'Fullscreen'">
+              <i :class="['fal', isFullScreen ? 'fa-compress' : 'fa-expand']"></i>
+          </span>
+      </div>
 
-    <div 
-      class="galaxy-viewport" 
-      :class="{ 'detail-open': !!selectedNode }"
-      :style="selectedNode && windowWidth <= 1200 ? { height: `calc(100% - ${currentSheetHeight}px)` } : {}"
-    >
-        <Galaxy3D 
-          ref="galaxy3dRef"
-          :graphData="filteredGraphData"
-          :selectedNodeId="selectedNode?.id"
-          :onNodeClick="handleNodeClick" 
-        />
+      <div 
+        class="galaxy-viewport" 
+        :class="{ 'detail-open': !!selectedNode }"
+        :style="selectedNode && windowWidth <= 1200 ? { height: `calc(100% - ${currentSheetHeight}px)` } : {}"
+      >
+          <Galaxy3D 
+            ref="galaxy3dRef"
+            :graphData="filteredGraphData"
+            :selectedNodeId="selectedNode?.id"
+            :onNodeClick="handleNodeClick" 
+          />
+      </div>
+      
+      <GalaxyBottomSheet 
+        ref="bottomSheetRef"
+        :node="selectedNode" 
+        :graphData="filteredGraphData"
+        :visible="!!selectedNode" 
+        @close="selectedNode = null" 
+        @locate="handleLocate"
+      />
     </div>
-    
-    <GalaxyBottomSheet 
-      ref="bottomSheetRef"
-      :node="selectedNode" 
-      :graphData="filteredGraphData"
-      :visible="!!selectedNode" 
-      @close="selectedNode = null" 
-      @locate="handleLocate"
-    />
   </div>
 </template>
 
 <style scoped>
 /* Removed reset-view-btn styles as it is now integrated */
 
-
-
 .galaxy-page {
   position: relative;
   width: 100%;
   height: 100%;
-  background: #000;
+  background-color: #121212;
+  border-radius: 1rem;
+  border: solid 0.1rem rgba(44, 44, 44, 0.2);
   overflow: hidden;
 }
 
@@ -205,50 +214,45 @@ watch(currentLang, (newLang) => {
 
 .galaxy-lang-switch {
     position: absolute;
+    top: 20px;
+    right: 20px;
     z-index: 2200;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     font-size: 14px;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.5);
-    background: rgba(20, 20, 25, 0.6);
-    backdrop-filter: blur(10px);
-    padding: 8px 16px;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-@media (min-width: 1201px) {
-    .galaxy-lang-switch {
-        bottom: 40px;
-        left: 40px;
-        top: auto;
-        right: auto;
-    }
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.6);
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 8px 18px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .galaxy-lang-switch .lang-btn {
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 4px 6px;
+    border-radius: 6px;
 }
 
 .galaxy-lang-switch .lang-btn.active {
-    color: #DBA91C;
-    text-shadow: 0 0 10px rgba(219, 169, 28, 0.5);
-    opacity: 1;
+    color: #38bdf8;
+    text-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+    background: rgba(56, 189, 248, 0.1);
 }
 
 .galaxy-lang-switch .lang-btn:hover:not(.active) {
-    color: #fff;
+    color: #f8fafc;
+    background: rgba(255, 255, 255, 0.05);
 }
 
 @media (max-width: 1200px) {
     .galaxy-lang-switch {
         top: 10.5rem;
-        right: 20px;
-        bottom: auto;
-        left: auto;
     }
 }
 </style>

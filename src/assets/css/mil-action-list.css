@@ -1,44 +1,105 @@
 /* -------------------------------------------
 
 Name:       Mil Action List
-Version:    1.0
-Description: Premium floating action menu with glassmorphism effects
+Version:    4.0
+Description: Fixed trigger + staggered slide-from-right action buttons
 
 ------------------------------------------- */
 
-/* Wrapper */
-.mil-action-menu-wrapper {
-    position: relative;
-    z-index: 99;
-}
+/* ===== Bar Containers ===== */
 
-/* Action List Container */
-.mil-action-list {
-    position: absolute;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
+.mil-bar-default,
+.mil-bar-actions {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 20px;
+    flex: 1;
+    min-width: 0;
+}
+
+.mil-bar-default {
+    justify-content: space-between;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.mil-bar-actions {
+    position: absolute;
+    top: 0;
+    left: 74px;
+    /* Reserve space for fixed left action */
+    right: 74px;
+    /* Reserve space for fixed trigger */
+    bottom: 0;
+    justify-content: space-evenly;
+    pointer-events: none;
+    padding: 0 20px;
+}
+
+/* ===== Fixed Left Action (always in same position) ===== */
+.mil-bar-left-action {
+    flex-shrink: 0;
+    margin-right: 20px;
+    z-index: 2;
+}
+
+/* Default state: bar-default visible, bar-actions hidden */
+.mil-actions-open .mil-bar-default {
     opacity: 0;
-    visibility: hidden;
-    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    z-index: 10;
-    padding-bottom: 10px;
-    /* Space for bounce */
+    pointer-events: none;
 }
 
-.mil-action-menu-wrapper.mil-active .mil-action-list {
+.mil-actions-open .mil-bar-actions {
+    pointer-events: auto;
+}
+
+/* ===== Action List — Evenly Distributed ===== */
+.mil-action-list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    gap: 10px;
+}
+
+/* ===== Individual Button Slide Animation ===== */
+.mil-action-btn {
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* When open: slide in from right, staggered right-to-left */
+.mil-actions-open .mil-action-btn {
     opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(0);
 }
 
-/* Common Button Styles */
+/* Stagger: rightmost (last in DOM) appears first */
+.mil-actions-open .mil-action-btn:nth-last-child(1) {
+    transition-delay: 0.03s;
+}
+
+.mil-actions-open .mil-action-btn:nth-last-child(2) {
+    transition-delay: 0.08s;
+}
+
+.mil-actions-open .mil-action-btn:nth-last-child(3) {
+    transition-delay: 0.13s;
+}
+
+.mil-actions-open .mil-action-btn:nth-last-child(4) {
+    transition-delay: 0.18s;
+}
+
+/* ===== Fixed Trigger (always in same position) ===== */
+.mil-bar-trigger {
+    flex-shrink: 0;
+    margin-left: 20px;
+    z-index: 2;
+}
+
+/* ===== Common Button Styles ===== */
 .mil-action-trigger,
-.mil-action-btn,
 .mil-fixed-icon {
     width: 54px;
     height: 54px;
@@ -50,34 +111,55 @@ Description: Premium floating action menu with glassmorphism effects
     transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     position: relative;
     overflow: hidden;
-    /* Glassmorphism Base */
     background: rgba(30, 30, 30, 0.6);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-    /* For fixed icon flex context */
+    flex-shrink: 0;
+}
+
+/* ===== Pill-shaped Action Buttons ===== */
+.mil-action-btn {
+    height: 44px;
+    padding: 0 22px;
+    border-radius: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     flex-shrink: 0;
 }
 
 /* Hover Effects */
 .mil-action-trigger:hover,
-.mil-action-btn:hover,
 .mil-fixed-icon:hover {
     transform: translateY(-4px) scale(1.05);
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.2);
     box-shadow: 0 12px 40px 0 rgba(219, 169, 28, 0.2);
-    /* Gold glow */
+}
+
+.mil-action-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateX(0) translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* Icon Styles */
 .mil-action-trigger i,
 .mil-action-btn i,
 .mil-fixed-icon i {
-    font-size: 20px;
+    font-size: 18px;
     color: rgba(255, 255, 255, 0.7);
-    transition: all 0.4s ease;
+    transition: color 0.3s ease;
     z-index: 2;
 }
 
@@ -85,8 +167,6 @@ Description: Premium floating action menu with glassmorphism effects
 .mil-action-btn:hover i,
 .mil-fixed-icon:hover i {
     color: #fff;
-    transform: scale(1.1);
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 /* Link inside fixed icon */
@@ -99,10 +179,9 @@ Description: Premium floating action menu with glassmorphism effects
     color: inherit;
 }
 
-/* Trigger Specifics */
+/* ===== Trigger Specifics ===== */
 .mil-action-trigger {
     background: rgba(219, 169, 28, 0.1);
-    /* Slight gold tint */
     border-color: rgba(219, 169, 28, 0.2);
 }
 
@@ -112,92 +191,47 @@ Description: Premium floating action menu with glassmorphism effects
     box-shadow: 0 0 30px rgba(219, 169, 28, 0.3);
 }
 
-/* Make fixed icon match trigger if desired, or keep neutral. 
-   User asked to "unify beautify", so making them similar is good.
-   Left icon often is "Share" or "Calendar", neutral is fine, but premium feel is must. 
-   Let's keep neutral background but same hover. */
-
 .mil-action-trigger i {
     color: #DBA91C;
-    /* Gold accent */
 }
 
 .mil-action-trigger.mil-active {
     background: #DBA91C;
     border-color: #DBA91C;
-    transform: rotate(180deg);
     box-shadow: 0 0 40px rgba(219, 169, 28, 0.5);
 }
 
 .mil-action-trigger.mil-active i {
     color: #000;
-    transform: rotate(-180deg);
-    /* Counter-rotate icon */
 }
 
-/* Sub-buttons specific adjustments */
-.mil-action-btn {
-    width: 48px;
-    height: 48px;
-    background: rgba(40, 40, 40, 0.8);
-}
-
-.mil-action-btn:nth-child(1) {
-    transition-delay: 0.05s;
-}
-
-.mil-action-btn:nth-child(2) {
-    transition-delay: 0.1s;
-}
-
-.mil-action-btn:nth-child(3) {
-    transition-delay: 0.15s;
-}
-
-/* Tooltip (Title) */
-.mil-action-btn::before {
-    content: attr(title);
-    position: absolute;
-    right: 70px;
-    top: 50%;
-    transform: translateY(-50%) translateX(10px);
-    background: rgba(0, 0, 0, 0.8);
-    color: #fff;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    white-space: nowrap;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    pointer-events: none;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(4px);
-}
-
-/* In this specific layout, buttons are centered, triggers is usually bottom right or center.
-   If the list is vertical above the trigger, tooltips might need to be to the side.
-   Adjusting tooltip to appear on hover. */
-.mil-action-btn:hover::before {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(-50%) translateX(0);
-}
-
-/* Responsive Overrides */
+/* ===== Responsive ===== */
 @media (max-width: 768px) {
-    .mil-action-list {
-        bottom: 70px;
-    }
-
-    .mil-action-trigger,
-    .mil-action-btn {
+    .mil-action-trigger {
         width: 48px;
         height: 48px;
     }
 
     .mil-action-btn {
-        width: 42px;
-        height: 42px;
+        height: 40px;
+        padding: 0 14px;
+        border-radius: 20px;
+    }
+
+    .mil-action-btn i {
+        font-size: 16px;
+    }
+
+    .mil-action-list {
+        gap: 6px;
+    }
+
+    .mil-bar-actions {
+        right: 60px;
+        padding: 0 10px;
+    }
+
+    .mil-bar-trigger {
+        margin-left: 10px;
     }
 }

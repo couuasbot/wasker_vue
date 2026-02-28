@@ -298,29 +298,28 @@ onUnmounted(() => {
                     <!-- Markdown Content with click listener -->
                     <div class="mil-markdown-content mil-mb-60 mil-up" v-html="renderedBody" @click="handleLinkClick"></div>
                 </div>
-
-                <!-- TOC Menu (Controlled by unified menu) -->
-                <div class="mil-toc-backdrop" :class="{ 'mil-active': isTocOpen }" @click="toggleToc"></div>
-                <div class="mil-toc-wrapper" :class="{ 'mil-toc-active': isTocOpen }" v-if="toc.length > 0">
-                    <div class="mil-toc-menu mil-up-instant">
-                        <div class="mil-sheet-handle"></div>
-                        <div class="mil-toc-header">
-                            <span class="mil-link">Contents</span>
-                            <div class="mil-toc-close" @click="toggleToc"><i class="fas fa-times"></i></div>
-                        </div>
-                        <ul class="mil-toc-list mil-scroll">
-                            <li v-for="item in toc" :key="item.slug" 
-                                :class="['mil-toc-item', 'mil-level-' + item.level]"
-                                @click="scrollToSection(item.slug)">
-                                <span class="mil-soft">{{ item.title }}</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
             </div>
             
             <div v-else class="mil-p-90-75">
                 <h1>Post not found</h1>
+            </div>
+
+        <!-- TOC Menu (Controlled by unified menu) -->
+        <div class="mil-toc-backdrop" :class="{ 'mil-active': isTocOpen }" @click="toggleToc"></div>
+        <div class="mil-toc-wrapper" :class="{ 'mil-toc-active': isTocOpen }" v-if="toc.length > 0">
+            <div class="mil-toc-menu">
+                <div class="mil-sheet-handle"></div>
+                <div class="mil-toc-header">
+                    <span class="mil-link">Contents</span>
+                    <div class="mil-toc-close" @click="toggleToc"><i class="fas fa-times"></i></div>
+                </div>
+                <ul class="mil-toc-list mil-scroll">
+                    <li v-for="item in toc" :key="item.slug" 
+                        :class="['mil-toc-item', 'mil-level-' + item.level]"
+                        @click="scrollToSection(item.slug)">
+                        <span class="mil-soft">{{ item.title }}</span>
+                    </li>
+                </ul>
             </div>
         </div>
 
@@ -328,13 +327,18 @@ onUnmounted(() => {
         <Teleport to="body" :disabled="!isMobile">
             <div class="mil-bottom-panel">
                     <div class="mil-jcc mil-space-15 mil-w-100">
-                            <div class="mil-jcb mil-w-100 mil-p-30-0">
-                                 <!-- Share Button (Far Left) for Symmetry -->
-                                 <div class="mil-action-trigger mil-icon-btn" @click="copyLink" title="Copy Link" style="margin-right: 20px;">
+                            <div class="mil-jcb mil-w-100 mil-p-30-0" :class="{ 'mil-actions-open': isActionMenuOpen }" style="position: relative;">
+                            
+                            <!-- Fixed Left Action -->
+                            <div class="mil-bar-left-action">
+                                 <div class="mil-action-trigger mil-icon-btn" @click="copyLink" title="Copy Link">
                                     <i :class="['fas', copied ? 'fa-check' : 'fa-share-alt']"></i>
                                  </div>
+                            </div>
 
-                                 <!-- Navigation (Left) -->
+                            <!-- Default Bar Content -->
+                            <div class="mil-bar-default">
+
                                 <div class="mil-prev-nav">
                                      <router-link v-if="adjacentPosts.prev" :to="'/blog/' + adjacentPosts.prev.slug" class="mil-link mil-icon-link-left" title="Previous Post">
                                         <i class="fas fa-chevron-left"></i> <span>Previous</span>
@@ -342,44 +346,46 @@ onUnmounted(() => {
                                      <span v-else class="mil-link mil-disabled" style="opacity: 0.5;"><i class="fas fa-chevron-left"></i> <span>Previous</span></span>
                                  </div>
 
-                            <!-- Center Group: Back -->
-                            <div class="mil-bottom-centered">
-                                <router-link to="/blog" class="mil-link mil-back-btn">Back to Blog</router-link>
+                                <div class="mil-bottom-centered">
+                                    <router-link to="/blog" class="mil-link mil-back-btn">Back to Blog</router-link>
+                                </div>
+
+                                <div class="mil-next-nav">
+                                    <router-link v-if="adjacentPosts.next" :to="'/blog/' + adjacentPosts.next.slug" class="mil-link mil-icon-link" title="Next Post">
+                                        <span>Next</span> <i class="fas fa-chevron-right"></i>
+                                    </router-link>
+                                    <span v-else class="mil-link mil-disabled" style="opacity: 0.5;"><span>Next</span> <i class="fas fa-chevron-right"></i></span>
+                                </div>
                             </div>
 
-                            <!-- Next Post (Right) -->
-                            <div class="mil-next-nav">
-                                <router-link v-if="adjacentPosts.next" :to="'/blog/' + adjacentPosts.next.slug" class="mil-link mil-icon-link" title="Next Post">
-                                    <span>Next</span> <i class="fas fa-chevron-right"></i>
-                                </router-link>
-                                <span v-else class="mil-link mil-disabled" style="opacity: 0.5;"><span>Next</span> <i class="fas fa-chevron-right"></i></span>
-                            </div>
-
-                            <!-- Unified Action Menu (Far Right) -->
-                            <div class="mil-action-menu-wrapper" :class="{ 'mil-active': isActionMenuOpen }">
+                            <!-- Action Buttons (slide in from right) -->
+                            <div class="mil-bar-actions">
                                 <div class="mil-action-list">
-                                    <!-- TOC Toggle -->
                                     <div class="mil-action-btn" @click="toggleToc" v-if="toc.length > 0" title="Table of Contents">
                                         <i class="fas fa-list-ul"></i>
                                     </div>
-                                    <!-- Language Toggle -->
                                     <div class="mil-action-btn" @click="toggleLang" title="Switch Language">
                                         <i class="fas fa-globe"></i>
                                     </div>
-                                    <!-- Full Screen Toggle -->
                                     <div class="mil-action-btn" @click="toggleFullScreen" :title="isFullScreen ? 'Original View' : 'Full Screen View'">
                                         <i :class="['fas', isFullScreen ? 'fa-compress-alt' : 'fa-expand-alt']"></i>
                                     </div>
                                 </div>
-                                <div class="mil-action-trigger mil-icon-btn" @click="toggleActionMenu" :class="{ 'mil-active': isActionMenuOpen }">
+                            </div>
+
+                            <!-- Fixed Trigger -->
+                            <div class="mil-bar-trigger">
+                                <div class="mil-action-trigger mil-icon-btn" :class="{ 'mil-active': isActionMenuOpen }" @click="toggleActionMenu">
                                     <i :class="['fas', isActionMenuOpen ? 'fa-times' : 'fa-ellipsis-v']"></i>
                                     <span class="mil-toc-dot" v-if="!isActionMenuOpen && toc.length > 0"></span>
                                 </div>
                             </div>
+
                         </div>
                 </div>
             </div>
         </Teleport>
+        </div>
     </div>
 </template>
 
@@ -650,11 +656,12 @@ onUnmounted(() => {
 
 /* TOC Styles Update */
 .mil-toc-backdrop {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
+    border-radius: 1rem;
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(4px);
     z-index: 998;
@@ -672,8 +679,8 @@ onUnmounted(() => {
 
 /* Desktop & Mobile: Always align to left part container */
 .mil-toc-wrapper {
-    position: fixed; /* Relative to mil-content-frame due to transform */
-    bottom: 0;
+    position: absolute; /* Relative to mil-content-frame due to transform */
+    bottom: 9rem; /* Above the bottom panel */
     left: 0;
     width: 100%;
     z-index: 1001;

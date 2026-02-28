@@ -1871,7 +1871,7 @@ frame
 }
 
 .mil-frame-wrapper .mil-frame .mil-menu-part {
-  width: 9rem;
+  width: 7.5rem;
   height: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1887,8 +1887,8 @@ frame
 }
 
 .mil-frame-wrapper .mil-frame .mil-menu-part .mil-logo {
-  width: 9rem;
-  height: 9rem;
+  width: 7.5rem;
+  height: 7.5rem;
   background-color: #DBA91C;
   border-radius: 1rem;
   font-family: "clesmont", sans-serif;
@@ -1944,13 +1944,13 @@ frame
   width: 100%;
   padding-bottom: 0;
   /* Removed 15rem padding */
-  height: calc(100% - 10.5rem);
+  height: calc(100% - 9rem);
   background-color: #121212;
   border: solid 0.1rem rgba(44, 44, 44, 0.2);
 }
 
 .mil-frame-wrapper .mil-frame .mil-content {
-  width: calc(100% - 10.5rem);
+  width: calc(100% - 9rem);
   height: 100%;
   overflow: hidden;
   display: -webkit-box;
@@ -1962,7 +1962,7 @@ frame
 }
 
 .mil-frame-wrapper .mil-frame .mil-content .mil-overlay {
-  z-index: 9;
+  z-index: 10000;
   display: none;
   opacity: 0;
   pointer-events: none;
@@ -2047,9 +2047,11 @@ frame
     flex-direction: row;
     -webkit-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    z-index: 10001;
   }
 
   .mil-frame-wrapper .mil-frame .mil-menu-part .mil-logo {
+    width: 6rem;
     height: 6rem;
     margin-top: 1.5rem;
     margin-left: 1.5rem;
@@ -2057,7 +2059,7 @@ frame
 
   .mil-frame-wrapper .mil-frame .mil-menu-part .mil-menu-panel {
     border-radius: 1rem;
-    width: calc(100% - 10.5rem);
+    width: calc(100% - 7.5rem);
     border: none;
     height: 9rem;
     background-color: transparent;

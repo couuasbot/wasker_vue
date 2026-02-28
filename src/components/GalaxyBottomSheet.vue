@@ -49,7 +49,7 @@ const neighbors = computed(() => {
 function getLink(node) {
     if (!node) return '#';
     const { type, slug } = node;
-    if (type === 'profile') return '/contact';
+    if (type === 'profile') return '/';
     return `/${type}/${slug}`; 
 }
 
@@ -161,7 +161,7 @@ defineExpose({ sheetRef });
 }
 
 .bottom-sheet {
-  position: fixed;
+  position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -175,7 +175,7 @@ defineExpose({ sheetRef });
   z-index: 2000;
   color: #fff;
   box-sizing: border-box;
-  max-height: 85vh;
+  max-height: 85%;
   display: flex;
   flex-direction: column;
 }
@@ -239,11 +239,6 @@ defineExpose({ sheetRef });
     transition: overflow-y 0s 0.4s; 
 }
 
-@media (max-width: 1200px) {
-    .bottom-sheet {
-        max-height: 50vh;
-    }
-}
 
 .related-item {
     padding: 10px;
@@ -294,26 +289,6 @@ defineExpose({ sheetRef });
     background: rgba(255, 255, 255, 0.15);
 }
 
-@media (min-width: 1201px) {
-    .bottom-sheet {
-        bottom: auto;
-        left: auto;
-        top: 20px;
-        right: 20px;
-        width: 360px;
-        height: auto;
-        max-height: calc(100vh - 40px);
-        background: rgba(20, 20, 25, 0.85);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        transform: translateX(120%);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-
-    .bottom-sheet.is-visible {
-        transform: translateX(0);
-    }
-}
 
 .category-tag {
   font-size: 10px;
