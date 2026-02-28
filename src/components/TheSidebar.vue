@@ -1,7 +1,6 @@
 <script setup>
 import { RouterLink, useRoute } from 'vue-router'
 import { useAppStore } from '../stores/app'
-import CompactMusicPlayer from './CompactMusicPlayer.vue'
 
 const appStore = useAppStore()
 const route = useRoute()
@@ -13,7 +12,7 @@ const route = useRoute()
       <!-- text logo -->
       <span>wa</span>
     </router-link>
-    <div class="mil-menu-panel mil-relative-panel" style="padding-top: 20px;">
+    <div class="mil-menu-panel mil-relative-panel" >
 
       <nav class="mil-main-menu" :class="{ 'mil-active': appStore.isMenuOpen }">
         
@@ -23,21 +22,7 @@ const route = useRoute()
             <li :class="{ 'mil-current': isExactActive }" @click="appStore.closeMenu">
               <a :href="href" @click="navigate" :class="{ 'mil-active': isExactActive }">
                 <i class="fal fa-home"></i>
-                <span>
-                    Home
-                </span>
-              </a>
-            </li>
-          </router-link>
-          
-          <!-- Portfolio -->
-          <router-link to="/portfolio" custom v-slot="{ href, navigate, isExactActive }">
-            <li :class="{ 'mil-current': isExactActive || route.name === 'portfolio-detail' }" @click="appStore.closeMenu">
-              <a :href="href" @click="navigate" :class="{ 'mil-active': isExactActive || route.name === 'portfolio-detail' }">
-                <i class="fal fa-palette"></i>
-                <span>
-                    {{ route.name === 'portfolio-detail' ? 'Back to Portfolio' : 'Portfolio' }}
-                </span>
+                <span>Home</span>
               </a>
             </li>
           </router-link>
@@ -47,9 +32,7 @@ const route = useRoute()
             <li :class="{ 'mil-current': isExactActive || route.name === 'blog-detail' }" @click="appStore.closeMenu">
               <a :href="href" @click="navigate" :class="{ 'mil-active': isExactActive || route.name === 'blog-detail' }">
                 <i class="fal fa-book"></i>
-                <span>
-                    {{ route.name === 'blog-detail' ? 'Back to Blog' : 'Blog' }}
-                </span>
+                <span>{{ route.name === 'blog-detail' ? 'Back to Blog' : 'Blog' }}</span>
               </a>
             </li>
           </router-link>
@@ -59,47 +42,35 @@ const route = useRoute()
             <li :class="{ 'mil-current': isExactActive || route.name === 'journal-detail' }" @click="appStore.closeMenu">
               <a :href="href" @click="navigate" :class="{ 'mil-active': isExactActive || route.name === 'journal-detail' }">
                 <i class="fal fa-pen-nib"></i>
-                <span>
-                    {{ route.name === 'journal-detail' ? 'Back to Journal' : 'Journal' }}
-                </span>
+                <span>{{ route.name === 'journal-detail' ? 'Back to Journal' : 'Journal' }}</span>
               </a>
             </li>
           </router-link>
 
-          <!-- Contact -->
-          <router-link to="/contact" custom v-slot="{ href, navigate, isExactActive }">
-            <li :class="{ 'mil-current': isExactActive }" @click="appStore.closeMenu">
-              <a :href="href" @click="navigate" :class="{ 'mil-active': isExactActive }">
-                <i class="fal fa-envelope"></i>
-                <span>
-                    Contact
-                </span>
-              </a>
-            </li>
-          </router-link>
-          
-          <!-- Separator between Contact and Galaxy -->
-          <li class="mil-sidebar-separator"></li>
-          
           <!-- Galaxy -->
           <router-link to="/galaxy" custom v-slot="{ href, navigate, isExactActive }">
             <li :class="{ 'mil-current': isExactActive }" @click="appStore.closeMenu" class="mil-lab-item">
               <a :href="href" @click="navigate" :class="{ 'mil-active': isExactActive }">
                 <i class="fal fa-atom"></i>
-                <span>
-                    Galaxy
-                </span>
+                <span>Galaxy</span>
               </a>
             </li>
           </router-link>
           
+          <!-- Contact -->
+          <router-link to="/contact" custom v-slot="{ href, navigate, isExactActive }">
+            <li :class="{ 'mil-current': isExactActive }" @click="appStore.closeMenu">
+              <a :href="href" @click="navigate" :class="{ 'mil-active': isExactActive }">
+                <i class="fal fa-envelope"></i>
+                <span>Contact</span>
+              </a>
+            </li>
+          </router-link>
+
         </ul>
       </nav>
 
 
-      <div class="mil-sidebar-player" style="margin-top: 15px; margin-bottom: 10px;">
-        <CompactMusicPlayer />
-      </div>
 
       <div class="mil-menu-btn" :class="{ 'mil-active': appStore.isMenuOpen }" @click="appStore.toggleMenu"><span></span></div>
     </div>
@@ -108,49 +79,108 @@ const route = useRoute()
 </template>
 
 <style scoped>
-.mil-sidebar-player {
-  padding: 0;
-  width: auto;
-  margin: 0 2rem 0 0; /* Right margin to separate from menu button */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* Premium Main Menu Styling */
+.mil-main-menu ul {
+    display: flex;
+    flex-direction: column;
+    padding: 0 1rem; /* Container padding */
 }
 
-@media (min-width: 1200px) {
-  .mil-sidebar-player {
-    width: 100%;
-    margin-top: 3rem; /* Add space between menu and player */
-  }
-}
-
-/* Scoped styles if needed, otherwise global CSS handles it */
-.mil-main-menu li a.mil-active {
-    /* Ensure active state style matches .mil-current */
-    color: #DBA91C;
-    font-weight: 700;
-}
-
-.mil-current-tag {
-    font-size: 8px;
-    font-weight: 400;
-    opacity: 0.5;
-    margin-left: 6px;
-    letter-spacing: 0.5px;
-    vertical-align: top;
-}
-
-/* Margin to space out the menu items and provide some breathing room */
+/* Base item spacing */
 .mil-main-menu ul li {
-    margin-bottom: 15px; /* Spacings */
+    margin-bottom: 0.8rem;
+    position: relative; /* For absolutely positioned pseudo-elements */
+}
+
+/* Modern Pill-Shaped Links */
+.mil-main-menu ul li a {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-radius: 12px;
+    color: #A5A5A5;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover State - Soft Glassmorphism Pill */
+.mil-main-menu ul li:not(.mil-current):hover a {
+    background: rgba(255, 255, 255, 0.05); /* Very subtle white wash */
+    color: #E0E0E0;
+    transform: translateX(4px); /* Micro-animation: gentle nudge */
+}
+
+/* Icon Styling and Micro-animations */
+.mil-main-menu ul li a i {
+    width: 2.5rem;
+    text-align: center;
+    font-size: 1.4rem;
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55), color 0.3s ease;
+}
+
+.mil-main-menu ul li:hover a i {
+    transform: scale(1.15); /* Icon pop on hover */
+    color: #DBA91C; /* Accent color on hover */
+}
+
+/* Text Styling */
+.mil-main-menu ul li a span {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+/* Active/Current State - Glowing Accent */
+.mil-main-menu ul li.mil-current a {
+    color: #DBA91C;
+    background: transparent; /* Keeping it clean, relying on indicator */
+}
+
+.mil-main-menu ul li.mil-current a i {
+    color: #DBA91C;
+}
+
+.mil-main-menu ul li.mil-current a span {
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(219, 169, 28, 0.3); /* Subtle text glow */
+}
+
+/* Elegant Growing Line Indicator for Active State */
+.mil-main-menu ul li::before {
+    content: '';
+    position: absolute;
+    left: -1rem; /* Aligned to the edge of the container */
+    top: 50%;
+    transform: translateY(-50%) scaleY(0);
+    height: 60%;
+    width: 3px;
+    background: #DBA91C;
+    border-radius: 4px;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 0 8px rgba(219, 169, 28, 0.5);
+    z-index: 2;
+}
+
+.mil-main-menu ul li.mil-current::before {
+    transform: translateY(-50%) scaleY(1);
+}
+
+/* Logo Premium Touch */
+.mil-logo span {
+    background: linear-gradient(135deg, #FFF, #DBA91C);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    letter-spacing: -1px;
+    text-shadow: 0 4px 20px rgba(219, 169, 28, 0.15);
 }
 
 /* Lab Badge Styles */
 .mil-lab-item a {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Center icons */
+    justify-content: flex-start;
 }
 
 .mil-lab-badge {
@@ -158,45 +188,106 @@ const route = useRoute()
     color: #121212;
     font-size: 8px;
     font-weight: 900;
-    padding: 1px 4px;
-    border-radius: 4px;
-    margin-left: 6px;
-    line-height: 1;
-    vertical-align: middle;
+    padding: 2px 6px;
+    border-radius: 6px;
+    margin-left: auto; /* Push badge to the right */
+    line-height: 1.2;
     letter-spacing: 0.5px;
-    box-shadow: 0 2px 5px rgba(219, 169, 28, 0.3);
+    box-shadow: 0 2px 8px rgba(219, 169, 28, 0.4);
+    transition: all 0.3s ease;
 }
 
 .mil-current .mil-lab-badge {
     background: #fff;
     color: #121212;
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.4);
 }
 
 /* Separator */
 .mil-sidebar-separator {
-    border-top: dotted 2px #2C2C2C;
-    margin: 1rem 0 1rem 0; /* Add more margin */
+    border-top: 1px solid rgba(255, 255, 255, 0.05); /* Modern solid thin line instead of dotted */
+    margin: 1.5rem 0; 
     list-style: none;
-    width: 60%; /* Back to 60 for consistency */
+    width: 80%; /* Wider for modern look */
     margin-left: auto;
     margin-right: auto;
 }
 
-/* Ensure icons have fixed width for accurate centering on wide screens only */
-@media (min-width: 1201px) {
-    .mil-main-menu ul li a i {
-        width: 2rem; /* Reduced from 2.5rem */
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        align-items: center; /* Ensure vertical center too */
-    }
-}
-
-/* Explicitly hide icons on narrow screens to prevent custom scoped styles from overriding global media queries */
+/* --- MOBILE RESPONSIVENESS OVERRIDES --- */
 @media (max-width: 1200px) {
+    /* Reset layout for horizontal mobile menu */
+    .mil-main-menu ul {
+        flex-direction: row;
+        padding: 0;
+        gap: 0 !important;
+        justify-content: space-around; /* Distribute evenly */
+        width: 100%;
+    }
+
+    .mil-main-menu ul li {
+        margin-bottom: 0;
+        flex: 1; /* Equal space distribution */
+    }
+
+    .mil-main-menu ul li a {
+        padding: 8px 5px;
+        flex-direction: column; /* Stack icon and text */
+        border-radius: 8px;
+        justify-content: center;
+    }
+
+    /* Reset desktop hover translates for mobile */
+    .mil-main-menu ul li:not(.mil-current):hover a {
+        transform: none; 
+        background: transparent;
+    }
+    
+    .mil-main-menu ul li:hover a i {
+        transform: scale(1.1); /* Keep slight pop but reduce scale */
+    }
+
+    /* Ensure icons ARE VISIBLE on mobile, overriding legacy hide rule */
     .mil-main-menu ul li a i {
-        display: none !important;
+        display: block !important;
+        margin-bottom: 4px;
+        font-size: 1.2rem;
+        width: auto;
+    }
+
+    .mil-main-menu ul li a span {
+        font-size: 9px;
+        letter-spacing: 0;
+        text-align: center;
+    }
+
+    /* Redesign active indicator for mobile (bottom border instead of left line) */
+    .mil-main-menu ul li::before {
+        left: 50%;
+        top: auto;
+        bottom: -2px;
+        height: 2px;
+        width: 20px;
+        transform: translateX(-50%) scaleX(0);
+        margin: 0;
+    }
+
+    .mil-main-menu ul li.mil-current::before {
+        transform: translateX(-50%) scaleX(1);
+    }
+    
+    /* Hide separator on mobile horizontal nav */
+    .mil-sidebar-separator {
+        display: none;
+    }
+    
+    /* Lab badge mobile adjustments */
+    .mil-lab-badge {
+        position: absolute;
+        top: 2px;
+        right: 15%;
+        margin: 0;
+        padding: 1px 4px;
+        font-size: 7px;
     }
 }
 </style>

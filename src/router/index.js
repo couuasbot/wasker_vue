@@ -10,18 +10,7 @@ const router = createRouter({
             component: () => import('../views/Home.vue'),
             meta: { bodyClass: 'mil-fw-page' }
         },
-        {
-            path: '/portfolio',
-            name: 'portfolio',
-            component: () => import('../views/Portfolio.vue'),
-            meta: { bodyClass: 'mil-half-page' }
-        },
-        {
-            path: '/portfolio/:id',
-            name: 'portfolio-detail',
-            component: () => import('../views/PortfolioDetail.vue'),
-            meta: { bodyClass: 'mil-half-page' }
-        },
+
         {
             path: '/blog',
             name: 'blog',

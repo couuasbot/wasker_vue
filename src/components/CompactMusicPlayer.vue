@@ -53,44 +53,18 @@ const musicStore = useMusicStore()
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  padding-bottom: 5px;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 1199px) {
-  .compact-music-player {
-    padding: 0;
-    width: auto;
-    margin: 0;
-    display: flex;
-    align-items: center;
-  }
-  
-  .compact-disc-container {
-    width: 38px;
-    height: 38px;
-  }
-  
-  .compact-disc {
-    width: 28px;
-    height: 28px;
-  }
-  
-  .compact-cover-icon {
-    font-size: 10px;
-  }
 }
 
 .compact-disc-container {
   position: relative;
-  width: 30px;
-  height: 30px;
+  width: 44px;
+  height: 44px;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
   transition: transform 0.2s ease;
+  flex-shrink: 0;
 }
 
 .compact-disc-container:active {
@@ -120,8 +94,8 @@ const musicStore = useMusicStore()
 
 /* Disc Content */
 .compact-disc {
-  width: 22px;
-  height: 22px;
+  width: 34px; 
+  height: 34px;
   border-radius: 50%;
   background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
   display: flex;
@@ -138,8 +112,8 @@ const musicStore = useMusicStore()
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #555;
-  font-size: 10px;
+  color: #A5A5A5; /* Match inactive icon color */
+  font-size: 14px; 
   transition: opacity 0.3s ease;
 }
 
@@ -153,7 +127,7 @@ const musicStore = useMusicStore()
 /* Hover States for Play/Pause Icons */
 .play-icon, .pause-icon {
   z-index: 2;
-  font-size: 10px;
+  font-size: 14px; 
   color: #FFF;
   opacity: 0;
   transition: opacity 0.2s ease;

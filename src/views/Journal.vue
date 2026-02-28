@@ -93,6 +93,26 @@ const groupedPosts = computed(() => {
 const currentVisibleMonth = ref('')
 const isCalendarOpen = ref(false)
 
+const isListView = ref(false)
+const toggleLayout = () => {
+    isListView.value = !isListView.value
+}
+
+const displayedJournalPosts = computed(() => {
+    return allJournalPosts.value.filter(p => p.lang === currentLang.value)
+})
+
+const formatDate = (date) => {
+    if (!date) return ''
+    const d = new Date(date)
+    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+}
+
+const isMobile = ref(false)
+const checkMobile = () => {
+    isMobile.value = window.innerWidth <= 1200
+}
+
 // Observer logic
 const observer = ref(null)
 const monthRefs = ref([])
@@ -106,6 +126,8 @@ const setMonthRef = (el, key) => {
 
 onMounted(() => {
     initAnimations()
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
     
     // Set initial visible month
     if (groupedPosts.value.length > 0) {
@@ -133,6 +155,10 @@ onMounted(() => {
     })
 })
 
+onUnmounted(() => {
+    window.removeEventListener('resize', checkMobile)
+})
+
 const toggleCalendar = () => {
     isCalendarOpen.value = !isCalendarOpen.value
 }
@@ -143,6 +169,14 @@ const formatDateDay = (date) => {
 
 const formatDateWeekday = (date) => {
     return new Date(date).toLocaleDateString('en-US', { weekday: 'short' })
+}
+
+const formatDateKey = (dateStr) => {
+    const d = new Date(dateStr)
+    const year = d.getFullYear()
+    const month = (d.getMonth() + 1).toString().padStart(2, '0')
+    const day = d.getDate().toString().padStart(2, '0')
+    return `${year}-${month}-${day}`
 }
 
 const handleDateSelect = (dateKey) => {
@@ -168,12 +202,20 @@ watch(groupedPosts, async () => {
     // For simplicity in this setup, we can re-run the observer logic if needed, 
     // but initAnimations handles the visual 'mil-up' parts.
     
-    // Re-attach observer for scroll spy
-    if (observer.value) {
+    // Re-attach observer for scroll spy if timeline view active
+    if (observer.value && !isListView.value) {
         observer.value.disconnect()
         nextTick(() => {
              monthRefs.value.forEach(el => observer.value.observe(el))
         })
+    }
+})
+
+watch(isListView, async () => {
+    await nextTick()
+    initAnimations()
+    if (!isListView.value && observer.value) {
+        monthRefs.value.forEach(el => observer.value.observe(el))
     }
 })
 
@@ -184,7 +226,7 @@ watch(groupedPosts, async () => {
 
             <div class="mil-scroll mil-half-1 mil-bp-fix">
             
-            <div class="mil-journal-container">
+            <div class="mil-journal-container" v-if="!isListView">
                  <!-- Main Timeline Spine -->
                  <div class="mil-timeline-spine"></div>
 
@@ -205,7 +247,7 @@ watch(groupedPosts, async () => {
                             v-for="(post, index) in group.posts" 
                             :key="post.slug"
                             :to="'/journal/' + post.slug"
-                            :id="'date-' + post.date"
+                            :id="'date-' + formatDateKey(post.date)"
                             class="mil-journal-entry mil-up"
                             :class="post.layoutSide === 'left' ? 'mil-left-entry' : 'mil-right-entry'"
                         >
@@ -235,42 +277,72 @@ watch(groupedPosts, async () => {
                  </div>
             </div>
 
-            <!-- Floating Bottom Navigation -->
-            <div class="mil-bottom-nav-container">
-                 <!-- Action Menu Overlay (Moved Inside) -->
-                 <div class="mil-action-menu-glass" :class="{ 'mil-active': isActionMenuOpen }">
-                     <div class="mil-action-btn" @click="toggleLang" title="Switch Language">
-                        <i class="fas fa-globe"></i>
-                     </div>
-                     <div class="mil-action-btn" @click="toggleFullScreen" :title="isFullScreen ? 'Original View' : 'Full Screen View'">
-                        <i :class="['fas', isFullScreen ? 'fa-compress-alt' : 'fa-expand-alt']"></i>
-                     </div>
-                 </div>
-
-                 <div class="mil-bottom-nav">
-                    
-                    <!-- Left: Calendar Toggle -->
-                    <button class="mil-add-btn" @click="toggleCalendar" title="Open Calendar" style="transform: none;">
-                        <i class="fas fa-calendar-alt"></i>
-                    </button>
-                    
-                    <div class="mil-nav-divider"></div>
-
-                    <!-- Center: Current Month Display -->
-                    <div class="mil-current-month-display">
-                        {{ currentVisibleMonth }}
+            <!-- List View (Table Style) -->
+            <div class="mil-list-container" v-else>
+                <router-link 
+                    v-for="post in displayedJournalPosts" 
+                    :key="post.slug" 
+                    :to="'/journal/' + post.slug"
+                    class="mil-list-row mil-up"
+                >
+                    <div class="mil-list-col mil-list-date">{{ formatDate(post.date) }}</div>
+                    <div class="mil-list-col mil-list-cat" v-if="post.weather || post.mood">
+                        <span class="mil-cat-pill" v-if="post.weather"><i class="fas fa-cloud"></i> {{ post.weather }}</span>
+                        <span class="mil-cat-pill" v-if="post.mood" :style="post.weather ? 'margin-left: 5px;' : ''"><i class="fas fa-smile"></i> {{ post.mood }}</span>
                     </div>
-
-                    <div class="mil-nav-divider"></div>
-
-                    <!-- Right: Action Menu Trigger -->
-                    <button class="mil-add-btn" @click="toggleActionMenu" :class="{ 'mil-active': isActionMenuOpen }">
-                        <i :class="['fas', isActionMenuOpen ? 'fa-times' : 'fa-ellipsis-v']"></i>
-                    </button>
-                 </div>
+                    <div class="mil-list-col mil-list-title">
+                        <h6>{{ post.title }}</h6>
+                        <p class="mil-list-desc" v-if="post.description">{{ post.description }}</p>
+                    </div>
+                    <div class="mil-list-col mil-list-arrow"><i class="fas fa-arrow-right"></i></div>
+                </router-link>
             </div>
-            </div> <!-- Close .mil-scroll -->
-            
+        </div>
+
+        <!-- Integrated Bottom Panel (Teleported to body on mobile) -->
+        <Teleport to="body" :disabled="!isMobile">
+            <div class="mil-bottom-panel">
+                    <div class="mil-jcc mil-space-15 mil-w-100">
+                        <div class="mil-jcb mil-w-100 mil-p-30-0" style="display: flex; align-items: center; justify-content: space-between;">
+                            
+                            <!-- Left: Calendar Toggle -->
+                            <div class="mil-action-trigger mil-icon-btn" @click="toggleCalendar" title="Open Calendar" style="margin-right: 20px; order: 1;">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+
+                            <!-- Center: Current Month Display -->
+                            <div class="mil-bottom-centered" style="display: flex; justify-content: center; flex: 1; overflow: hidden; order: 2;">
+                                <div class="mil-current-month-display">
+                                    {{ currentVisibleMonth }}
+                                </div>
+                            </div>
+
+                            <!-- Right: Action Menu (Unified style) -->
+                            <div class="mil-action-menu-wrapper" :class="{ 'mil-active': isActionMenuOpen }" style="order: 3;">
+                                <div class="mil-action-list">
+                                    <!-- Layout Toggle -->
+                                    <div class="mil-action-btn" @click="toggleLayout" :title="isListView ? 'Timeline View' : 'List View'">
+                                        <i :class="['fas', isListView ? 'fa-stream' : 'fa-list']"></i>
+                                    </div>
+                                    <!-- Language Toggle -->
+                                    <div class="mil-action-btn" @click="toggleLang" title="Switch Language">
+                                        <i class="fas fa-globe"></i>
+                                    </div>
+                                    <!-- Full Screen Toggle -->
+                                    <div class="mil-action-btn" @click="toggleFullScreen" :title="isFullScreen ? 'Original View' : 'Full Screen View'">
+                                        <i :class="['fas', isFullScreen ? 'fa-compress-alt' : 'fa-expand-alt']"></i>
+                                    </div>
+                                </div>
+                                <div class="mil-action-trigger mil-icon-btn" @click="toggleActionMenu" :class="{ 'mil-active': isActionMenuOpen }">
+                                    <i :class="['fas', isActionMenuOpen ? 'fa-times' : 'fa-ellipsis-v']"></i>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+        </Teleport>
+
             <!-- Calendar Overlay -->
             <div class="mil-calendar-overlay" :class="{ 'mil-active': isCalendarOpen }">
                      <div class="mil-calendar-modal">
@@ -284,8 +356,6 @@ watch(groupedPosts, async () => {
                      </div>
                      <div class="mil-calendar-backdrop" @click="toggleCalendar"></div>
             </div>
-
-
     </div>
 </template>
 
@@ -507,63 +577,13 @@ watch(groupedPosts, async () => {
     }
 }
 
-/* Bottom Navigation Styles (Unified) */
-.mil-bottom-nav-container {
-    position: fixed;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 95%; /* Mobile width */
-    max-width: 500px; /* Constrain on desktop - smaller than portfolio for text */
-    z-index: 100;
+/* Bottom Panel Layout Styling */
+.mil-bottom-centered {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 15px; 
-}
-
-.mil-bottom-nav {
-    background: rgba(26, 26, 26, 0.95);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1); 
-    border-radius: 50px; 
-    padding: 10px 15px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-}
-
-.mil-nav-divider {
-    width: 1px;
-    height: 25px;
-    background: rgba(255, 255, 255, 0.1);
-    margin: 0 10px;
-    flex-shrink: 0;
-}
-
-.mil-add-btn {
-    background: var(--mil-dark-2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--mil-text-primary);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
     justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-}
-
-.mil-add-btn:hover,
-.mil-add-btn.mil-active {
-    background-color: #FFD700;
-    color: #000;
-    border-color: #FFD700;
+    gap: 15px;
 }
 
 .mil-current-month-display {
@@ -576,57 +596,43 @@ watch(groupedPosts, async () => {
     text-overflow: ellipsis;
     padding: 0 10px;
     color: #fff;
-    flex-grow: 1;
     text-align: center;
 }
 
-/* Action Menu Glass Overlay */
-.mil-action-menu-glass {
-    position: absolute;
-    bottom: 70px; /* Above nav bar */
-    right: 0; /* Align to right edge of container */
-    transform: translateY(20px) scale(0.9); /* Vertical pop only */
-    background: rgba(26, 26, 26, 0.95);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 50px; /* Capsule shape for vertical */
-    padding: 10px;
+/* Action Menu Styles (Integrated) */
+.mil-action-menu-wrapper {
+    position: relative;
+    z-index: 1000;
     display: flex;
-    flex-direction: column; /* Vertical alignment */
-    gap: 10px;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: 90;
-}
-
-.mil-action-menu-glass.mil-active {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    pointer-events: all;
-}
-
-.mil-action-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.05);
-    display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.mil-action-btn:hover {
-    background: #FFD700;
-    color: #000;
+    margin-left: 20px;
 }
 
 @media (max-width: 768px) {
-    .mil-bottom-nav-container {
-        width: 95%;
-        bottom: 10px;
+    .mil-bottom-panel .mil-jcb {
+        padding: 15px 0;
+        gap: 10px;
+    }
+    
+    .mil-bottom-left {
+        flex: 0 0 auto !important;
+    }
+
+    .mil-bottom-right {
+        flex: 0 0 auto !important;
+    }
+    
+    .mil-bottom-centered {
+        flex: 1 1 auto;
+        max-width: none !important;
+        min-width: 0;
+        justify-content: center !important;
+    }
+
+    .mil-action-trigger {
+        width: 40px;
+        height: 40px;
     }
 }
 
@@ -701,5 +707,116 @@ watch(groupedPosts, async () => {
 .mil-close-btn:hover {
     background: rgba(255,255,255,0.1);
     color: #DBA91C;
+}
+
+/* List View Styles */
+.mil-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+    padding-top: 60px;
+    padding-bottom: 120px;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.mil-list-row {
+    display: flex;
+    align-items: center;
+    padding: 20px 25px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    gap: 20px;
+}
+
+.mil-list-row:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.mil-list-date {
+    font-size: 0.85rem;
+    opacity: 0.6;
+    white-space: nowrap;
+    min-width: 100px;
+}
+
+.mil-cat-pill {
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+.mil-cat-pill i { color: #DBA91C; }
+
+.mil-list-title {
+    flex-grow: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.mil-list-title h6 {
+    margin: 0;
+    font-size: 1.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mil-list-desc {
+    margin: 5px 0 0 0;
+    font-size: 0.85rem;
+    opacity: 0.6;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: normal;
+}
+
+.mil-list-arrow {
+    display: flex;
+    align-items: center;
+    opacity: 0.5;
+    transition: transform 0.3s ease;
+}
+
+.mil-list-row:hover .mil-list-arrow {
+    transform: translateX(5px);
+    opacity: 1;
+    color: var(--mil-accent);
+}
+
+@media (max-width: 768px) {
+    .mil-list-row {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .mil-list-date {
+        order: 1;
+        width: auto;
+    }
+    .mil-list-cat {
+        order: 2;
+        margin-left: auto;
+    }
+    .mil-list-title {
+        order: 3;
+        width: 100%;
+        margin-top: 5px;
+    }
+    .mil-list-arrow {
+        display: none;
+    }
 }
 </style>

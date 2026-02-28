@@ -1,9 +1,11 @@
 <script setup>
-import { onMounted, nextTick, onUnmounted, ref, computed, watch } from 'vue'
+import { onMounted, onUnmounted, ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useDraggable, useWindowSize, useMouse, useElementHover } from '@vueuse/core'
 import TheSidebar from '../components/TheSidebar.vue'
 import TheRightBar from '../components/TheRightBar.vue'
 import GlobalAudio from '../components/GlobalAudio.vue'
+import CompactMusicPlayer from '../components/CompactMusicPlayer.vue'
 import { useAppStore } from '../stores/app'
 
 import { useScrollAnimations } from '../composables/useScrollAnimations'
@@ -32,10 +34,37 @@ const previousBodyClass = ref(route.meta.bodyClass) // Track previous layout for
 // This prevents the sidebar from snapping before the page fades out
 const shouldShowRightBar = computed(() => currentBodyClass.value !== 'mil-fw-page')
 
-// Preloader state
-const isLoading = ref(true)
-const percent = ref(0)
-const preloaderClass = ref('mil-preloader')
+// Floating Player Logic
+const floatingPlayerRef = ref(null)
+const { width: windowWidthReactive, height: windowHeight } = useWindowSize()
+
+// Default positions
+// X: right edge (windowWidth - playerSize - gap)
+// Y: middle (windowHeight / 2 - playerSize / 2)
+const playerY = ref(windowHeight.value / 2 - 30) 
+const playerX = ref(windowWidthReactive.value - (windowWidthReactive.value < 1200 ? 63 : 82))
+
+// Enable dragging on both axes
+const { position: dragPosition, isDragging } = useDraggable(floatingPlayerRef, {
+  initialValue: { x: playerX.value, y: playerY.value },
+  axis: 'both',
+  activeElement: floatingPlayerRef
+})
+
+// Sync dragged position, clamping to screen bounds
+watch(() => dragPosition.value, (newPos) => {
+    const isMob = windowWidthReactive.value < 1200
+    const gap = isMob ? 5 : 20
+    const size = isMob ? 58 : 62 // Approximate player size with padding and border
+    
+    // Clamp Y
+    const maxY = windowHeight.value - size - gap
+    playerY.value = Math.max(gap, Math.min(newPos.y, maxY))
+    
+    // Clamp X
+    const maxX = windowWidthReactive.value - size - gap
+    playerX.value = Math.max(gap, Math.min(newPos.x, maxX))
+}, { deep: true })
 
 const setHeight = () => {
     const vh = window.innerHeight * 0.01
@@ -63,24 +92,12 @@ onMounted(() => {
       // Your custom options
    });
    
-   // Preloader Animation
-   const interval = setInterval(() => {
-    if (percent.value < 100) {
-      percent.value += 5 
-    } else {
-      clearInterval(interval)
-      preloaderClass.value += ' mil-complete'
-      
-      // Init animations when preloader is done
-      initAnimations()
-      
-      setTimeout(() => {
-        isLoading.value = false
-        appStore.setLoading(false)
-        appStore.setTransitioning(false) // Safety reset
-      }, 800) 
-    }
-   }, 100) 
+   // Init animations directly
+   setTimeout(() => {
+     initAnimations()
+     appStore.setLoading(false)
+     appStore.setTransitioning(false) // Safety reset
+   }, 100)
 })
 
 onUnmounted(() => {
@@ -207,16 +224,19 @@ const onAfterLeave = () => {
 <template>
   <div class="mil-frame-wrapper">
       <GlobalAudio />
-      <div :class="preloaderClass" v-if="isLoading">
-
-          <div class="mil-preloader-content">
-              <h1 class="mil-mb-30"><span class="mil-h3">Loading:</span> <span class="mil-accent mil-percent">{{ percent }}</span> <span class="mil-h3">%</span></h1>
-              <div class="mil-preload-track">
-                  <div class="mil-preload-line" :style="{ width: percent + '%' }"></div>
-              </div>
-          </div>
+      
+      <!-- Global Floating Music Player -->
+      <div 
+        ref="floatingPlayerRef"
+        class="mil-floating-player"
+        :class="{ 'is-dragging': isDragging }"
+        :style="{ top: `${playerY}px`, left: `${playerX}px` }"
+      >
+        <div class="player-drag-handle">
+           <CompactMusicPlayer />
+        </div>
       </div>
-    
+      <!-- Preloader removed -->
     <div class="mil-frame">
       <TheSidebar />
       
@@ -261,6 +281,49 @@ const onAfterLeave = () => {
 </template>
 
 <style scoped>
+/* Floating Music Player */
+.mil-floating-player {
+  position: fixed;
+  z-index: 2147483647; /* Maximum possible z-index to stay above absolutely everything */
+  background: rgba(44, 44, 44, 0.4); /* Transparent glass look */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 8px;
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: grab;
+  touch-action: none; /* Prevent scrolling when dragging */
+}
+
+/* Hover and active visual states */
+.mil-floating-player:active,
+.mil-floating-player.is-dragging {
+  cursor: grabbing;
+  transform: scale(1.05);
+}
+
+.mil-floating-player:hover {
+  background: rgba(44, 44, 44, 0.8);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.player-drag-handle {
+  pointer-events: none; /* Let the wrapper handle drag and allow clicks to pass to player */
+}
+.player-drag-handle :deep(*) {
+   pointer-events: auto;
+}
+
+@media (max-width: 1200px) {
+  .mil-floating-player {
+    padding: 6px;
+  }
+}
+
 /* Mobile RightBar logic */
 .mil-mobile-right-bar {
   display: block;

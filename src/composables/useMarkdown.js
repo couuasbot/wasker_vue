@@ -32,10 +32,8 @@ export function useMarkdown() {
                 frontmatter.image = frontmatter.cover;
             }
 
-            // Determine type based on path (blog vs portfolio vs friend)
+            // Determine type based on path (blog vs mysites vs journal)
             const isBlog = path.includes('/blog/');
-            const isPortfolio = path.includes('/portfolio/');
-            const isFriend = path.includes('/friend/');
             const isMySite = path.includes('/mysites/');
             const isJournal = path.includes('/journal/');
 
@@ -64,8 +62,8 @@ export function useMarkdown() {
             let computedCategory = frontmatter.category;
             const pathParts = path.split('/');
 
-            // Find where 'blog' or 'portfolio' is
-            const typeKey = isBlog ? 'blog' : (isPortfolio ? 'portfolio' : (isFriend ? 'friend' : (isMySite ? 'mysites' : (isJournal ? 'journal' : null))));
+            // Find where 'blog' or 'journal' is
+            const typeKey = isBlog ? 'blog' : (isMySite ? 'mysites' : (isJournal ? 'journal' : null));
             const typeIndex = typeKey ? pathParts.findIndex(p => p === typeKey) : -1;
 
             if (typeIndex !== -1) {
@@ -92,7 +90,7 @@ export function useMarkdown() {
                 category: computedCategory, // Override or keep original
                 slug: filename,
                 body: content.body,
-                type: isBlog ? 'blog' : (isPortfolio ? 'portfolio' : (isFriend ? 'friend' : (isMySite ? 'mysite' : (isJournal ? 'journal' : 'other')))),
+                type: isBlog ? 'blog' : (isMySite ? 'mysite' : (isJournal ? 'journal' : 'other')),
                 lang: lang,
                 path: path
             });

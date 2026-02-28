@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useMarkdown } from '@/composables/useMarkdown'
 import { useScrollAnimations } from '@/composables/useScrollAnimations'
@@ -77,15 +77,21 @@ const checkOverflow = () => {
 }
 
 // Check on mount, resize, and data change
-import { onMounted, onUnmounted } from 'vue'
+const isMobile = ref(false)
+const checkMobile = () => {
+    isMobile.value = window.innerWidth <= 1200
+}
 
 onMounted(() => {
     checkOverflow()
+    checkMobile()
     window.addEventListener('resize', checkOverflow)
+    window.addEventListener('resize', checkMobile)
 })
 
 onUnmounted(() => {
     window.removeEventListener('resize', checkOverflow)
+    window.removeEventListener('resize', checkMobile)
 })
 
 watch([categories, currentLang], async () => {
@@ -229,61 +235,66 @@ const handleWheel = (e) => {
                 </div>
 
             </div>
-            
-
-            <!-- Floating Bottom Navigation -->
-            <div class="mil-bottom-nav-container">
-                 <!-- Action Menu Overlay (Moved Inside) -->
-                 <div class="mil-action-menu-glass" :class="{ 'mil-active': isActionMenuOpen }">
-                     <div class="mil-action-btn" @click="toggleLayout" :title="isListView ? 'Grid View' : 'List View'">
-                        <i :class="['fas', isListView ? 'fa-th-large' : 'fa-list']"></i>
-                     </div>
-                     <div class="mil-action-btn" @click="toggleLang" title="Switch Language">
-                        <i class="fas fa-globe"></i>
-                     </div>
-                     <div class="mil-action-btn" @click="toggleFullScreen" :title="isFullScreen ? 'Original View' : 'Full Screen View'">
-                        <i :class="['fas', isFullScreen ? 'fa-compress-alt' : 'fa-expand-alt']"></i>
-                     </div>
-                 </div>
-
-                 <div class="mil-bottom-nav">
-                    
-                    <!-- Left: Share Button -->
-                    <button class="mil-add-btn" @click="copyLink" title="Copy Link" style="transform: none;">
-                        <i :class="['fas', copied ? 'fa-check' : 'fa-share-alt']"></i>
-                    </button>
-                    
-                    <div class="mil-nav-divider"></div>
-
-                    <!-- Center: Categories -->
-                    <ul 
-                        class="mil-bottom-menu"
-                        ref="scrollContainer"
-                        @mousedown="startDrag"
-                        @mouseleave="stopDrag"
-                        @mouseup="stopDrag"
-                        @mousemove="doDrag"
-                        @wheel.prevent="handleWheel"
-                    >
-                         <li 
-                            v-for="cat in categories" 
-                            :key="cat" 
-                            :class="{ 'mil-active': activeCategory === cat }"
-                            @click="switchCategory(cat)"
-                        >
-                            {{ cat }}
-                        </li>
-                    </ul>
-
-                    <div class="mil-nav-divider"></div>
-
-                    <!-- Right: Action Menu Trigger -->
-                    <button class="mil-add-btn" @click="toggleActionMenu" :class="{ 'mil-active': isActionMenuOpen }">
-                        <i :class="['fas', isActionMenuOpen ? 'fa-times' : 'fa-ellipsis-v']"></i>
-                    </button>
-                 </div>
-            </div>
         </div>
+
+        <!-- Integrated Bottom Panel (Teleported to body on mobile to avoid transition-fade bugs) -->
+        <Teleport to="body" :disabled="!isMobile">
+            <div class="mil-bottom-panel">
+                    <div class="mil-jcc mil-space-15 mil-w-100">
+                        <div class="mil-jcb mil-w-100 mil-p-30-0" style="display: flex; align-items: center; justify-content: space-between;">
+                            
+                            <!-- Left: Share Button (matches detail layout) -->
+                            <div class="mil-action-trigger mil-icon-btn" @click="copyLink" title="Copy Link" style="margin-right: 20px; order: 1;">
+                                <i :class="['fas', copied ? 'fa-check' : 'fa-share-alt']"></i>
+                            </div>
+
+                            <!-- Center: Categories Filter (Scrollable) -->
+                            <div class="mil-bottom-centered" style="display: flex; justify-content: center; flex: 1; overflow: hidden; order: 2;">
+                                <ul 
+                                    class="mil-bottom-menu"
+                                    ref="scrollContainer"
+                                    @mousedown="startDrag"
+                                    @mouseleave="stopDrag"
+                                    @mouseup="stopDrag"
+                                    @mousemove="doDrag"
+                                    @wheel.prevent="handleWheel"
+                                >
+                                    <li 
+                                        v-for="cat in categories" 
+                                        :key="cat" 
+                                        :class="{ 'mil-active': activeCategory === cat }"
+                                        @click="switchCategory(cat)"
+                                    >
+                                        {{ cat }}
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Right: Action Menu (Unified style) -->
+                            <div class="mil-action-menu-wrapper" :class="{ 'mil-active': isActionMenuOpen }" style="order: 3;">
+                                <div class="mil-action-list">
+                                    <!-- Layout Toggle -->
+                                    <div class="mil-action-btn" @click="toggleLayout" :title="isListView ? 'Grid View' : 'List View'">
+                                        <i :class="['fas', isListView ? 'fa-th-large' : 'fa-list']"></i>
+                                    </div>
+                                    <!-- Language Toggle -->
+                                    <div class="mil-action-btn" @click="toggleLang" title="Switch Language">
+                                        <i class="fas fa-globe"></i>
+                                    </div>
+                                    <!-- Full Screen Toggle -->
+                                    <div class="mil-action-btn" @click="toggleFullScreen" :title="isFullScreen ? 'Original View' : 'Full Screen View'">
+                                        <i :class="['fas', isFullScreen ? 'fa-compress-alt' : 'fa-expand-alt']"></i>
+                                    </div>
+                                </div>
+                                <div class="mil-action-trigger mil-icon-btn" @click="toggleActionMenu" :class="{ 'mil-active': isActionMenuOpen }">
+                                    <i :class="['fas', isActionMenuOpen ? 'fa-times' : 'fa-ellipsis-v']"></i>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+        </Teleport>
     </div>
 </template>
 
@@ -404,48 +415,25 @@ const handleWheel = (e) => {
     }
 }
 
-/* Bottom Navigation Styles (Unified) */
-.mil-bottom-nav-container {
-    position: fixed;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 95%; /* Mobile width */
-    max-width: 700px; /* Widened for desktop */
-    z-index: 100;
+/* Bottom Panel Layout Styling */
+.mil-bottom-centered {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 15px; 
-}
-
-.mil-bottom-nav {
-    background: rgba(26, 26, 26, 0.95);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1); 
-    border-radius: 50px; 
-    padding: 10px 15px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: fit-content;
-    max-width: 100%;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    justify-content: center;
+    gap: 15px;
 }
 
 .mil-bottom-menu {
     list-style: none;
-    padding: 0 10px; /* Added horizontal padding */
+    padding: 0 10px;
     margin: 0;
     display: flex;
     overflow-x: auto;
-    scrollbar-width: none; /* Hide Scrollbar */
+    scrollbar-width: none;
     -ms-overflow-style: none;
-    flex-grow: 1;
     gap: 5px;
     cursor: grab;
-    justify-content: flex-start; /* Changed from center to prevent obscuring first item on overflow */
 }
 
 .mil-bottom-menu:active {
@@ -474,82 +462,40 @@ const handleWheel = (e) => {
     color: #000;
 }
 
-.mil-nav-divider {
-    width: 1px;
-    height: 25px;
-    background: rgba(255, 255, 255, 0.1);
-    margin: 0 10px;
-    flex-shrink: 0;
-}
-
-.mil-add-btn {
-    background: var(--mil-dark-2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--mil-text-primary);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-}
-
-.mil-add-btn.mil-active {
-    background-color: #FFD700;
-    color: #000;
-    border-color: #FFD700;
-}
-
-/* Action Menu Glass Overlay */
-.mil-action-menu-glass {
-    position: absolute;
-    bottom: 70px; 
-    right: 0; 
-    transform: translateY(20px) scale(0.9);
-    background: rgba(26, 26, 26, 0.95);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 50px;
-    padding: 10px;
+/* Action Menu Styles (Integrated) */
+.mil-action-menu-wrapper {
+    position: relative;
+    z-index: 1000;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: 90;
-}
-
-.mil-action-menu-glass.mil-active {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    pointer-events: all;
-}
-
-.mil-action-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.05);
-    display: flex;
-    justify-content: center;
     align-items: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.mil-action-btn:hover {
-    background: #FFD700;
-    color: #000;
+    margin-left: 20px;
 }
 
 @media (max-width: 768px) {
-    .mil-bottom-nav-container {
-        width: 95%;
-        bottom: 10px;
+    .mil-bottom-panel .mil-jcb {
+        padding: 15px 0;
+        gap: 10px;
+    }
+    
+    .mil-bottom-left {
+        flex: 0 0 auto !important;
+    }
+
+    .mil-bottom-right {
+        flex: 0 0 auto !important;
+    }
+    
+    .mil-bottom-centered {
+        flex: 1 1 auto;
+        max-width: none !important;
+        min-width: 0;
+        justify-content: center !important;
+    }
+
+    .mil-action-trigger {
+        width: 40px;
+        height: 40px;
     }
 }
 

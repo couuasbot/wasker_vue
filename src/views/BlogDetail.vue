@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, onUpdated, nextTick, ref, shallowRef } from 'vue'
+import { computed, onMounted, onUpdated, nextTick, ref, shallowRef, onUnmounted } from 'vue'
 import { useRoute, useRouter, RouterLink } from 'vue-router'
 import { useMarkdown } from '@/composables/useMarkdown'
 // import md from '@/utils/markdown' // Static import removed for performance
@@ -156,6 +156,10 @@ const scrollToSection = (slug) => {
 };
 
 const isFullScreen = ref(false)
+const isMobile = ref(false)
+const checkMobile = () => {
+    isMobile.value = window.innerWidth <= 1200
+}
 
 const toggleFullScreen = () => {
     isFullScreen.value = !isFullScreen.value
@@ -193,19 +197,16 @@ const handleLinkClick = (event) => {
             let path = targetUrl.pathname;
             
             // Logic to handle basic markdown relative links
-            // e.g., ../../portfolio/zh/post.md -> /portfolio/post
+            // e.g., ../../blog/zh/post.md -> /blog/post
             if (path.endsWith('.md')) {
                 event.preventDefault();
                 
-                const isPortfolio = path.includes('/portfolio/');
                 const isBlog = path.includes('/blog/');
                 
                 const parts = path.split('/');
                 const slug = decodeURIComponent(parts.pop().replace('.md', ''));
                 
-                if (isPortfolio) {
-                    path = '/portfolio/' + slug;
-                } else if (isBlog) {
+                if (isBlog) {
                     path = '/blog/' + slug;
                 } else {
                     // Fallback to same section
@@ -238,6 +239,8 @@ const attachCopyListeners = () => {
 };
 
 onMounted(() => {
+   checkMobile()
+   window.addEventListener('resize', checkMobile)
    nextTick(() => {
        attachCopyListeners();
        initMarkdown();
@@ -251,6 +254,10 @@ onUpdated(() => {
        initMarkdown();
        initMermaid();
    });
+})
+
+onUnmounted(() => {
+    window.removeEventListener('resize', checkMobile)
 })
 
 </script>
@@ -315,61 +322,64 @@ onUpdated(() => {
             <div v-else class="mil-p-90-75">
                 <h1>Post not found</h1>
             </div>
+        </div>
 
-            <div class="mil-bottom-panel mil-up-instant">
-                <div class="mil-jcc mil-space-15 mil-w-100">
-                        <div class="mil-jcb mil-w-100 mil-p-30-0">
-                             <!-- Share Button (Far Left) for Symmetry -->
-                             <div class="mil-action-trigger mil-icon-btn" @click="copyLink" title="Copy Link" style="margin-right: 20px;">
-                                <i :class="['fas', copied ? 'fa-check' : 'fa-share-alt']"></i>
-                             </div>
+        <!-- Integrated Bottom Panel (Teleported to body on mobile to avoid transition-fade bugs) -->
+        <Teleport to="body" :disabled="!isMobile">
+            <div class="mil-bottom-panel">
+                    <div class="mil-jcc mil-space-15 mil-w-100">
+                            <div class="mil-jcb mil-w-100 mil-p-30-0">
+                                 <!-- Share Button (Far Left) for Symmetry -->
+                                 <div class="mil-action-trigger mil-icon-btn" @click="copyLink" title="Copy Link" style="margin-right: 20px;">
+                                    <i :class="['fas', copied ? 'fa-check' : 'fa-share-alt']"></i>
+                                 </div>
 
-                             <!-- Navigation (Left) -->
-                            <div class="mil-prev-nav">
-                                 <router-link v-if="adjacentPosts.prev" :to="'/blog/' + adjacentPosts.prev.slug" class="mil-link mil-icon-link-left" title="Previous Post">
-                                    <i class="fas fa-chevron-left"></i> <span>Previous</span>
-                                 </router-link>
-                                 <span v-else class="mil-link mil-disabled" style="opacity: 0.5;"><i class="fas fa-chevron-left"></i> <span>Previous</span></span>
-                             </div>
+                                 <!-- Navigation (Left) -->
+                                <div class="mil-prev-nav">
+                                     <router-link v-if="adjacentPosts.prev" :to="'/blog/' + adjacentPosts.prev.slug" class="mil-link mil-icon-link-left" title="Previous Post">
+                                        <i class="fas fa-chevron-left"></i> <span>Previous</span>
+                                     </router-link>
+                                     <span v-else class="mil-link mil-disabled" style="opacity: 0.5;"><i class="fas fa-chevron-left"></i> <span>Previous</span></span>
+                                 </div>
 
-                        <!-- Center Group: Back -->
-                        <div class="mil-bottom-centered">
-                            <router-link to="/blog" class="mil-link mil-back-btn">Back to Blog</router-link>
-                        </div>
+                            <!-- Center Group: Back -->
+                            <div class="mil-bottom-centered">
+                                <router-link to="/blog" class="mil-link mil-back-btn">Back to Blog</router-link>
+                            </div>
 
-                        <!-- Next Post (Right) -->
-                        <div class="mil-next-nav">
-                            <router-link v-if="adjacentPosts.next" :to="'/blog/' + adjacentPosts.next.slug" class="mil-link mil-icon-link" title="Next Post">
-                                <span>Next</span> <i class="fas fa-chevron-right"></i>
-                            </router-link>
-                            <span v-else class="mil-link mil-disabled" style="opacity: 0.5;"><span>Next</span> <i class="fas fa-chevron-right"></i></span>
-                        </div>
+                            <!-- Next Post (Right) -->
+                            <div class="mil-next-nav">
+                                <router-link v-if="adjacentPosts.next" :to="'/blog/' + adjacentPosts.next.slug" class="mil-link mil-icon-link" title="Next Post">
+                                    <span>Next</span> <i class="fas fa-chevron-right"></i>
+                                </router-link>
+                                <span v-else class="mil-link mil-disabled" style="opacity: 0.5;"><span>Next</span> <i class="fas fa-chevron-right"></i></span>
+                            </div>
 
-                        <!-- Unified Action Menu (Far Right) -->
-                        <div class="mil-action-menu-wrapper" :class="{ 'mil-active': isActionMenuOpen }">
-                            <div class="mil-action-list">
-                                <!-- TOC Toggle -->
-                                <div class="mil-action-btn" @click="toggleToc" v-if="toc.length > 0" title="Table of Contents">
-                                    <i class="fas fa-list-ul"></i>
+                            <!-- Unified Action Menu (Far Right) -->
+                            <div class="mil-action-menu-wrapper" :class="{ 'mil-active': isActionMenuOpen }">
+                                <div class="mil-action-list">
+                                    <!-- TOC Toggle -->
+                                    <div class="mil-action-btn" @click="toggleToc" v-if="toc.length > 0" title="Table of Contents">
+                                        <i class="fas fa-list-ul"></i>
+                                    </div>
+                                    <!-- Language Toggle -->
+                                    <div class="mil-action-btn" @click="toggleLang" title="Switch Language">
+                                        <i class="fas fa-globe"></i>
+                                    </div>
+                                    <!-- Full Screen Toggle -->
+                                    <div class="mil-action-btn" @click="toggleFullScreen" :title="isFullScreen ? 'Original View' : 'Full Screen View'">
+                                        <i :class="['fas', isFullScreen ? 'fa-compress-alt' : 'fa-expand-alt']"></i>
+                                    </div>
                                 </div>
-                                <!-- Language Toggle -->
-                                <div class="mil-action-btn" @click="toggleLang" title="Switch Language">
-                                    <i class="fas fa-globe"></i>
-                                </div>
-                                <!-- Full Screen Toggle -->
-                                <div class="mil-action-btn" @click="toggleFullScreen" :title="isFullScreen ? 'Original View' : 'Full Screen View'">
-                                    <i :class="['fas', isFullScreen ? 'fa-compress-alt' : 'fa-expand-alt']"></i>
+                                <div class="mil-action-trigger mil-icon-btn" @click="toggleActionMenu" :class="{ 'mil-active': isActionMenuOpen }">
+                                    <i :class="['fas', isActionMenuOpen ? 'fa-times' : 'fa-ellipsis-v']"></i>
+                                    <span class="mil-toc-dot" v-if="!isActionMenuOpen && toc.length > 0"></span>
                                 </div>
                             </div>
-                            <div class="mil-action-trigger mil-icon-btn" @click="toggleActionMenu" :class="{ 'mil-active': isActionMenuOpen }">
-                                <i :class="['fas', isActionMenuOpen ? 'fa-times' : 'fa-ellipsis-v']"></i>
-                                <span class="mil-toc-dot" v-if="!isActionMenuOpen && toc.length > 0"></span>
-                            </div>
                         </div>
-                    </div>
                 </div>
             </div>
-        </div>
+        </Teleport>
     </div>
 </template>
 

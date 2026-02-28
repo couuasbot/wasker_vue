@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@fancyapps/ui": "^6.1.7",
+    "@vueuse/core": "^14.2.1",
     "3d-force-graph": "^1.79.0",
     "dotenv": "^17.2.3",
     "front-matter": "^4.0.2",

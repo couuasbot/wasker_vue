@@ -98,7 +98,7 @@ onUnmounted(() => {
 
         <div class="mil-space-90 mil-p-0-75" v-if="profile">
           <div class="mil-title-line mil-mb-60 mil-up">
-            <h2>Services</h2>
+            <h2>ABOUTME</h2>
             <div class="mil-line"></div>
             <div class="mil-h2 mil-number">01</div>
           </div>
@@ -108,8 +108,6 @@ onUnmounted(() => {
                 <h3 class="mil-mb-20"><span class="mil-accent">{{ String(index + 1).padStart(2, '0') }}.</span> {{ service.title }}
                 </h3>
                 <p class="mil-mb-20-plus">{{ service.description }}</p>
-                <router-link :to="service.link" class="mil-link mil-hover-link">Order
-                  service</router-link>
               </div>
             </div>
           </div>

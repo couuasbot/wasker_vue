@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, onUpdated, nextTick, ref, shallowRef } from 'vue'
+import { computed, onMounted, onUpdated, nextTick, ref, shallowRef, onUnmounted } from 'vue'
 import { useRoute, useRouter, RouterLink } from 'vue-router'
 import { useMarkdown } from '@/composables/useMarkdown'
 // import md from '@/utils/markdown'
@@ -132,6 +132,10 @@ const toc = computed(() => {
 const isTocOpen = ref(false);
 const isActionMenuOpen = ref(false);
 const isFullScreen = ref(false)
+const isMobile = ref(false)
+const checkMobile = () => {
+    isMobile.value = window.innerWidth <= 1200
+}
 
 const toggleToc = () => {
     isTocOpen.value = !isTocOpen.value;
@@ -189,7 +193,6 @@ const handleLinkClick = (event) => {
                 const parts = path.split('/');
                 const slug = decodeURIComponent(parts.pop().replace('.md', ''));
                 if (path.includes('/journal/')) { path = '/journal/' + slug }
-                else if (path.includes('/portfolio/')) { path = '/portfolio/' + slug }
                 else { path = '/blog/' + slug }
                 router.push(path);
             }
@@ -213,8 +216,13 @@ const attachCopyListeners = () => {
     });
 };
 
-onMounted(() => { nextTick(() => { attachCopyListeners(); initMarkdown(); initMermaid(); }); })
+onMounted(() => { 
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    nextTick(() => { attachCopyListeners(); initMarkdown(); initMermaid(); }); 
+})
 onUpdated(() => { nextTick(() => { attachCopyListeners(); initMarkdown(); initMermaid(); }); })
+onUnmounted(() => { window.removeEventListener('resize', checkMobile); })
 
 
 </script>
@@ -280,11 +288,14 @@ onUpdated(() => { nextTick(() => { attachCopyListeners(); initMarkdown(); initMe
             <div v-else class="mil-p-90-75">
                 <h1>Entry not found</h1>
             </div>
+        </div>
 
-            <!-- Bottom Panel (Similar to Blog, return to /journal) -->
-            <div class="mil-bottom-panel mil-up-instant">
-                <div class="mil-jcc mil-space-15 mil-w-100">
+        <!-- Integrated Bottom Panel (Teleported to body on mobile) -->
+        <Teleport to="body" :disabled="!isMobile">
+            <div class="mil-bottom-panel">
+                    <div class="mil-jcc mil-space-15 mil-w-100">
                         <div class="mil-jcb mil-w-100 mil-p-30-0">
+                             
                              <div class="mil-action-trigger mil-icon-btn" @click="copyLink" title="Copy Link" style="margin-right: 20px;">
                                 <i :class="['fas', copied ? 'fa-check' : 'fa-share-alt']"></i>
                              </div>
@@ -327,7 +338,7 @@ onUpdated(() => { nextTick(() => { attachCopyListeners(); initMarkdown(); initMe
                     </div>
                 </div>
             </div>
-        </div>
+        </Teleport>
     </div>
 </template>
 

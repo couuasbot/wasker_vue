@@ -24,7 +24,7 @@ p.s. I am available for Freelance hire (UI design, web development). email: mill
     - social icons
     - main menu
     - menu button
-    - portfolio
+    - works
     - banner
     - services
     - skills
@@ -43,6 +43,7 @@ fonts
 
 ------------------------------------------- */
 /* Import Global Styles */
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 @import './plugins/bootstrap-grid.css';
 @import './plugins/swiper.css';
 @import './plugins/fontawesome.css';
@@ -242,7 +243,7 @@ Markdown Styles
   opacity: 0.5;
 }
 
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+
 
 @font-face {
   font-family: "clesmont";
@@ -1230,8 +1231,8 @@ page transitions
 
 ------------------------------------------- */
 .transition-fade {
-  -webkit-transform: scale(1);
-  transform: scale(1);
+  -webkit-transform: none;
+  transform: none;
   overflow: hidden;
   -webkit-transition: 0.4s cubic-bezier(0, 0, 0.3642, 1);
   transition: 0.4s cubic-bezier(0, 0, 0.3642, 1);
@@ -1242,9 +1243,16 @@ html.is-animating .transition-fade {
   transform: scale(1.001);
 }
 
+@media (max-width: 1200px) {
+  html.is-animating .transition-fade {
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
 .mil-main-menu {
-  -webkit-transform: scale(1);
-  transform: scale(1);
+  -webkit-transform: none;
+  transform: none;
 }
 
 html.is-animating .mil-main-menu {
@@ -1264,8 +1272,8 @@ Half-Page Layout: 50/50 Split with Sidebar Visible
 }
 
 .mil-half-page .mil-left-part .mil-content-frame {
-  -webkit-transform: translateY(0);
-  transform: translateY(0);
+  -webkit-transform: none;
+  transform: none;
   opacity: 1;
   -webkit-transition: opacity 0.4s cubic-bezier(0, 0, 0.3642, 1), transform 0.4s cubic-bezier(0, 0, 0.3642, 1);
   transition: opacity 0.4s cubic-bezier(0, 0, 0.3642, 1), transform 0.4s cubic-bezier(0, 0, 0.3642, 1);
@@ -1287,6 +1295,13 @@ html.is-animating .mil-half-page .mil-left-part .mil-content-frame {
   -webkit-transform: translateY(30px);
   transform: translateY(30px);
   opacity: 0;
+}
+
+@media (max-width: 1200px) {
+  html.is-animating .mil-half-page .mil-left-part .mil-content-frame {
+    -webkit-transform: none;
+    transform: none;
+  }
 }
 
 /* Sidebar stays in place during half-to-half transitions */
@@ -1314,8 +1329,8 @@ Full-Width Page Layout: Left 100%, Sidebar Hidden
 }
 
 .mil-fw-page .mil-left-part .mil-content-frame {
-  -webkit-transform: translateY(0);
-  transform: translateY(0);
+  -webkit-transform: none;
+  transform: none;
   opacity: 1;
   -webkit-transition: opacity 0.4s cubic-bezier(0, 0, 0.3642, 1), transform 0.4s cubic-bezier(0, 0, 0.3642, 1);
   transition: opacity 0.4s cubic-bezier(0, 0, 0.3642, 1), transform 0.4s cubic-bezier(0, 0, 0.3642, 1);
@@ -1341,6 +1356,13 @@ html.is-animating .mil-fw-page .mil-left-part .mil-content-frame {
   -webkit-transform: translateY(30px);
   transform: translateY(30px);
   opacity: 0;
+}
+
+@media (max-width: 1200px) {
+  html.is-animating .mil-fw-page .mil-left-part .mil-content-frame {
+    -webkit-transform: none;
+    transform: none;
+  }
 }
 
 /* Sidebar stays slid out during full-to-full transitions */
@@ -2110,6 +2132,11 @@ frame
   align-items: center;
 }
 
+.mil-content-frame {
+  position: relative;
+  height: 100%;
+}
+
 .mil-content-frame .mil-bottom-panel {
   height: 9rem;
   border-radius: 1rem;
@@ -2131,17 +2158,26 @@ frame
 }
 
 @media (max-width: 1200px) {
-  .mil-content-frame .mil-bottom-panel {
-    position: fixed;
-    top: calc(100% - 9rem);
-    left: 0;
-    background-color: rgba(26, 26, 26, 0.85);
+  .mil-bottom-panel {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    background-color: rgba(26, 26, 26, 0.95) !important;
     -webkit-backdrop-filter: blur(1rem);
     backdrop-filter: blur(1rem);
     border: solid 0.1rem rgba(44, 44, 44, 0.2);
-    border-radius: 1.5rem 1.5rem 0 0;
-    -webkit-box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.1);
-    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 0;
+    -webkit-box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.3);
+    z-index: 9999 !important;
+    height: 9rem;
+    display: flex;
+    align-items: center;
+    pointer-events: all !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
   }
 }
 
@@ -2304,12 +2340,6 @@ main menu
   transition-delay: 1s;
 }
 
-.mil-main-menu ul li.mil-current a span:after {
-  content: "(current)";
-  margin-left: 1rem;
-  opacity: 0.3;
-  font-weight: 300;
-}
 
 .mil-main-menu ul li.mil-current a i {
   color: #DBA91C;
@@ -2466,7 +2496,7 @@ menu button
 
 /* -------------------------------------------
 
-portfolio
+works
 
 ------------------------------------------- */
 .mil-work-card {
