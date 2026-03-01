@@ -6,8 +6,12 @@ on:
       - 'src/content/blog/**'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   sync:
+    if: ${{ github.repository == 'couuasbot/wasker_vue' }}
     runs-on: ubuntu-latest
     
     steps:
